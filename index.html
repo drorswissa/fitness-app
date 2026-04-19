@@ -1,110 +1,366 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fitness App</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: Arial;
+      font-family: Arial, sans-serif;
       background: #0f172a;
-      color: white;
+      color: #fff;
+    }
+    .header {
       text-align: center;
+      padding: 24px 16px 12px;
+      background: #111827;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid #1f2937;
     }
-
-    h1 {
-      margin-top: 30px;
+    .header h1 {
+      margin: 0;
+      font-size: 34px;
     }
-
+    .header p {
+      margin: 8px 0 0;
+      color: #cbd5e1;
+    }
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .spotify-btn, .back-btn, .rest-btn, .timer-btn, .video-btn, .workout-btn {
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 15px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .spotify-btn { background: #22c55e; color: white; }
+    .back-btn { background: #334155; color: white; }
+    .timer-btn { background: #3b82f6; color: white; }
+    .rest-btn { background: #8b5cf6; color: white; }
+    .video-btn { background: #ef4444; color: white; }
+    .workout-btn {
+      width: 100%;
+      background: #1e293b;
+      color: white;
+      text-align: right;
+      margin-bottom: 12px;
+      padding: 18px;
+      font-size: 18px;
+      border: 1px solid #334155;
+    }
+    .workout-btn:hover, .card:hover { background: #243247; }
     .container {
-      padding: 20px;
+      padding: 16px;
+      max-width: 900px;
+      margin: auto;
     }
-
+    .hidden { display: none; }
     .card {
       background: #1e293b;
-      margin: 10px;
-      padding: 20px;
-      border-radius: 15px;
-      cursor: pointer;
-      transition: 0.3s;
+      border: 1px solid #334155;
+      border-radius: 18px;
+      margin-bottom: 18px;
+      overflow: hidden;
     }
-
-    .card:hover {
-      background: #334155;
+    .card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      background: #0b1220;
     }
-
-    .hidden {
-      display: none;
+    .card-body {
+      padding: 16px;
     }
-
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      background: #22c55e;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
+    .exercise-title {
+      font-size: 22px;
+      margin: 0 0 10px;
     }
-
-    ul {
-      text-align: right;
-      max-width: 300px;
-      margin: auto;
+    .meta {
+      color: #cbd5e1;
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+    .sets {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .set-box {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 10px 12px;
+      min-width: 85px;
+      text-align: center;
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .timer-panel {
+      position: sticky;
+      bottom: 0;
+      background: #111827;
+      border-top: 1px solid #334155;
+      padding: 14px;
+      text-align: center;
+      z-index: 30;
+    }
+    .timer-display {
+      font-size: 34px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .timer-label {
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+    .rest-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .small-note {
+      color: #94a3b8;
+      font-size: 13px;
+      margin-top: 8px;
     }
   </style>
 </head>
-
 <body>
 
-<h1>💪 Fitness App עובד!</h1>
+  <div class="header">
+    <h1>💪 Fitness App</h1>
+    <p>אימונים, טיימר, מנוחה, וידאו ומוזיקה</p>
+    <div class="top-actions">
+      <a class="spotify-btn" href="https://open.spotify.com/" target="_blank">🎵 פתיחת Spotify</a>
+      <button class="back-btn hidden" id="backTopBtn" onclick="goBack()">⬅ חזור</button>
+    </div>
+  </div>
 
-<div class="container" id="home">
-  <h2>בחר אימון</h2>
+  <div class="container" id="home">
+    <button class="workout-btn" onclick="showWorkout('chest')">חזה + יד קדמית</button>
+    <button class="workout-btn" onclick="showWorkout('back')">גב + יד אחורית</button>
+    <button class="workout-btn" onclick="showWorkout('legs')">רגליים</button>
+    <button class="workout-btn" onclick="showWorkout('shoulders')">כתפיים</button>
+  </div>
 
-  <div class="card" onclick="showWorkout('chest')">חזה + יד קדמית</div>
-  <div class="card" onclick="showWorkout('back')">גב + יד אחורית</div>
-  <div class="card" onclick="showWorkout('legs')">רגליים</div>
-  <div class="card" onclick="showWorkout('shoulders')">כתפיים</div>
-</div>
+  <div class="container hidden" id="workoutScreen">
+    <h2 id="workoutTitle"></h2>
+    <div id="exerciseList"></div>
+  </div>
 
-<div class="container hidden" id="workout">
-  <h2 id="title"></h2>
-  <ul id="list"></ul>
-  <button onclick="goBack()">חזור</button>
-</div>
+  <div class="timer-panel">
+    <div class="timer-label" id="timerMode">טיימר</div>
+    <div class="timer-display" id="timerDisplay">00:00</div>
 
-<script>
-  const workouts = {
-    chest: ["לחיצת חזה", "פרפר", "שכיבות סמיכה", "כבל קרוס"],
-    back: ["משיכה עליונה", "חתירה", "דדליפט", "פולי"],
-    legs: ["סקוואט", "לחיצת רגליים", "לאנג׳ים", "תאומים"],
-    shoulders: ["לחיצת כתפיים", "הרחקות צד", "הרחקות קדימה", "פייס פול"]
-  };
+    <div class="rest-row">
+      <button class="timer-btn" onclick="startActivityTimer(30)">עבודה 30ש׳</button>
+      <button class="timer-btn" onclick="startActivityTimer(45)">עבודה 45ש׳</button>
+      <button class="timer-btn" onclick="startActivityTimer(60)">עבודה 60ש׳</button>
+    </div>
 
-  function showWorkout(type) {
-    document.getElementById("home").classList.add("hidden");
-    document.getElementById("workout").classList.remove("hidden");
+    <div class="rest-row">
+      <button class="rest-btn" onclick="startRestTimer(60)">מנוחה 60</button>
+      <button class="rest-btn" onclick="startRestTimer(90)">מנוחה 90</button>
+      <button class="rest-btn" onclick="startRestTimer(120)">מנוחה 120</button>
+    </div>
 
-    const list = document.getElementById("list");
-    const title = document.getElementById("title");
+    <div class="rest-row">
+      <button class="back-btn" onclick="stopTimer()">עצור טיימר</button>
+    </div>
 
-    list.innerHTML = "";
-    title.innerText = type;
+    <div class="small-note">לכל תרגיל: 3 סטים. אפשר להשתמש בטיימר עבודה ואז מנוחה בין הסטים.</div>
+  </div>
 
-    workouts[type].forEach(ex => {
-      const li = document.createElement("li");
-      li.innerText = ex;
-      list.appendChild(li);
-    });
-  }
+  <script>
+    const workouts = {
+      chest: {
+        title: "חזה + יד קדמית",
+        exercises: [
+          {
+            name: "לחיצת חזה",
+            image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80",
+            video: "https://www.youtube.com/results?search_query=chest+press+exercise"
+          },
+          {
+            name: "פרפר",
+            image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1200&q=80",
+            video: "https://www.youtube.com/results?search_query=pec+deck+fly+exercise"
+          },
+          {
+            name: "כפיפות יד קדמית",
+            image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=1200&q=80",
+            video: "https://www.youtube.com/results?search_query=biceps+curl+exercise"
+          }
+        ]
+      },
+      back: {
+        title: "גב + יד אחורית",
+        exercises: [
+          {
+            name: "משיכה עליונה",
+            image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=1200&q=80",
+            video: "https://www.youtube.com/results?search_query=lat+pulldown+exercise"
+          },
+          {
+            name: "חתירה",
+            image: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=1200&q=80",
+            video: "https://www.youtube.com/results?search_query=seated+row+exercise"
+          },
+          {
+            name: "פשיטת מרפק",
+            image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80",
+            video: "https://www.youtube.com/results?search_query=triceps+pushdown+exercise"
+          }
+        ]
+      },
+      legs: {
+        title: "רגליים",
+        exercises: [
+          {
+            name: "סקוואט",
+            image: "https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=1200&q=80",
+            video: "https://www.youtube.com/results?search_query=squat+exercise"
+          },
+          {
+            name: "לחיצת רגליים",
+            image: "https://images.unsplash.com/photo-1517343985841-f8b2d66e010b?auto=format&fit=crop&w=1200&q=80",
+            video: "https://www.youtube.com/results?search_query=leg+press+exercise"
+          },
+          {
+            name: "לאנג׳ים",
+            image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1200&q=80",
+            video: "https://www.youtube.com/results?search_query=lunges+exercise"
+          }
+        ]
+      },
+      shoulders: {
+        title: "כתפיים",
+        exercises: [
+          {
+            name: "לחיצת כתפיים",
+            image: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=1200&q=80",
+            video: "https://www.youtube.com/results?search_query=shoulder+press+exercise"
+          },
+          {
+            name: "הרחקות לצדדים",
+            image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1200&q=80",
+            video: "https://www.youtube.com/results?search_query=lateral+raise+exercise"
+          },
+          {
+            name: "פייס פול",
+            image: "https://images.unsplash.com/photo-1571019613914-85f342c55f55?auto=format&fit=crop&w=1200&q=80",
+            video: "https://www.youtube.com/results?search_query=face+pull+exercise"
+          }
+        ]
+      }
+    };
 
-  function goBack() {
-    document.getElementById("home").classList.remove("hidden");
-    document.getElementById("workout").classList.add("hidden");
-  }
-</script>
+    let timerInterval = null;
+    let remaining = 0;
 
+    function formatTime(seconds) {
+      const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const s = String(seconds % 60).padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function runTimer(label, seconds) {
+      clearInterval(timerInterval);
+      remaining = seconds;
+      document.getElementById("timerMode").innerText = label;
+      document.getElementById("timerDisplay").innerText = formatTime(remaining);
+
+      timerInterval = setInterval(() => {
+        remaining--;
+        document.getElementById("timerDisplay").innerText = formatTime(remaining);
+
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById("timerDisplay").innerText = "סיום";
+          alert(label + " הסתיים");
+        }
+      }, 1000);
+    }
+
+    function startActivityTimer(seconds) {
+      runTimer("זמן עבודה", seconds);
+    }
+
+    function startRestTimer(seconds) {
+      runTimer("זמן מנוחה", seconds);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      document.getElementById("timerMode").innerText = "טיימר";
+      document.getElementById("timerDisplay").innerText = "00:00";
+    }
+
+    function showWorkout(type) {
+      const data = workouts[type];
+      const list = document.getElementById("exerciseList");
+      document.getElementById("home").classList.add("hidden");
+      document.getElementById("workoutScreen").classList.remove("hidden");
+      document.getElementById("backTopBtn").classList.remove("hidden");
+      document.getElementById("workoutTitle").innerText = data.title;
+
+      list.innerHTML = "";
+
+      data.exercises.forEach((exercise) => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+          <img src="${exercise.image}" alt="${exercise.name}">
+          <div class="card-body">
+            <h3 class="exercise-title">${exercise.name}</h3>
+            <div class="meta">3 סטים לכל תרגיל</div>
+
+            <div class="sets">
+              <div class="set-box">סט 1</div>
+              <div class="set-box">סט 2</div>
+              <div class="set-box">סט 3</div>
+            </div>
+
+            <div class="actions">
+              <a class="video-btn" href="${exercise.video}" target="_blank">▶ YouTube</a>
+              <button class="timer-btn" onclick="startActivityTimer(45)">זמן עבודה</button>
+              <button class="rest-btn" onclick="startRestTimer(60)">מנוחה 60</button>
+              <button class="rest-btn" onclick="startRestTimer(90)">מנוחה 90</button>
+              <button class="rest-btn" onclick="startRestTimer(120)">מנוחה 120</button>
+            </div>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    function goBack() {
+      document.getElementById("home").classList.remove("hidden");
+      document.getElementById("workoutScreen").classList.add("hidden");
+      document.getElementById("backTopBtn").classList.add("hidden");
+      document.getElementById("exerciseList").innerHTML = "";
+    }
+  </script>
 </body>
 </html>
