@@ -1,640 +1,240 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fitness App</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(180deg, #0b0f14 0%, #111827 100%);
-      color: #fff;
-    }
+<meta charset="UTF-8">
+<title>Fitness App</title>
 
-    .app {
-      max-width: 480px;
-      margin: 0 auto;
-      min-height: 100vh;
-      padding-bottom: 170px;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+}
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      padding: 18px 16px 12px;
-      background: rgba(11, 15, 20, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
+.container {
+  padding: 16px;
+  padding-bottom: 120px;
+}
 
-    .plan-box {
-      background: #0f141b;
-      border-radius: 18px;
-      padding: 16px 18px;
-      font-size: 18px;
-      font-weight: 700;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
+.header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
 
-    .tabs {
-      display: flex;
-      gap: 18px;
-      overflow-x: auto;
-      margin-top: 16px;
-      padding-bottom: 4px;
-      scrollbar-width: none;
-    }
-    .tabs::-webkit-scrollbar { display: none; }
+.card {
+  background: #111827;
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
 
-    .tab {
-      background: transparent;
-      color: #8f9baa;
-      border: none;
-      font-size: 16px;
-      font-weight: 700;
-      padding: 8px 0;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      white-space: nowrap;
-    }
-    .tab.active {
-      color: #fff;
-      border-bottom-color: #fff;
-    }
+.exercise-top {
+  display: flex;
+  gap: 12px;
+}
 
-    .home, .workout-screen {
-      padding: 16px;
-    }
+.exercise-top img {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+}
 
-    .hero-card {
-      background: linear-gradient(135deg, #1db954 0%, #13a86b 100%);
-      border-radius: 22px;
-      padding: 18px;
-      color: #fff;
-      margin-bottom: 18px;
-      box-shadow: 0 10px 30px rgba(29,185,84,0.18);
-    }
+.exercise-name {
+  font-size: 18px;
+  font-weight: bold;
+}
 
-    .hero-title {
-      font-size: 22px;
-      font-weight: 800;
-      margin: 0 0 8px;
-    }
+.exercise-muscle {
+  font-size: 12px;
+  color: #9ca3af;
+}
 
-    .hero-sub {
-      margin: 0;
-      color: rgba(255,255,255,0.88);
-      font-size: 14px;
-    }
+.set-row {
+  display: grid;
+  grid-template-columns: 10px 1fr 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 14px;
+}
 
-    .quick-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 14px;
-      flex-wrap: wrap;
-    }
+.dot {
+  width: 6px;
+  height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+  margin-top: 6px;
+}
 
-    .pill-btn {
-      border: none;
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
+.exercise-bottom-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
 
-    .pill-green { background: #0f141b; color: #fff; }
-    .pill-dark { background: #161d27; color: #fff; }
+.tiny-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  background: #1f2937;
+  color: white;
+}
 
-    .workout-card {
-      background: #121821;
-      border-radius: 22px;
-      padding: 16px;
-      margin-bottom: 14px;
-      border: 1px solid rgba(255,255,255,0.05);
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-    .workout-card:hover { transform: translateY(-1px); }
+.rest-btn {
+  background: #334155;
+}
 
-    .workout-card h3 {
-      margin: 0 0 6px;
-      font-size: 22px;
-    }
-    .workout-card p {
-      margin: 0;
-      color: #97a3b6;
-      font-size: 14px;
-    }
+.youtube {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #22c55e;
+}
 
-    .screen-title {
-      font-size: 28px;
-      margin: 0 0 18px;
-      font-weight: 800;
-    }
+.timer-box {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #22c55e;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 18px;
+  display: none;
+}
 
-    .exercise-card {
-      background: #0f141b;
-      border-radius: 24px;
-      overflow: hidden;
-      margin-bottom: 18px;
-      border: 1px solid rgba(255,255,255,0.05);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-    }
-
-    .exercise-top {
-      display: flex;
-      gap: 14px;
-      padding: 16px;
-      align-items: center;
-    }
-
-    .exercise-top img {
-      width: 100px;
-      height: 100px;
-      border-radius: 18px;
-      object-fit: cover;
-      background: #fff;
-      flex-shrink: 0;
-    }
-
-    .exercise-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .exercise-name {
-      margin: 0 0 6px;
-      font-size: 20px;
-      font-weight: 800;
-      line-height: 1.2;
-    }
-
-    .exercise-muscle {
-      margin: 0 0 10px;
-      color: #a6b0bf;
-      font-size: 14px;
-    }
-
-    .exercise-meta {
-      color: #d1d5db;
-      font-size: 14px;
-    }
-
-    .mini-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    .mini-btn {
-      border: none;
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      background: #1b2430;
-      color: #fff;
-    }
-
-    .sets-area {
-      background: #0b0f14;
-      padding: 12px 16px 16px;
-      border-top: 1px solid rgba(255,255,255,0.04);
-    }
-
-    .set-row {
-      display: grid;
-      grid-template-columns: 28px 1fr 1fr 1fr;
-      gap: 8px;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      color: #fff;
-      font-size: 15px;
-    }
-    .set-row:last-child { border-bottom: none; }
-
-    .dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #1f2937;
-      border: 1px solid #334155;
-      justify-self: center;
-    }
-
-    .timer-bar {
-      position: fixed;
-      bottom: 92px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(440px, calc(100% - 24px));
-      background: #18c47c;
-      color: #fff;
-      border-radius: 26px;
-      padding: 14px 16px;
-      box-shadow: 0 14px 30px rgba(24,196,124,0.28);
-      z-index: 30;
-    }
-
-    .timer-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .timer-mode {
-      font-size: 14px;
-      font-weight: 700;
-      opacity: 0.95;
-    }
-
-    .timer-display {
-      font-size: 30px;
-      font-weight: 900;
-      letter-spacing: 1px;
-    }
-
-    .timer-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .tiny-btn {
-      border: none;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.18);
-      color: #fff;
-      padding: 8px 10px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .spotify-bar {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(480px, 100%);
-      background: #0b0f14;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 10px 12px 16px;
-      z-index: 25;
-    }
-
-    .spotify-box {
-      background: #121821;
-      border-radius: 18px;
-      padding: 10px;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .spotify-box iframe {
-      border-radius: 12px;
-    }
-
-    .back-btn {
-      margin-top: 8px;
-      background: #1b2430;
-      color: #fff;
-      border: none;
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .hidden { display: none; }
-
-    .toast {
-      position: fixed;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #111827;
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 12px 16px;
-      border-radius: 14px;
-      z-index: 100;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-      font-weight: 700;
-    }
-  </style>
+/* Spotify */
+.spotify {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+</style>
 </head>
+
 <body>
-  <div class="app">
-    <div id="toast" class="toast hidden"></div>
 
-    <div class="topbar">
-      <div class="plan-box">
-        <span>My Workout Plan</span>
-        <span>⌄</span>
-      </div>
+<div class="container">
+  <div class="header">💪 תוכנית אימונים</div>
+  <div id="workout"></div>
+</div>
 
-      <div class="tabs" id="tabs">
-        <button class="tab active" onclick="showWorkout('chest', this)">חזה ויד קדמית</button>
-        <button class="tab" onclick="showWorkout('back', this)">גב ויד אחורית</button>
-        <button class="tab" onclick="showWorkout('shoulders', this)">כתפיים</button>
-        <button class="tab" onclick="showWorkout('legs', this)">רגליים</button>
-      </div>
-    </div>
+<div id="timer" class="timer-box">00:00</div>
 
-    <div class="home" id="home">
-      <div class="hero-card">
-        <p class="hero-title">האימון של היום</p>
-        <p class="hero-sub">תוכנית אימונים מודרנית עם טיימר, YouTube ו־Spotify</p>
-        <div class="quick-actions">
-          <a class="pill-btn pill-green" href="https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP" target="_blank">🎵 פלייליסט כושר</a>
-          <button class="pill-btn pill-dark" onclick="showWorkout('chest')">▶ התחל אימון</button>
+<!-- Spotify -->
+<div class="spotify">
+<iframe style="border-radius:12px" 
+src="https://open.spotify.com/embed/playlist/37i9dQZF1DX70RN3TfWWJh?autoplay=1" 
+width="100%" height="80" frameBorder="0" allow="autoplay"></iframe>
+</div>
+
+<script>
+const exercises = [
+  {
+    name: "Dumbbell Bench Press",
+    muscle: "חזה",
+    image: "https://i.imgur.com/8Km9tLL.png",
+    video: "https://www.youtube.com/watch?v=VmB1G1K7v94"
+  },
+  {
+    name: "Biceps Curl",
+    muscle: "יד קדמית",
+    image: "https://i.imgur.com/2SHX5XU.png",
+    video: "https://www.youtube.com/watch?v=ykJmrZ5v0Oo"
+  },
+  {
+    name: "Hammer Curl",
+    muscle: "יד קדמית",
+    image: "https://i.imgur.com/2SHX5XU.png",
+    video: "https://www.youtube.com/watch?v=zC3nLlEvin4"
+  }
+];
+
+const workoutDiv = document.getElementById("workout");
+
+function renderWorkout() {
+  workoutDiv.innerHTML = "";
+
+  exercises.forEach(ex => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <div class="exercise-top">
+        <img src="${ex.image}">
+        <div>
+          <div class="exercise-name">${ex.name}</div>
+          <div class="exercise-muscle">${ex.muscle}</div>
+          <a class="youtube" href="${ex.video}" target="_blank">▶ סרטון</a>
         </div>
       </div>
 
-      <div class="workout-card" onclick="showWorkout('chest')">
-        <h3>חזה + יד קדמית</h3>
-        <p>לחיצת חזה, פרפר, פטישים, כפיפות יד קדמית</p>
+      <div class="set-row"><div class="dot"></div><div>סט 1</div><div>8 חזרות</div><div>20 ק"ג</div></div>
+      <div class="set-row"><div class="dot"></div><div>סט 2</div><div>8 חזרות</div><div>22.5 ק"ג</div></div>
+      <div class="set-row"><div class="dot"></div><div>סט 3</div><div>8 חזרות</div><div>25 ק"ג</div></div>
+
+      <div class="exercise-bottom-actions">
+        <button class="tiny-btn" onclick="startTimer(30)">עבודה 30</button>
+        <button class="tiny-btn" onclick="startTimer(45)">עבודה 45</button>
+        <button class="tiny-btn" onclick="startTimer(60)">עבודה 60</button>
+
+        <button class="tiny-btn rest-btn" onclick="startRest(60)">מנוחה 60</button>
+        <button class="tiny-btn rest-btn" onclick="startRest(90)">מנוחה 90</button>
+        <button class="tiny-btn rest-btn" onclick="startRest(120)">מנוחה 120</button>
       </div>
+    `;
 
-      <div class="workout-card" onclick="showWorkout('back')">
-        <h3>גב + יד אחורית</h3>
-        <p>פולי עליון, חתירה, פשיטות מרפק, כבל</p>
-      </div>
+    workoutDiv.appendChild(card);
+  });
+}
 
-      <div class="workout-card" onclick="showWorkout('shoulders')">
-        <h3>כתפיים</h3>
-        <p>לחיצת כתפיים, הרחקות, פייס פול</p>
-      </div>
+let timerInterval;
 
-      <div class="workout-card" onclick="showWorkout('legs')">
-        <h3>רגליים</h3>
-        <p>סקוואט, לאנג׳ים, לחיצת רגליים</p>
-      </div>
-    </div>
+function startTimer(seconds) {
+  runTimer(seconds, false);
+}
 
-    <div class="workout-screen hidden" id="workoutScreen">
-      <div style="padding:16px 16px 0;">
-        <button class="back-btn" onclick="goBack()">⬅ חזור</button>
-        <h2 class="screen-title" id="workoutTitle"></h2>
-      </div>
-      <div id="exerciseList" style="padding: 0 16px 16px;"></div>
-    </div>
-  </div>
+function startRest(seconds) {
+  runTimer(seconds, true);
+}
 
-  <div class="timer-bar">
-    <div class="timer-top">
-      <div class="timer-mode" id="timerMode">טיימר מנוחה/עבודה</div>
-      <div class="timer-display" id="timerDisplay">00:00</div>
-    </div>
-    <div class="timer-actions">
-      <button class="tiny-btn" onclick="startActivityTimer(30)">עבודה 30ש׳</button>
-      <button class="tiny-btn" onclick="startActivityTimer(45)">עבודה 45ש׳</button>
-      <button class="tiny-btn" onclick="startActivityTimer(60)">עבודה 60ש׳</button>
-      <button class="tiny-btn" onclick="startRestTimer(60)">מנוחה 60</button>
-      <button class="tiny-btn" onclick="startRestTimer(90)">מנוחה 90</button>
-      <button class="tiny-btn" onclick="startRestTimer(120)">מנוחה 120</button>
-      <button class="tiny-btn" onclick="stopTimer()">עצור</button>
-    </div>
-  </div>
+function runTimer(seconds, isRest) {
+  const timerBox = document.getElementById("timer");
+  timerBox.style.display = "block";
 
-  <div class="spotify-bar">
-    <div class="spotify-box">
-      <iframe
-        style="border-radius:12px"
-        src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator"
-        width="100%"
-        height="80"
-        frameBorder="0"
-        allowfullscreen=""
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        loading="lazy"></iframe>
-    </div>
-  </div>
+  clearInterval(timerInterval);
 
-  <script>
-    const workouts = {
-      chest: {
-        title: "חזה + יד קדמית",
-        exercises: [
-          {
-            name: "Dumbbell Bench Press",
-            muscle: "Chest",
-            image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=800&q=80",
-            video: "https://www.youtube.com/results?search_query=dumbbell+bench+press"
-          },
-          {
-            name: "Dumbbell Biceps Curl",
-            muscle: "Biceps",
-            image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=800&q=80",
-            video: "https://www.youtube.com/results?search_query=dumbbell+biceps+curl"
-          },
-          {
-            name: "Hammer Curl",
-            muscle: "Biceps",
-            image: "https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=800&q=80",
-            video: "https://www.youtube.com/results?search_query=hammer+curl"
-          }
-        ]
-      },
-      back: {
-        title: "גב + יד אחורית",
-        exercises: [
-          {
-            name: "Lat Pulldown",
-            muscle: "Back",
-            image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=800&q=80",
-            video: "https://www.youtube.com/results?search_query=lat+pulldown"
-          },
-          {
-            name: "Seated Row",
-            muscle: "Back",
-            image: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=800&q=80",
-            video: "https://www.youtube.com/results?search_query=seated+row"
-          },
-          {
-            name: "Triceps Pushdown",
-            muscle: "Triceps",
-            image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80",
-            video: "https://www.youtube.com/results?search_query=triceps+pushdown"
-          }
-        ]
-      },
-      shoulders: {
-        title: "כתפיים",
-        exercises: [
-          {
-            name: "Shoulder Press",
-            muscle: "Shoulders",
-            image: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=800&q=80",
-            video: "https://www.youtube.com/results?search_query=shoulder+press"
-          },
-          {
-            name: "Lateral Raise",
-            muscle: "Shoulders",
-            image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80",
-            video: "https://www.youtube.com/results?search_query=lateral+raise"
-          },
-          {
-            name: "Face Pull",
-            muscle: "Shoulders",
-            image: "https://images.unsplash.com/photo-1571019613914-85f342c55f55?auto=format&fit=crop&w=800&q=80",
-            video: "https://www.youtube.com/results?search_query=face+pull"
-          }
-        ]
-      },
-      legs: {
-        title: "רגליים",
-        exercises: [
-          {
-            name: "Squat",
-            muscle: "Legs",
-            image: "https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=800&q=80",
-            video: "https://www.youtube.com/results?search_query=squat"
-          },
-          {
-            name: "Lunges",
-            muscle: "Legs",
-            image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80",
-            video: "https://www.youtube.com/results?search_query=lunges"
-          },
-          {
-            name: "Leg Press",
-            muscle: "Legs",
-            image: "https://images.unsplash.com/photo-1517343985841-f8b2d66e010b?auto=format&fit=crop&w=800&q=80",
-            video: "https://www.youtube.com/results?search_query=leg+press"
-          }
-        ]
+  timerInterval = setInterval(() => {
+    const m = String(Math.floor(seconds / 60)).padStart(2,'0');
+    const s = String(seconds % 60).padStart(2,'0');
+    timerBox.innerText = m + ":" + s;
+
+    if (seconds <= 0) {
+      clearInterval(timerInterval);
+      timerBox.style.display = "none";
+
+      if (isRest) {
+        speak("יאללה חזרה לעבודה");
       }
-    };
 
-    let timerInterval = null;
-    let remaining = 0;
-
-    function formatTime(seconds) {
-      const m = String(Math.floor(seconds / 60)).padStart(2, "0");
-      const s = String(seconds % 60).padStart(2, "0");
-      return `${m}:${s}`;
     }
 
-    function showToast(message) {
-      const toast = document.getElementById("toast");
-      toast.innerText = message;
-      toast.classList.remove("hidden");
-      setTimeout(() => {
-        toast.classList.add("hidden");
-      }, 2500);
-    }
+    seconds--;
+  }, 1000);
+}
 
-    function runTimer(label, seconds, doneMessage) {
-      clearInterval(timerInterval);
-      remaining = seconds;
-      document.getElementById("timerMode").innerText = label;
-      document.getElementById("timerDisplay").innerText = formatTime(remaining);
+// קול בעברית
+function speak(text) {
+  const msg = new SpeechSynthesisUtterance(text);
+  msg.lang = "he-IL";
+  speechSynthesis.speak(msg);
+}
 
-      timerInterval = setInterval(() => {
-        remaining--;
-        document.getElementById("timerDisplay").innerText = formatTime(remaining);
+renderWorkout();
+</script>
 
-        if (remaining <= 0) {
-          clearInterval(timerInterval);
-          document.getElementById("timerDisplay").innerText = "00:00";
-          showToast(doneMessage);
-        }
-      }, 1000);
-    }
-
-    function startActivityTimer(seconds) {
-      runTimer("זמן עבודה", seconds, "כל הכבוד, ממשיכים");
-    }
-
-    function startRestTimer(seconds) {
-      runTimer("זמן מנוחה", seconds, "יאללה חזרה לעבודה");
-    }
-
-    function stopTimer() {
-      clearInterval(timerInterval);
-      document.getElementById("timerMode").innerText = "טיימר מנוחה/עבודה";
-      document.getElementById("timerDisplay").innerText = "00:00";
-    }
-
-    function showWorkout(type, btn = null) {
-      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-      if (btn) btn.classList.add("active");
-
-      const data = workouts[type];
-      const list = document.getElementById("exerciseList");
-      document.getElementById("home").classList.add("hidden");
-      document.getElementById("workoutScreen").classList.remove("hidden");
-      document.getElementById("workoutTitle").innerText = data.title;
-      list.innerHTML = "";
-
-      data.exercises.forEach((exercise) => {
-        const card = document.createElement("div");
-        card.className = "exercise-card";
-        card.innerHTML = `
-          <div class="exercise-top">
-            <img src="${exercise.image}" alt="${exercise.name}">
-            <div class="exercise-info">
-              <h3 class="exercise-name">${exercise.name}</h3>
-              <p class="exercise-muscle">${exercise.muscle}</p>
-              <div class="exercise-meta">Rest time - 01:00</div>
-              <div class="mini-actions">
-                <a class="mini-btn" href="${exercise.video}" target="_blank">YouTube</a>
-                <button class="mini-btn" onclick="startActivityTimer(45)">עבודה</button>
-                <button class="mini-btn" onclick="startRestTimer(60)">60</button>
-                <button class="mini-btn" onclick="startRestTimer(90)">90</button>
-                <button class="mini-btn" onclick="startRestTimer(120)">120</button>
-              </div>
-            </div>
-          </div>
-          <div class="sets-area">
-            <div class="set-row">
-              <div class="dot"></div>
-              <div>1 Set</div>
-              <div>8 Reps</div>
-              <div>20 Kg</div>
-            </div>
-            <div class="set-row">
-              <div class="dot"></div>
-              <div>1 Set</div>
-              <div>8 Reps</div>
-              <div>22.5 Kg</div>
-            </div>
-            <div class="set-row">
-              <div class="dot"></div>
-              <div>1 Set</div>
-              <div>8 Reps</div>
-              <div>25 Kg</div>
-            </div>
-          </div>
-        `;
-        list.appendChild(card);
-      });
-    }
-
-    function goBack() {
-      document.getElementById("home").classList.remove("hidden");
-      document.getElementById("workoutScreen").classList.add("hidden");
-      document.getElementById("exerciseList").innerHTML = "";
-    }
-  </script>
 </body>
 </html>
