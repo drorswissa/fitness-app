@@ -19,7 +19,6 @@
       --danger:#7f1d1d;
       --white:#f8fafc;
       --shadow:0 12px 28px rgba(0,0,0,.32);
-      --radius:22px;
     }
 
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -82,10 +81,7 @@
       cursor:pointer;
     }
 
-    .screen{
-      padding:14px;
-    }
-
+    .screen{padding:14px}
     .hidden{display:none}
 
     .hero{
@@ -240,6 +236,49 @@
       border-bottom-color:#fff;
     }
 
+    .progress-card{
+      background:linear-gradient(180deg,var(--card) 0%,var(--card2) 100%);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:14px;
+      margin-bottom:14px;
+      box-shadow:var(--shadow);
+    }
+
+    .progress-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .progress-title{
+      font-size:14px;
+      font-weight:800;
+    }
+
+    .progress-text{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .progress-bar{
+      width:100%;
+      height:10px;
+      background:#1a2330;
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .progress-fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,var(--green),var(--green2));
+      border-radius:999px;
+      transition:width .25s ease;
+    }
+
     .exercise-card{
       background:linear-gradient(180deg,#151b23 0%, #10161d 100%);
       border:1px solid var(--line);
@@ -247,6 +286,12 @@
       overflow:hidden;
       box-shadow:var(--shadow);
       margin-bottom:14px;
+      transition:.2s ease;
+    }
+
+    .exercise-card.current{
+      outline:2px solid rgba(30,215,96,.45);
+      box-shadow:0 0 0 3px rgba(30,215,96,.08), var(--shadow);
     }
 
     .exercise-top{
@@ -388,6 +433,7 @@
     .mini-btn.work{background:#1a3324;color:#d8ffe6}
     .mini-btn.rest{background:#223244;color:#fff}
     .mini-btn.stop{background:#5a1c1c;color:#fff}
+    .mini-btn.next{background:var(--green);color:#06210e}
 
     .save-bar{
       display:flex;
@@ -526,6 +572,7 @@
       flex-direction:column;
       align-items:center;
       gap:4px;
+      cursor:pointer;
     }
 
     .spotify-embed{
@@ -570,7 +617,7 @@
     <div class="screen" id="homeScreen">
       <div class="hero">
         <h1>האימון שלך</h1>
-        <p>אפליקציית אימונים עם מעקב, היסטוריה, טיימר חכם, סטים editable ומראה מודרני.</p>
+        <p>אפליקציית אימונים עם היסטוריה, טיימר חכם, התקדמות, סימון סטים ועיצוב מודרני.</p>
 
         <div class="hero-row">
           <button class="pill pill-dark" onclick="showWorkout('chest')">▶ התחל אימון</button>
@@ -637,10 +684,21 @@
         <button class="tab" id="tab-fullbody" onclick="showWorkout('fullbody', null, true)">משולב</button>
       </div>
 
+      <div class="progress-card">
+        <div class="progress-top">
+          <div class="progress-title">התקדמות באימון</div>
+          <div class="progress-text" id="progressText">0/6</div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
       <div id="exerciseList"></div>
 
       <div class="save-bar">
         <button class="primary-btn" onclick="saveCurrentWorkout()">💾 שמור אימון</button>
+        <button class="secondary-btn" onclick="goToNextExercise()">⏭ תרגיל הבא</button>
         <button class="secondary-btn" onclick="showHistory()">📚 היסטוריה</button>
       </div>
     </div>
@@ -668,7 +726,7 @@
       <div class="floating-timer-label" id="timerMode">טיימר</div>
       <div class="floating-timer-value" id="timerDisplay">00:00</div>
     </div>
-    <div class="floating-timer-note">עבודה, מנוחה, עצירה והודעות קוליות</div>
+    <div class="floating-timer-note">עבודה, מנוחה, עצירה, מעבר לתרגיל הבא</div>
   </div>
 
   <div class="bottom-nav">
@@ -676,7 +734,7 @@
       <button onclick="startActivityTimer()">▶</button>
       <button onclick="startRestTimer()">⏸</button>
       <button onclick="stopTimer()">■</button>
-      <button onclick="saveCurrentWorkout()">＋</button>
+      <button onclick="goToNextExercise()">⏭</button>
     </div>
 
     <div class="nav-icons">
@@ -688,8 +746,8 @@
   </div>
 
   <script>
-    const HISTORY_KEY = "workout_history_pro_v3";
-    const DRAFT_KEY = "workout_draft_pro_v3";
+    const HISTORY_KEY = "workout_history_pro_v4";
+    const DRAFT_KEY = "workout_draft_pro_v4";
 
     const workouts = {
       chest: {
@@ -739,6 +797,7 @@
     };
 
     let currentWorkoutKey = null;
+    let currentExerciseIndex = 0;
     let timerInterval = null;
     let remaining = 0;
     let currentTimerType = null;
@@ -762,7 +821,7 @@
         return;
       }
       const msg = new SpeechSynthesisUtterance(text);
-      msg.lang = "he-IL";
+      msg.lang = "en-US";
       msg.rate = 1;
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(msg);
@@ -836,6 +895,7 @@
       if (!drafts[type]) drafts[type] = createDefaultDraft(type);
       drafts[type][exIndex][setIndex][field] = value;
       saveDrafts(drafts);
+      updateProgress();
     }
 
     function renderExercises(type){
@@ -849,7 +909,9 @@
         const sets = draft[exIndex];
 
         const card = document.createElement("div");
-        card.className = "exercise-card";
+        card.className = "exercise-card" + (exIndex === currentExerciseIndex ? " current" : "");
+        card.id = `exercise-card-${exIndex}`;
+
         card.innerHTML = `
           <div class="exercise-top">
             <img class="exercise-img" src="${exercise.img}" alt="${exercise.name}">
@@ -887,16 +949,39 @@
                 <button class="mini-btn work" onclick="startActivityTimer()">סט</button>
                 <button class="mini-btn rest" onclick="startRestTimer()">מנוחה</button>
                 <button class="mini-btn stop" onclick="stopTimer()">עצור</button>
+                <button class="mini-btn next" onclick="goToNextExercise()">הבא</button>
               </div>
             </div>
           </div>
         `;
         list.appendChild(card);
       });
+
+      updateProgress();
+      scrollToCurrentExercise();
+    }
+
+    function updateProgress(){
+      if (!currentWorkoutKey) return;
+      const draft = ensureDraft(currentWorkoutKey);
+      const doneExercises = draft.filter(ex => ex.every(set => set.done)).length;
+      const total = draft.length;
+      const percent = Math.round((doneExercises / total) * 100);
+
+      document.getElementById("progressText").innerText = `${doneExercises}/${total}`;
+      document.getElementById("progressFill").style.width = `${percent}%`;
+    }
+
+    function scrollToCurrentExercise(){
+      const el = document.getElementById(`exercise-card-${currentExerciseIndex}`);
+      if (el) {
+        el.scrollIntoView({ behavior:"smooth", block:"center" });
+      }
     }
 
     function showWorkout(type, btn = null, keepScreen = false){
       currentWorkoutKey = type;
+      currentExerciseIndex = 0;
       setActiveTopWorkoutTab(type);
       document.getElementById("workoutTitle").innerText = workouts[type].title;
       renderExercises(type);
@@ -929,8 +1014,9 @@
           document.getElementById("timerDisplay").innerText = "00:00";
 
           if (type === "rest") {
-            showToast("קדימה לעבודה, נחת מספיק");
-            speak("קדימה לעבודה, נחת מספיק");
+            showToast("REST IS DONE");
+            speak("REST IS DONE");
+            goToNextExercise(true);
           } else {
             showToast("זמן הסט הסתיים");
           }
@@ -961,12 +1047,24 @@
     function stopTimer(){
       clearInterval(timerInterval);
       if (currentTimerType === "rest") {
-        showToast("קדימה לעבודה, נחת מספיק");
-        speak("קדימה לעבודה, נחת מספיק");
+        showToast("REST IS DONE");
+        speak("REST IS DONE");
       }
       currentTimerType = null;
       document.getElementById("timerMode").innerText = "טיימר";
       document.getElementById("timerDisplay").innerText = "00:00";
+    }
+
+    function goToNextExercise(fromAuto = false){
+      if (!currentWorkoutKey) return;
+      const total = workouts[currentWorkoutKey].exercises.length;
+      if (currentExerciseIndex < total - 1) {
+        currentExerciseIndex++;
+        renderExercises(currentWorkoutKey);
+        if (!fromAuto) showToast("עבר לתרגיל הבא");
+      } else {
+        showToast("זה התרגיל האחרון");
+      }
     }
 
     function saveCurrentWorkout(){
