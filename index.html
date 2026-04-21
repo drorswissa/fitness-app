@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout App Live</title>
+  <title>Workout App Builder</title>
   <style>
     :root{
       --bg:#0b0f14;
@@ -17,6 +17,7 @@
       --green:#1ed760;
       --green2:#17c874;
       --danger:#ff5a67;
+      --warning:#ffb020;
       --shadow:0 18px 40px rgba(0,0,0,.30);
     }
 
@@ -27,6 +28,7 @@
       color:var(--text);
       font-family:Arial,sans-serif;
       min-height:100%;
+      scroll-behavior:smooth;
     }
     body{min-height:100vh}
     .hidden{display:none}
@@ -35,7 +37,7 @@
       width:min(430px,100%);
       margin:0 auto;
       min-height:100vh;
-      padding-bottom:115px;
+      padding-bottom:118px;
     }
 
     .topbar{
@@ -83,16 +85,19 @@
       cursor:pointer;
     }
 
-    .screen{padding:14px;animation:fadeUp .25s ease}
+    .screen{padding:14px;animation:fadeUp .2s ease}
+
+    .hero,.panel-card,.history-card,.workout-card,.progress-card,.live-card,.stat{
+      background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+    }
 
     .hero{
-      background:linear-gradient(135deg,#18212d 0%, #10161f 100%);
-      color:#fff;
-      border:1px solid var(--line);
-      border-radius:28px;
       padding:18px;
-      box-shadow:var(--shadow);
       margin-bottom:16px;
+      background:linear-gradient(135deg,#18212d 0%, #10161f 100%);
     }
 
     .hero h1{
@@ -116,7 +121,7 @@
       margin-top:14px;
     }
 
-    .pill{
+    .pill,.mini,.tool-btn,.pill-link{
       border:none;
       border-radius:999px;
       padding:10px 14px;
@@ -127,6 +132,7 @@
       align-items:center;
       justify-content:center;
       gap:6px;
+      text-decoration:none;
     }
 
     .pill-dark{background:var(--green);color:#06200f}
@@ -139,20 +145,12 @@
       margin-top:14px;
     }
 
-    .stat,.panel-card,.history-card,.workout-card,.progress-card,.live-card{
-      background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
-      border:1px solid var(--line);
-      border-radius:22px;
-      padding:16px;
-      box-shadow:var(--shadow);
-    }
-
+    .stat{padding:12px}
     .stat-value{
       font-size:22px;
       font-weight:900;
       margin-bottom:4px;
     }
-
     .stat-label{
       font-size:12px;
       color:rgba(255,255,255,.72);
@@ -161,10 +159,10 @@
     .workout-list{display:grid;gap:12px}
 
     .workout-card{
+      padding:16px;
       cursor:pointer;
       transition:transform .16s ease,border-color .16s ease;
     }
-
     .workout-card:hover{border-color:rgba(30,215,96,.25)}
     .workout-card:active{transform:scale(.99)}
 
@@ -215,7 +213,6 @@
       padding-bottom:2px;
       margin-bottom:14px;
     }
-
     .tabs::-webkit-scrollbar{display:none}
 
     .tab{
@@ -229,12 +226,12 @@
       padding:8px 0;
       border-bottom:2px solid transparent;
     }
-
     .tab.active{
       color:#fff;
       border-bottom-color:#fff;
     }
 
+    .progress-card{padding:14px;margin-bottom:14px}
     .progress-top{
       display:flex;
       align-items:center;
@@ -242,10 +239,8 @@
       gap:10px;
       margin-bottom:10px;
     }
-
     .progress-top strong{font-size:14px}
     .progress-top span{font-size:12px;color:var(--muted)}
-
     .progress-bar{
       width:100%;
       height:10px;
@@ -253,7 +248,6 @@
       border-radius:999px;
       overflow:hidden;
     }
-
     .progress-fill{
       height:100%;
       width:0%;
@@ -262,41 +256,29 @@
       transition:width .25s ease;
     }
 
-    .live-card{
-      padding:14px;
-      animation:fadeUp .28s ease;
-    }
-
+    .live-card{padding:14px}
     .live-top{
       display:grid;
       grid-template-columns:92px 1fr;
       gap:14px;
       align-items:center;
     }
-
     .live-img{
-      width:92px;
-      height:92px;
-      border-radius:20px;
-      object-fit:cover;
-      background:#fff;
+      width:92px;height:92px;border-radius:20px;object-fit:cover;background:#fff;
       border:1px solid rgba(255,255,255,.06);
     }
-
     .live-kicker{
       color:var(--green);
       font-size:12px;
       font-weight:900;
       margin-bottom:4px;
     }
-
     .live-title{
       font-size:22px;
       font-weight:900;
       line-height:1.08;
       margin-bottom:6px;
     }
-
     .live-sub{
       font-size:13px;
       color:var(--muted);
@@ -314,37 +296,22 @@
       justify-content:space-between;
       gap:10px;
     }
-
     .live-timer-label{
       font-size:12px;
       color:var(--muted);
       font-weight:800;
     }
-
     .live-timer-value{
       font-size:30px;
       font-weight:900;
       letter-spacing:1px;
     }
 
-    .live-actions{
+    .live-actions,.bottom-tools,.editor-actions{
       display:flex;
       gap:8px;
       flex-wrap:wrap;
       margin-top:14px;
-    }
-
-    .mini{
-      border:none;
-      border-radius:999px;
-      padding:9px 12px;
-      font-size:12px;
-      font-weight:900;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
     }
 
     .mini-work{background:#193325;color:#d7ffe5}
@@ -353,11 +320,14 @@
     .mini-video{background:#1c2531;color:#fff}
     .mini-next{background:var(--green);color:#06200f}
     .mini-prev{background:#1a2230;color:#fff}
+    .tool-primary{background:#1a3324;color:#d8ffe6}
+    .tool-secondary{background:#223244;color:#fff}
+    .tool-danger{background:#4a1c23;color:#fff}
+    .tool-warning{background:#3b2d12;color:#ffd887}
 
     .sets-box{
       margin-top:14px;
       background:#070b10;
-      border-top:1px solid rgba(255,255,255,.04);
       border-radius:18px;
       padding:12px 14px 14px;
     }
@@ -370,7 +340,6 @@
       padding:10px 0;
       border-bottom:1px solid rgba(255,255,255,.04);
     }
-
     .set-row:last-child{border-bottom:none;padding-bottom:0}
 
     .set-check{
@@ -394,62 +363,38 @@
       border-radius:12px;
       padding:8px 10px;
     }
-
-    .field input{
+    .field input,.field textarea,.editor-grid input,.editor-grid select{
       width:100%;
       border:none;
       outline:none;
       background:transparent;
       color:#fff;
       font-size:14px;
-      text-align:center;
     }
-
+    .field input{text-align:center}
     .field span{
       color:#90a0b3;
       font-size:12px;
       white-space:nowrap;
     }
 
-    .history-item{
+    .history-card,.panel-card{padding:16px}
+    .history-item,.editor-item{
       padding:10px 0;
       border-top:1px solid rgba(255,255,255,.06);
     }
-
-    .history-item:first-child{border-top:none;padding-top:0}
-
+    .history-item:first-child,.editor-item:first-child{border-top:none;padding-top:0}
     .history-title{
       font-size:14px;
       font-weight:900;
       margin-bottom:4px;
     }
-
     .history-meta{
       font-size:12px;
       color:var(--muted);
     }
 
-    .bottom-tools{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-
-    .tool-btn{
-      border:none;
-      border-radius:999px;
-      padding:11px 14px;
-      font-size:12px;
-      font-weight:900;
-      cursor:pointer;
-    }
-
-    .tool-primary{background:#1a3324;color:#d8ffe6}
-    .tool-secondary{background:#223244;color:#fff}
-    .tool-danger{background:#4a1c23;color:#fff}
-
-    .profile-list{
+    .profile-list,.editor-list{
       display:grid;
       gap:12px;
       margin-top:12px;
@@ -463,25 +408,50 @@
       padding:12px 0;
       border-top:1px solid rgba(255,255,255,.06);
     }
-
     .profile-row:first-child{border-top:none;padding-top:0}
-
-    .profile-row strong{
-      display:block;
-      font-size:14px;
-    }
-
-    .profile-row small{
-      color:var(--muted);
-      font-size:12px;
-    }
-
+    .profile-row strong{display:block;font-size:14px}
+    .profile-row small{color:var(--muted);font-size:12px}
     .profile-row select{
       background:#121a24;
       border:1px solid var(--line);
       color:#fff;
       border-radius:12px;
       padding:9px 10px;
+    }
+
+    .editor-grid{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .editor-grid.two{grid-template-columns:1fr 1fr}
+    .editor-grid.three{grid-template-columns:1fr 1fr 1fr}
+
+    .editor-box{
+      background:#121a24;
+      border-radius:12px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,.04);
+    }
+
+    .editor-box label{
+      display:block;
+      font-size:11px;
+      color:var(--muted);
+      margin-bottom:6px;
+      font-weight:800;
+    }
+
+    .divider{
+      height:1px;background:rgba(255,255,255,.06);margin:12px 0;
+    }
+
+    .summary-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
     }
 
     .bottom-nav{
@@ -581,11 +551,11 @@
     <div class="screen" id="homeScreen">
       <div class="hero">
         <h1>Your Workout</h1>
-        <p>Live mode: one exercise at a time for better focus.</p>
+        <p>Built on your existing workouts, with live mode, editor, stats, history and profile.</p>
 
         <div class="hero-actions">
           <button class="pill pill-dark" onclick="showWorkout('chest')">▶ Start Workout</button>
-          <button class="pill pill-light" onclick="showStats()">📊 Stats</button>
+          <button class="pill pill-light" onclick="showEditor()">✏️ Editor</button>
         </div>
 
         <div class="stats-grid">
@@ -600,24 +570,7 @@
         </div>
       </div>
 
-      <div class="workout-list">
-        <div class="workout-card" onclick="showWorkout('chest')">
-          <h3>חזה + יד קדמית</h3>
-          <p>Chest + Biceps</p>
-        </div>
-        <div class="workout-card" onclick="showWorkout('back')">
-          <h3>גב + יד אחורית</h3>
-          <p>Back + Triceps</p>
-        </div>
-        <div class="workout-card" onclick="showWorkout('shoulders')">
-          <h3>כתפיים + רגליים</h3>
-          <p>Shoulders + Legs</p>
-        </div>
-        <div class="workout-card" onclick="showWorkout('fullbody')">
-          <h3>אימון משולב</h3>
-          <p>Mixed Workout</p>
-        </div>
-      </div>
+      <div class="workout-list" id="homeWorkoutList"></div>
 
       <div class="spotify-embed">
         <iframe
@@ -638,12 +591,7 @@
         <h2 class="section-title" id="workoutTitle"></h2>
       </div>
 
-      <div class="tabs">
-        <button class="tab active" id="tab-chest" onclick="showWorkout('chest', null, true)">Chest+Biceps</button>
-        <button class="tab" id="tab-back" onclick="showWorkout('back', null, true)">Back+Triceps</button>
-        <button class="tab" id="tab-shoulders" onclick="showWorkout('shoulders', null, true)">Shoulders+Legs</button>
-        <button class="tab" id="tab-fullbody" onclick="showWorkout('fullbody', null, true)">Mixed</button>
-      </div>
+      <div class="tabs" id="workoutTabs"></div>
 
       <div class="progress-card">
         <div class="progress-top">
@@ -759,6 +707,56 @@
         </div>
       </div>
     </div>
+
+    <div class="screen hidden" id="editorScreen">
+      <div class="section-head">
+        <button class="back-btn" onclick="showHome()">⬅ Back</button>
+        <h2 class="section-title">Workout Editor</h2>
+      </div>
+
+      <div class="panel-card">
+        <h3>Workouts</h3>
+        <p>Edit, duplicate, delete, add and reorder.</p>
+        <div class="bottom-tools">
+          <button class="tool-btn tool-primary" onclick="addWorkout()">＋ Add Workout</button>
+        </div>
+        <div class="editor-list" id="editorWorkoutList"></div>
+      </div>
+
+      <div class="panel-card" style="margin-top:14px">
+        <h3 id="editorWorkoutTitle">Select a workout</h3>
+        <p>Edit exercises inside the selected workout.</p>
+        <div class="bottom-tools">
+          <button class="tool-btn tool-primary" onclick="addExercise()">＋ Add Exercise</button>
+        </div>
+        <div class="editor-list" id="editorExerciseList"></div>
+      </div>
+    </div>
+
+    <div class="screen hidden" id="summaryScreen">
+      <div class="section-head">
+        <button class="back-btn" onclick="showHome()">⬅ Back</button>
+        <h2 class="section-title">Workout Summary</h2>
+      </div>
+
+      <div class="panel-card">
+        <h3>Finished Workout</h3>
+        <div class="summary-grid">
+          <div class="stat">
+            <div class="stat-value" id="summarySets">0</div>
+            <div class="stat-label">Checked sets</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="summaryVolume">0</div>
+            <div class="stat-label">Volume</div>
+          </div>
+        </div>
+        <div class="bottom-tools">
+          <button class="tool-btn tool-primary" onclick="showHome()">Done</button>
+          <button class="tool-btn tool-secondary" onclick="showStats()">View Stats</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="bottom-nav">
@@ -774,58 +772,61 @@
       <span onclick="showProfile()">👤<small>Profile</small></span>
       <span onclick="showStats()">📊<small>Stats</small></span>
       <span onclick="showHistory()">📚<small>History</small></span>
-      <span onclick="showWorkout(currentWorkoutKey || 'chest')">🏋️<small>Workout</small></span>
+      <span onclick="showEditor()">✏️<small>Editor</small></span>
+      <span onclick="showWorkout(currentWorkoutKey || getFirstWorkoutKey())">🏋️<small>Workout</small></span>
     </div>
   </div>
 
   <script>
-    const HISTORY_KEY = "workout_history_live_v1";
-    const DRAFT_KEY = "workout_draft_live_v1";
-    const PROFILE_KEY = "workout_profile_live_v1";
+    const HISTORY_KEY = "workout_history_builder_v1";
+    const DRAFT_KEY = "workout_draft_builder_v1";
+    const PROFILE_KEY = "workout_profile_builder_v1";
+    const WORKOUTS_KEY = "workout_definitions_builder_v1";
+    const LAST_WEIGHTS_KEY = "last_weights_builder_v1";
 
-    const workouts = {
+    const defaultWorkouts = {
       chest: {
         title: "חזה + יד קדמית",
         exercises: [
-          { name: "Machine Chest Press", muscle: "Chest", img: "https://img.youtube.com/vi/sqNwDkUU_Ps/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=machine+chest+press" },
-          { name: "Incline Dumbbell Press", muscle: "Chest", img: "https://img.youtube.com/vi/8iPEnn-ltC8/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=incline+dumbbell+press" },
-          { name: "Pec Deck Fly", muscle: "Chest", img: "https://img.youtube.com/vi/8j6SPW5DzzE/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=pec+deck+fly" },
-          { name: "Cable Chest Fly", muscle: "Chest", img: "https://img.youtube.com/vi/eozdVDA78K0/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=cable+chest+fly" },
-          { name: "Hammer Curl", muscle: "Biceps", img: "https://img.youtube.com/vi/zC3nLlEvin4/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=hammer+curl" },
-          { name: "Cable Curl", muscle: "Biceps", img: "https://img.youtube.com/vi/NFzTWp2qpiE/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=cable+curl" }
+          { name: "Machine Chest Press", muscle: "Chest", img: "https://img.youtube.com/vi/sqNwDkUU_Ps/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=machine+chest+press", sets: 3, defaultReps: 8, defaultWeight: 20 },
+          { name: "Incline Dumbbell Press", muscle: "Chest", img: "https://img.youtube.com/vi/8iPEnn-ltC8/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=incline+dumbbell+press", sets: 3, defaultReps: 8, defaultWeight: 18 },
+          { name: "Pec Deck Fly", muscle: "Chest", img: "https://img.youtube.com/vi/8j6SPW5DzzE/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=pec+deck+fly", sets: 3, defaultReps: 10, defaultWeight: 14 },
+          { name: "Cable Chest Fly", muscle: "Chest", img: "https://img.youtube.com/vi/eozdVDA78K0/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=cable+chest+fly", sets: 3, defaultReps: 10, defaultWeight: 12 },
+          { name: "Hammer Curl", muscle: "Biceps", img: "https://img.youtube.com/vi/zC3nLlEvin4/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=hammer+curl", sets: 3, defaultReps: 10, defaultWeight: 10 },
+          { name: "Cable Curl", muscle: "Biceps", img: "https://img.youtube.com/vi/NFzTWp2qpiE/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=cable+curl", sets: 3, defaultReps: 10, defaultWeight: 10 }
         ]
       },
       back: {
         title: "גב + יד אחורית",
         exercises: [
-          { name: "Lat Pulldown", muscle: "Back", img: "https://img.youtube.com/vi/SALxEARiMkw/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=lat+pulldown" },
-          { name: "Seated Cable Row", muscle: "Back", img: "https://img.youtube.com/vi/GZbfZ033f74/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=seated+cable+row" },
-          { name: "Chest Supported Row", muscle: "Back", img: "https://img.youtube.com/vi/Ze79BVvExdA/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=chest+supported+row" },
-          { name: "Rope Triceps Pushdown", muscle: "Triceps", img: "https://img.youtube.com/vi/vB5OHsJ3EME/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=rope+triceps+pushdown" },
-          { name: "Overhead Cable Extension", muscle: "Triceps", img: "https://img.youtube.com/vi/tmgfpdpQ5sk/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=overhead+cable+extension" },
-          { name: "Single Arm Cable Pushdown", muscle: "Triceps", img: "https://img.youtube.com/vi/kiuVAaQawxk/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=single+arm+cable+triceps+pushdown" }
+          { name: "Lat Pulldown", muscle: "Back", img: "https://img.youtube.com/vi/SALxEARiMkw/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=lat+pulldown", sets: 3, defaultReps: 8, defaultWeight: 30 },
+          { name: "Seated Cable Row", muscle: "Back", img: "https://img.youtube.com/vi/GZbfZ033f74/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=seated+cable+row", sets: 3, defaultReps: 8, defaultWeight: 30 },
+          { name: "Chest Supported Row", muscle: "Back", img: "https://img.youtube.com/vi/Ze79BVvExdA/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=chest+supported+row", sets: 3, defaultReps: 10, defaultWeight: 24 },
+          { name: "Rope Triceps Pushdown", muscle: "Triceps", img: "https://img.youtube.com/vi/vB5OHsJ3EME/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=rope+triceps+pushdown", sets: 3, defaultReps: 10, defaultWeight: 20 },
+          { name: "Overhead Cable Extension", muscle: "Triceps", img: "https://img.youtube.com/vi/tmgfpdpQ5sk/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=overhead+cable+extension", sets: 3, defaultReps: 10, defaultWeight: 18 },
+          { name: "Single Arm Cable Pushdown", muscle: "Triceps", img: "https://img.youtube.com/vi/kiuVAaQawxk/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=single+arm+cable+triceps+pushdown", sets: 3, defaultReps: 10, defaultWeight: 12 }
         ]
       },
       shoulders: {
         title: "כתפיים + רגליים",
         exercises: [
-          { name: "Arnold Press", muscle: "Shoulders", img: "https://img.youtube.com/vi/6Z15_WdXmVw/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=arnold+press" },
-          { name: "Dumbbell Shoulder Press", muscle: "Shoulders", img: "https://img.youtube.com/vi/qEwKCR5JCog/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=dumbbell+shoulder+press" },
-          { name: "Alternating Lateral Raise", muscle: "Shoulders", img: "https://img.youtube.com/vi/wc371SfWq2w/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=alternating+lateral+raise" },
-          { name: "Barbell Squat", muscle: "Legs", img: "https://img.youtube.com/vi/xqvCmoLULNY/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=barbell+squat" },
-          { name: "Goblet Squat", muscle: "Legs", img: "https://img.youtube.com/vi/6xwGFn-J_Q4/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=goblet+squat" },
-          { name: "Bulgarian Split Squat", muscle: "Legs", img: "https://img.youtube.com/vi/2C-uNgKwPLE/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=bulgarian+split+squat" }
+          { name: "Arnold Press", muscle: "Shoulders", img: "https://img.youtube.com/vi/6Z15_WdXmVw/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=arnold+press", sets: 3, defaultReps: 10, defaultWeight: 12 },
+          { name: "Dumbbell Shoulder Press", muscle: "Shoulders", img: "https://img.youtube.com/vi/qEwKCR5JCog/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=dumbbell+shoulder+press", sets: 3, defaultReps: 8, defaultWeight: 14 },
+          { name: "Alternating Lateral Raise", muscle: "Shoulders", img: "https://img.youtube.com/vi/wc371SfWq2w/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=alternating+lateral+raise", sets: 3, defaultReps: 12, defaultWeight: 8 },
+          { name: "Barbell Squat", muscle: "Legs", img: "https://img.youtube.com/vi/xqvCmoLULNY/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=barbell+squat", sets: 3, defaultReps: 8, defaultWeight: 40 },
+          { name: "Goblet Squat", muscle: "Legs", img: "https://img.youtube.com/vi/6xwGFn-J_Q4/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=goblet+squat", sets: 3, defaultReps: 10, defaultWeight: 16 },
+          { name: "Bulgarian Split Squat", muscle: "Legs", img: "https://img.youtube.com/vi/2C-uNgKwPLE/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=bulgarian+split+squat", sets: 3, defaultReps: 10, defaultWeight: 12 }
         ]
       },
       fullbody: {
         title: "אימון משולב",
         exercises: [
-          { name: "Smith Machine Bench Press", muscle: "Chest", img: "https://img.youtube.com/vi/SCVCLChPQFY/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=smith+machine+bench+press" },
-          { name: "Neutral Grip Lat Pulldown", muscle: "Back", img: "https://img.youtube.com/vi/jJXPqY4nw4U/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=neutral+grip+lat+pulldown" },
-          { name: "Dumbbell Shoulder Press", muscle: "Shoulders", img: "https://img.youtube.com/vi/qEwKCR5JCog/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=dumbbell+shoulder+press" },
-          { name: "Cable Curl", muscle: "Biceps", img: "https://img.youtube.com/vi/NFzTWp2qpiE/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=cable+curl" },
-          { name: "Rope Pushdown", muscle: "Triceps", img: "https://img.youtube.com/vi/vB5OHsJ3EME/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=rope+pushdown" },
-          { name: "Leg Press", muscle: "Legs", img: "https://img.youtube.com/vi/Aq5uxXrXq7c/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=leg+press" }
+          { name: "Smith Machine Bench Press", muscle: "Chest", img: "https://img.youtube.com/vi/SCVCLChPQFY/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=smith+machine+bench+press", sets: 3, defaultReps: 8, defaultWeight: 30 },
+          { name: "Neutral Grip Lat Pulldown", muscle: "Back", img: "https://img.youtube.com/vi/jJXPqY4nw4U/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=neutral+grip+lat+pulldown", sets: 3, defaultReps: 8, defaultWeight: 30 },
+          { name: "Dumbbell Shoulder Press", muscle: "Shoulders", img: "https://img.youtube.com/vi/qEwKCR5JCog/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=dumbbell+shoulder+press", sets: 3, defaultReps: 8, defaultWeight: 14 },
+          { name: "Cable Curl", muscle: "Biceps", img: "https://img.youtube.com/vi/NFzTWp2qpiE/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=cable+curl", sets: 3, defaultReps: 10, defaultWeight: 10 },
+          { name: "Rope Pushdown", muscle: "Triceps", img: "https://img.youtube.com/vi/vB5OHsJ3EME/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=rope+pushdown", sets: 3, defaultReps: 10, defaultWeight: 18 },
+          { name: "Leg Press", muscle: "Legs", img: "https://img.youtube.com/vi/Aq5uxXrXq7c/hqdefault.jpg", video: "https://www.youtube.com/results?search_query=leg+press", sets: 3, defaultReps: 10, defaultWeight: 80 }
         ]
       }
     };
@@ -835,6 +836,25 @@
     let timerInterval = null;
     let currentTimerType = null;
     let currentTimerSeconds = 0;
+    let editorWorkoutKey = null;
+
+    function getWorkouts(){
+      try{
+        const saved = JSON.parse(localStorage.getItem(WORKOUTS_KEY) || "null");
+        if (saved && Object.keys(saved).length) return saved;
+      }catch(e){}
+      localStorage.setItem(WORKOUTS_KEY, JSON.stringify(defaultWorkouts));
+      return JSON.parse(JSON.stringify(defaultWorkouts));
+    }
+
+    function saveWorkouts(data){
+      localStorage.setItem(WORKOUTS_KEY, JSON.stringify(data));
+    }
+
+    function getFirstWorkoutKey(){
+      const workouts = getWorkouts();
+      return Object.keys(workouts)[0];
+    }
 
     function formatTime(seconds){
       const m = String(Math.floor(seconds / 60)).padStart(2,"0");
@@ -891,10 +911,20 @@
       catch(e){ return []; }
     }
 
+    function getLastWeights(){
+      try { return JSON.parse(localStorage.getItem(LAST_WEIGHTS_KEY) || "{}"); }
+      catch(e){ return {}; }
+    }
+
+    function saveLastWeights(data){
+      localStorage.setItem(LAST_WEIGHTS_KEY, JSON.stringify(data));
+    }
+
     function updateHomeStats(){
       const history = getHistory();
       document.getElementById("totalWorkoutsStat").innerText = history.length;
       document.getElementById("weeklyWorkoutsStat").innerText = getWeeklyWorkoutsCount();
+      renderHomeWorkouts();
     }
 
     function getWeeklyWorkoutsCount(){
@@ -905,7 +935,7 @@
     }
 
     function showScreen(id){
-      ["homeScreen","workoutScreen","historyScreen","statsScreen","profileScreen"].forEach(x => {
+      ["homeScreen","workoutScreen","historyScreen","statsScreen","profileScreen","editorScreen","summaryScreen"].forEach(x => {
         document.getElementById(x).classList.add("hidden");
       });
       document.getElementById(id).classList.remove("hidden");
@@ -929,8 +959,27 @@
       stopTimer(true);
     }
 
+    function showEditor(){
+      renderEditorWorkoutList();
+      if (!editorWorkoutKey) editorWorkoutKey = getFirstWorkoutKey();
+      renderEditorExerciseList();
+      showScreen("editorScreen");
+      stopTimer(true);
+    }
+
+    function renderHomeWorkouts(){
+      const container = document.getElementById("homeWorkoutList");
+      const workouts = getWorkouts();
+      container.innerHTML = Object.entries(workouts).map(([key, workout]) => `
+        <div class="workout-card" onclick="showWorkout('${key}')">
+          <h3>${workout.title}</h3>
+          <p>${workout.exercises.length} exercises</p>
+        </div>
+      `).join("");
+    }
+
     function setActiveTab(type){
-      ["chest","back","shoulders","fullbody"].forEach(key => {
+      Object.keys(getWorkouts()).forEach(key => {
         const el = document.getElementById("tab-" + key);
         if (el) el.classList.remove("active");
       });
@@ -939,11 +988,17 @@
     }
 
     function createDefaultDraft(type){
-      return workouts[type].exercises.map(() => [
-        { reps: 8, weight: 20, done: false },
-        { reps: 8, weight: 22.5, done: false },
-        { reps: 8, weight: 25, done: false }
-      ]);
+      const workouts = getWorkouts();
+      const lastWeights = getLastWeights();
+      return workouts[type].exercises.map(ex => {
+        const remembered = lastWeights[ex.name];
+        const baseWeight = remembered ?? ex.defaultWeight ?? 20;
+        return Array.from({length: ex.sets || 3}, (_, i) => ({
+          reps: ex.defaultReps || 8,
+          weight: baseWeight + (i === 0 ? 0 : i * 2.5),
+          done: false
+        }));
+      });
     }
 
     function getDrafts(){
@@ -964,6 +1019,12 @@
       return drafts[type];
     }
 
+    function resetDraft(type){
+      const drafts = getDrafts();
+      drafts[type] = createDefaultDraft(type);
+      saveDrafts(drafts);
+    }
+
     function updateSet(type, exIndex, setIndex, field, value){
       const drafts = getDrafts();
       if (!drafts[type]) drafts[type] = createDefaultDraft(type);
@@ -979,8 +1040,17 @@
       return "TIMER";
     }
 
+    function renderWorkoutTabs(){
+      const tabs = document.getElementById("workoutTabs");
+      const workouts = getWorkouts();
+      tabs.innerHTML = Object.entries(workouts).map(([key, workout]) => `
+        <button class="tab ${key === currentWorkoutKey ? 'active' : ''}" id="tab-${key}" onclick="showWorkout('${key}', null, true)">${workout.title}</button>
+      `).join("");
+    }
+
     function renderLiveExercise(){
       if (!currentWorkoutKey) return;
+      const workouts = getWorkouts();
       const workout = workouts[currentWorkoutKey];
       const draft = ensureDraft(currentWorkoutKey);
       const ex = workout.exercises[currentExerciseIndex];
@@ -1053,8 +1123,10 @@
     }
 
     function showWorkout(type, btn = null, keepScreen = false){
+      const workouts = getWorkouts();
       currentWorkoutKey = type;
       currentExerciseIndex = 0;
+      renderWorkoutTabs();
       setActiveTab(type);
       document.getElementById("workoutTitle").innerText = workouts[type].title;
       stopTimer(true);
@@ -1123,7 +1195,7 @@
 
     function goToNextExercise(fromAuto = false){
       if (!currentWorkoutKey) return;
-      const total = workouts[currentWorkoutKey].exercises.length;
+      const total = getWorkouts()[currentWorkoutKey].exercises.length;
       if (currentExerciseIndex < total - 1) {
         currentExerciseIndex++;
         renderLiveExercise();
@@ -1148,6 +1220,7 @@
 
     function buildWorkoutPayload(){
       if (!currentWorkoutKey) return null;
+      const workouts = getWorkouts();
       const draft = ensureDraft(currentWorkoutKey);
       return {
         workoutKey: currentWorkoutKey,
@@ -1161,17 +1234,32 @@
       };
     }
 
+    function rememberLastWeights(payload){
+      const map = getLastWeights();
+      payload.exercises.forEach(ex => {
+        const weights = ex.sets.map(s => Number(s.weight || 0)).filter(Boolean);
+        if (weights.length) {
+          map[ex.name] = weights[weights.length - 1];
+        }
+      });
+      saveLastWeights(map);
+    }
+
     function finishWorkout(){
       const payload = buildWorkoutPayload();
       if (!payload) return;
       const history = getHistory();
       history.unshift(payload);
       localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      rememberLastWeights(payload);
       updateHomeStats();
 
       const checkedSets = payload.exercises.reduce((sum, ex) => sum + ex.sets.filter(s => s.done).length, 0);
-      showToast(`Workout finished • ${checkedSets} sets`);
-      showStats();
+      const volume = payload.exercises.reduce((sum, ex) => sum + ex.sets.reduce((a,s) => a + (Number(s.weight||0)*Number(s.reps||0)), 0), 0);
+
+      document.getElementById("summarySets").innerText = checkedSets;
+      document.getElementById("summaryVolume").innerText = Math.round(volume);
+      showScreen("summaryScreen");
     }
 
     function renderHistory(){
@@ -1241,8 +1329,272 @@
       document.getElementById("topExerciseText").innerText = topExercise;
     }
 
+    function renderEditorWorkoutList(){
+      const workouts = getWorkouts();
+      const box = document.getElementById("editorWorkoutList");
+      box.innerHTML = Object.entries(workouts).map(([key, workout], idx, arr) => `
+        <div class="editor-item">
+          <div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
+            <div>
+              <div class="history-title">${workout.title}</div>
+              <div class="history-meta">${workout.exercises.length} exercises</div>
+            </div>
+            <div class="editor-actions">
+              <button class="tool-btn tool-secondary" onclick="selectEditorWorkout('${key}')">Open</button>
+              <button class="tool-btn tool-secondary" onclick="moveWorkout('${key}', -1)">↑</button>
+              <button class="tool-btn tool-secondary" onclick="moveWorkout('${key}', 1)">↓</button>
+              <button class="tool-btn tool-warning" onclick="duplicateWorkout('${key}')">Duplicate</button>
+              <button class="tool-btn tool-danger" onclick="deleteWorkout('${key}')">Delete</button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function selectEditorWorkout(key){
+      editorWorkoutKey = key;
+      renderEditorExerciseList();
+    }
+
+    function renderEditorExerciseList(){
+      const workouts = getWorkouts();
+      const box = document.getElementById("editorExerciseList");
+      const title = document.getElementById("editorWorkoutTitle");
+
+      if (!editorWorkoutKey || !workouts[editorWorkoutKey]) {
+        title.innerText = "Select a workout";
+        box.innerHTML = "";
+        return;
+      }
+
+      const workout = workouts[editorWorkoutKey];
+      title.innerText = workout.title;
+
+      box.innerHTML = workout.exercises.map((ex, idx) => `
+        <div class="editor-item">
+          <div class="editor-grid two">
+            <div class="editor-box">
+              <label>Exercise Name</label>
+              <input value="${escapeHtml(ex.name)}" onchange="editExerciseField(${idx}, 'name', this.value)">
+            </div>
+            <div class="editor-box">
+              <label>Muscle</label>
+              <input value="${escapeHtml(ex.muscle)}" onchange="editExerciseField(${idx}, 'muscle', this.value)">
+            </div>
+          </div>
+
+          <div class="editor-grid two">
+            <div class="editor-box">
+              <label>Image URL</label>
+              <input value="${escapeHtml(ex.img)}" onchange="editExerciseField(${idx}, 'img', this.value)">
+            </div>
+            <div class="editor-box">
+              <label>Video URL</label>
+              <input value="${escapeHtml(ex.video)}" onchange="editExerciseField(${idx}, 'video', this.value)">
+            </div>
+          </div>
+
+          <div class="editor-grid three">
+            <div class="editor-box">
+              <label>Sets</label>
+              <input type="number" min="1" value="${ex.sets || 3}" onchange="editExerciseField(${idx}, 'sets', Number(this.value))">
+            </div>
+            <div class="editor-box">
+              <label>Default Reps</label>
+              <input type="number" min="1" value="${ex.defaultReps || 8}" onchange="editExerciseField(${idx}, 'defaultReps', Number(this.value))">
+            </div>
+            <div class="editor-box">
+              <label>Default Weight</label>
+              <input type="number" min="0" step="0.5" value="${ex.defaultWeight || 0}" onchange="editExerciseField(${idx}, 'defaultWeight', Number(this.value))">
+            </div>
+          </div>
+
+          <div class="editor-actions">
+            <button class="tool-btn tool-secondary" onclick="moveExercise(${idx}, -1)">↑</button>
+            <button class="tool-btn tool-secondary" onclick="moveExercise(${idx}, 1)">↓</button>
+            <button class="tool-btn tool-warning" onclick="duplicateExercise(${idx})">Duplicate</button>
+            <button class="tool-btn tool-danger" onclick="deleteExercise(${idx})">Delete</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function escapeHtml(str){
+      return String(str ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    function addWorkout(){
+      const workouts = getWorkouts();
+      const key = "workout_" + Date.now();
+      workouts[key] = {
+        title: "New Workout",
+        exercises: []
+      };
+      saveWorkouts(workouts);
+      editorWorkoutKey = key;
+      renderEditorWorkoutList();
+      renderEditorExerciseList();
+      renderHomeWorkouts();
+      showToast("Workout added");
+    }
+
+    function duplicateWorkout(key){
+      const workouts = getWorkouts();
+      const copyKey = key + "_copy_" + Date.now();
+      workouts[copyKey] = JSON.parse(JSON.stringify(workouts[key]));
+      workouts[copyKey].title = workouts[key].title + " Copy";
+      saveWorkouts(workouts);
+      renderEditorWorkoutList();
+      renderHomeWorkouts();
+      showToast("Workout duplicated");
+    }
+
+    function deleteWorkout(key){
+      const workouts = getWorkouts();
+      if (Object.keys(workouts).length === 1) {
+        showToast("At least one workout required");
+        return;
+      }
+      delete workouts[key];
+      saveWorkouts(workouts);
+      if (editorWorkoutKey === key) editorWorkoutKey = Object.keys(workouts)[0];
+      renderEditorWorkoutList();
+      renderEditorExerciseList();
+      renderHomeWorkouts();
+      showToast("Workout deleted");
+    }
+
+    function moveWorkout(key, direction){
+      const workouts = getWorkouts();
+      const entries = Object.entries(workouts);
+      const idx = entries.findIndex(([k]) => k === key);
+      const newIdx = idx + direction;
+      if (newIdx < 0 || newIdx >= entries.length) return;
+      [entries[idx], entries[newIdx]] = [entries[newIdx], entries[idx]];
+      const rebuilt = Object.fromEntries(entries);
+      saveWorkouts(rebuilt);
+      renderEditorWorkoutList();
+      renderHomeWorkouts();
+    }
+
+    function addExercise(){
+      if (!editorWorkoutKey) return;
+      const workouts = getWorkouts();
+      workouts[editorWorkoutKey].exercises.push({
+        name: "New Exercise",
+        muscle: "Muscle",
+        img: "https://img.youtube.com/vi/qEwKCR5JCog/hqdefault.jpg",
+        video: "https://www.youtube.com/results?search_query=exercise",
+        sets: 3,
+        defaultReps: 8,
+        defaultWeight: 10
+      });
+      saveWorkouts(workouts);
+      resetDraft(editorWorkoutKey);
+      renderEditorExerciseList();
+      renderHomeWorkouts();
+      showToast("Exercise added");
+    }
+
+    function editExerciseField(index, field, value){
+      const workouts = getWorkouts();
+      workouts[editorWorkoutKey].exercises[index][field] = value;
+      saveWorkouts(workouts);
+      resetDraft(editorWorkoutKey);
+      renderHomeWorkouts();
+      if (currentWorkoutKey === editorWorkoutKey) showWorkout(editorWorkoutKey, null, true);
+    }
+
+    function duplicateExercise(index){
+      const workouts = getWorkouts();
+      const copy = JSON.parse(JSON.stringify(workouts[editorWorkoutKey].exercises[index]));
+      copy.name += " Copy";
+      workouts[editorWorkoutKey].exercises.splice(index + 1, 0, copy);
+      saveWorkouts(workouts);
+      resetDraft(editorWorkoutKey);
+      renderEditorExerciseList();
+      renderHomeWorkouts();
+      showToast("Exercise duplicated");
+    }
+
+    function deleteExercise(index){
+      const workouts = getWorkouts();
+      workouts[editorWorkoutKey].exercises.splice(index, 1);
+      saveWorkouts(workouts);
+      resetDraft(editorWorkoutKey);
+      renderEditorExerciseList();
+      renderHomeWorkouts();
+      showToast("Exercise deleted");
+    }
+
+    function moveExercise(index, direction){
+      const workouts = getWorkouts();
+      const arr = workouts[editorWorkoutKey].exercises;
+      const newIdx = index + direction;
+      if (newIdx < 0 || newIdx >= arr.length) return;
+      [arr[index], arr[newIdx]] = [arr[newIdx], arr[index]];
+      saveWorkouts(workouts);
+      resetDraft(editorWorkoutKey);
+      renderEditorExerciseList();
+      renderHomeWorkouts();
+    }
+
+    function startActivityTimer(){
+      clearInterval(timerInterval);
+      currentTimerType = "work";
+      currentTimerSeconds = 0;
+      renderLiveExercise();
+
+      timerInterval = setInterval(() => {
+        currentTimerSeconds++;
+        updateInlineTimerUI();
+      }, 1000);
+    }
+
+    function startRestTimer(){
+      clearInterval(timerInterval);
+      currentTimerType = "rest";
+      currentTimerSeconds = Number(getProfile().rest);
+      renderLiveExercise();
+
+      timerInterval = setInterval(() => {
+        currentTimerSeconds--;
+        updateInlineTimerUI();
+        if (currentTimerSeconds < 0) {
+          clearInterval(timerInterval);
+          currentTimerSeconds = 0;
+          updateInlineTimerUI();
+          showToast("REST IS DONE");
+          speak("REST IS DONE");
+          currentTimerType = null;
+          renderLiveExercise();
+          goToNextExercise(true);
+        }
+      }, 1000);
+    }
+
+    function updateInlineTimerUI(){
+      const label = document.getElementById("inlineTimerLabel");
+      const value = document.getElementById("inlineTimerValue");
+      if (label) label.innerText = getTimerLabel();
+      if (value) value.innerText = formatTime(currentTimerSeconds);
+    }
+
+    function stopTimer(silent = false){
+      clearInterval(timerInterval);
+      if (!silent && currentTimerType === "rest") {
+        showToast("REST IS DONE");
+        speak("REST IS DONE");
+      }
+      currentTimerType = null;
+      currentTimerSeconds = 0;
+      updateInlineTimerUI();
+      if (currentWorkoutKey && document.getElementById("workoutScreen") && !document.getElementById("workoutScreen").classList.contains("hidden")) renderLiveExercise();
+    }
+
     updateHomeStats();
     loadProfileUI();
+    renderHomeWorkouts();
   </script>
 </body>
 </html>
