@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout App Pro</title>
+  <title>Workout App Live</title>
   <style>
     :root{
       --bg:#0b0f14;
@@ -11,14 +11,12 @@
       --panel:#121821;
       --panel2:#0f141c;
       --card:#171f2b;
-      --soft:#202b39;
       --line:rgba(255,255,255,.06);
       --text:#f5f7fb;
       --muted:#95a2b3;
       --green:#1ed760;
       --green2:#17c874;
       --danger:#ff5a67;
-      --warning:#ffb020;
       --shadow:0 18px 40px rgba(0,0,0,.30);
     }
 
@@ -28,7 +26,7 @@
       background:linear-gradient(180deg,var(--bg) 0%, var(--bg2) 100%);
       color:var(--text);
       font-family:Arial,sans-serif;
-      scroll-behavior:smooth;
+      min-height:100%;
     }
     body{min-height:100vh}
     .hidden{display:none}
@@ -37,15 +35,15 @@
       width:min(430px,100%);
       margin:0 auto;
       min-height:100vh;
-      padding-bottom:110px;
+      padding-bottom:115px;
     }
 
     .topbar{
       position:sticky;
       top:0;
-      z-index:40;
+      z-index:50;
       padding:14px 14px 10px;
-      background:rgba(11,15,20,.9);
+      background:rgba(11,15,20,.92);
       backdrop-filter:blur(14px);
       border-bottom:1px solid var(--line);
     }
@@ -71,7 +69,6 @@
     .plan-title{
       font-size:16px;
       font-weight:900;
-      letter-spacing:.2px;
     }
 
     .menu-btn{
@@ -81,12 +78,12 @@
       background:#070b10;
       color:#fff;
       font-size:22px;
-      box-shadow:var(--shadow);
       border:1px solid var(--line);
+      box-shadow:var(--shadow);
       cursor:pointer;
     }
 
-    .screen{padding:14px}
+    .screen{padding:14px;animation:fadeUp .25s ease}
 
     .hero{
       background:linear-gradient(135deg,#18212d 0%, #10161f 100%);
@@ -96,7 +93,6 @@
       padding:18px;
       box-shadow:var(--shadow);
       margin-bottom:16px;
-      animation:fadeUp .35s ease;
     }
 
     .hero h1{
@@ -143,11 +139,12 @@
       margin-top:14px;
     }
 
-    .stat{
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.07);
-      border-radius:18px;
-      padding:12px;
+    .stat,.panel-card,.history-card,.workout-card,.progress-card,.live-card{
+      background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:16px;
+      box-shadow:var(--shadow);
     }
 
     .stat-value{
@@ -161,26 +158,15 @@
       color:rgba(255,255,255,.72);
     }
 
-    .workout-list{
-      display:grid;
-      gap:12px;
-    }
-
-    .workout-card,.history-card,.panel-card{
-      background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
-      border:1px solid var(--line);
-      border-radius:22px;
-      padding:16px;
-      box-shadow:var(--shadow);
-      animation:fadeUp .28s ease;
-    }
+    .workout-list{display:grid;gap:12px}
 
     .workout-card{
       cursor:pointer;
-      transition:transform .18s ease, border-color .18s ease;
+      transition:transform .16s ease,border-color .16s ease;
     }
-    .workout-card:active{transform:scale(.99)}
+
     .workout-card:hover{border-color:rgba(30,215,96,.25)}
+    .workout-card:active{transform:scale(.99)}
 
     .workout-card h3,.panel-card h3,.history-card h3{
       margin:0 0 6px;
@@ -192,7 +178,7 @@
       margin:0;
       color:var(--muted);
       font-size:14px;
-      line-height:1.45;
+      line-height:1.4;
     }
 
     .section-head{
@@ -229,6 +215,7 @@
       padding-bottom:2px;
       margin-bottom:14px;
     }
+
     .tabs::-webkit-scrollbar{display:none}
 
     .tab{
@@ -242,26 +229,18 @@
       padding:8px 0;
       border-bottom:2px solid transparent;
     }
+
     .tab.active{
       color:#fff;
       border-bottom-color:#fff;
-    }
-
-    .progress-card{
-      background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
-      border:1px solid var(--line);
-      border-radius:22px;
-      padding:14px;
-      margin-bottom:14px;
-      box-shadow:var(--shadow);
     }
 
     .progress-top{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      margin-bottom:10px;
       gap:10px;
+      margin-bottom:10px;
     }
 
     .progress-top strong{font-size:14px}
@@ -283,51 +262,49 @@
       transition:width .25s ease;
     }
 
-    .focus-card{
-      background:linear-gradient(135deg,#18212d 0%, #10161f 100%);
-      border:1px solid rgba(30,215,96,.14);
-      border-radius:24px;
+    .live-card{
       padding:14px;
-      margin-bottom:14px;
-      box-shadow:var(--shadow);
+      animation:fadeUp .28s ease;
     }
 
-    .focus-top{
+    .live-top{
       display:grid;
-      grid-template-columns:84px 1fr;
-      gap:12px;
+      grid-template-columns:92px 1fr;
+      gap:14px;
       align-items:center;
     }
 
-    .focus-img{
-      width:84px;
-      height:84px;
-      border-radius:18px;
+    .live-img{
+      width:92px;
+      height:92px;
+      border-radius:20px;
       object-fit:cover;
       background:#fff;
+      border:1px solid rgba(255,255,255,.06);
     }
 
-    .focus-kicker{
+    .live-kicker{
       color:var(--green);
       font-size:12px;
       font-weight:900;
       margin-bottom:4px;
     }
 
-    .focus-title{
-      font-size:20px;
+    .live-title{
+      font-size:22px;
       font-weight:900;
-      line-height:1.1;
+      line-height:1.08;
       margin-bottom:6px;
     }
 
-    .focus-sub{
+    .live-sub{
       font-size:13px;
       color:var(--muted);
+      line-height:1.35;
     }
 
-    .inline-timer{
-      margin-top:12px;
+    .live-timer{
+      margin-top:14px;
       background:#0d131b;
       border:1px solid rgba(255,255,255,.05);
       border-radius:18px;
@@ -338,19 +315,19 @@
       gap:10px;
     }
 
-    .inline-timer-label{
+    .live-timer-label{
       font-size:12px;
       color:var(--muted);
       font-weight:800;
     }
 
-    .inline-timer-value{
-      font-size:28px;
+    .live-timer-value{
+      font-size:30px;
       font-weight:900;
       letter-spacing:1px;
     }
 
-    .focus-actions{
+    .live-actions{
       display:flex;
       gap:8px;
       flex-wrap:wrap;
@@ -375,72 +352,13 @@
     .mini-stop{background:#4a1c23;color:#fff}
     .mini-video{background:#1c2531;color:#fff}
     .mini-next{background:var(--green);color:#06200f}
-
-    .exercise-card{
-      background:linear-gradient(180deg,#151b23 0%, #10161d 100%);
-      border:1px solid var(--line);
-      border-radius:24px;
-      overflow:hidden;
-      margin-bottom:14px;
-      box-shadow:var(--shadow);
-      opacity:.78;
-      transition:.22s ease;
-    }
-
-    .exercise-card.current{
-      opacity:1;
-      outline:2px solid rgba(30,215,96,.36);
-      transform:translateY(-1px);
-    }
-
-    .exercise-top{
-      display:grid;
-      grid-template-columns:74px 1fr 42px;
-      gap:12px;
-      padding:14px;
-      align-items:center;
-    }
-
-    .exercise-img{
-      width:74px;
-      height:74px;
-      object-fit:cover;
-      border-radius:15px;
-      background:#fff;
-    }
-
-    .exercise-info h4{
-      margin:0 0 4px;
-      font-size:18px;
-      line-height:1.15;
-      font-weight:900;
-    }
-
-    .exercise-muscle{
-      font-size:13px;
-      color:var(--muted);
-      margin-bottom:6px;
-    }
-
-    .exercise-rest{
-      font-size:13px;
-      color:#dce3eb;
-    }
-
-    .video-icon{
-      width:42px;
-      height:42px;
-      border:none;
-      border-radius:14px;
-      background:#1b2431;
-      color:#fff;
-      font-size:17px;
-      cursor:pointer;
-    }
+    .mini-prev{background:#1a2230;color:#fff}
 
     .sets-box{
+      margin-top:14px;
       background:#070b10;
       border-top:1px solid rgba(255,255,255,.04);
+      border-radius:18px;
       padding:12px 14px 14px;
     }
 
@@ -452,10 +370,8 @@
       padding:10px 0;
       border-bottom:1px solid rgba(255,255,255,.04);
     }
-    .set-row:last-child{
-      border-bottom:none;
-      padding-bottom:0;
-    }
+
+    .set-row:last-child{border-bottom:none;padding-bottom:0}
 
     .set-check{
       width:16px;
@@ -499,10 +415,8 @@
       padding:10px 0;
       border-top:1px solid rgba(255,255,255,.06);
     }
-    .history-item:first-child{
-      border-top:none;
-      padding-top:0;
-    }
+
+    .history-item:first-child{border-top:none;padding-top:0}
 
     .history-title{
       font-size:14px;
@@ -549,6 +463,7 @@
       padding:12px 0;
       border-top:1px solid rgba(255,255,255,.06);
     }
+
     .profile-row:first-child{border-top:none;padding-top:0}
 
     .profile-row strong{
@@ -666,7 +581,7 @@
     <div class="screen" id="homeScreen">
       <div class="hero">
         <h1>Your Workout</h1>
-        <p>All buttons are active now. Workout, stats, history and profile all work.</p>
+        <p>Live mode: one exercise at a time for better focus.</p>
 
         <div class="hero-actions">
           <button class="pill pill-dark" onclick="showWorkout('chest')">▶ Start Workout</button>
@@ -740,13 +655,12 @@
         </div>
       </div>
 
-      <div id="focusCard"></div>
-      <div id="exerciseList"></div>
+      <div id="liveExerciseArea"></div>
 
       <div class="bottom-tools">
         <button class="tool-btn tool-primary" onclick="finishWorkout()">✅ Finish Workout</button>
-        <button class="tool-btn tool-secondary" onclick="goToNextExercise()">⏭ Next Exercise</button>
-        <button class="tool-btn tool-secondary" onclick="showHistory()">📚 History</button>
+        <button class="tool-btn tool-secondary" onclick="goToPreviousExercise()">⏮ Previous</button>
+        <button class="tool-btn tool-secondary" onclick="goToNextExercise()">⏭ Next</button>
       </div>
     </div>
 
@@ -849,6 +763,7 @@
 
   <div class="bottom-nav">
     <div class="bottom-pill">
+      <button title="Previous exercise" onclick="goToPreviousExercise()">⏮</button>
       <button title="Next exercise" onclick="goToNextExercise()">⏭</button>
       <button title="Stop timer" onclick="stopTimer()">■</button>
       <button title="Start rest" onclick="startRestTimer()">⏸</button>
@@ -864,9 +779,9 @@
   </div>
 
   <script>
-    const HISTORY_KEY = "workout_history_pro_v7";
-    const DRAFT_KEY = "workout_draft_pro_v7";
-    const PROFILE_KEY = "workout_profile_v1";
+    const HISTORY_KEY = "workout_history_live_v1";
+    const DRAFT_KEY = "workout_draft_live_v1";
+    const PROFILE_KEY = "workout_profile_live_v1";
 
     const workouts = {
       chest: {
@@ -954,12 +869,9 @@
 
     function loadProfileUI(){
       const p = getProfile();
-      const rest = document.getElementById("restSelect");
-      const voice = document.getElementById("voiceLangSelect");
-      const goal = document.getElementById("goalSelect");
-      if (rest) rest.value = p.rest;
-      if (voice) voice.value = p.voice;
-      if (goal) goal.value = p.goal;
+      if (document.getElementById("restSelect")) document.getElementById("restSelect").value = p.rest;
+      if (document.getElementById("voiceLangSelect")) document.getElementById("voiceLangSelect").value = p.voice;
+      if (document.getElementById("goalSelect")) document.getElementById("goalSelect").value = p.goal;
     }
 
     function speak(text){
@@ -987,9 +899,8 @@
 
     function getWeeklyWorkoutsCount(){
       const history = getHistory();
-      const now = new Date();
       const weekAgo = new Date();
-      weekAgo.setDate(now.getDate() - 7);
+      weekAgo.setDate(weekAgo.getDate() - 7);
       return history.filter(item => new Date(item.savedAt) >= weekAgo).length;
     }
 
@@ -1059,7 +970,7 @@
       drafts[type][exIndex][setIndex][field] = value;
       saveDrafts(drafts);
       updateProgress();
-      renderFocusCard();
+      renderLiveExercise();
     }
 
     function getTimerLabel(){
@@ -1068,89 +979,60 @@
       return "TIMER";
     }
 
-    function renderFocusCard(){
+    function renderLiveExercise(){
       if (!currentWorkoutKey) return;
       const workout = workouts[currentWorkoutKey];
       const draft = ensureDraft(currentWorkoutKey);
       const ex = workout.exercises[currentExerciseIndex];
       const sets = draft[currentExerciseIndex];
 
-      document.getElementById("focusCard").innerHTML = `
-        <div class="focus-card">
-          <div class="focus-top">
-            <img class="focus-img" src="${ex.img}" alt="${ex.name}">
+      document.getElementById("liveExerciseArea").innerHTML = `
+        <div class="live-card">
+          <div class="live-top">
+            <img class="live-img" src="${ex.img}" alt="${ex.name}">
             <div>
-              <div class="focus-kicker">CURRENT EXERCISE</div>
-              <div class="focus-title">${ex.name}</div>
-              <div class="focus-sub">${ex.muscle} • ${sets.filter(s => s.done).length}/3 sets done</div>
+              <div class="live-kicker">LIVE WORKOUT</div>
+              <div class="live-title">${ex.name}</div>
+              <div class="live-sub">${ex.muscle} • Exercise ${currentExerciseIndex + 1} of ${workout.exercises.length}</div>
             </div>
           </div>
 
-          <div class="inline-timer">
-            <div class="inline-timer-label" id="inlineTimerLabel">${getTimerLabel()}</div>
-            <div class="inline-timer-value" id="inlineTimerValue">${formatTime(currentTimerSeconds)}</div>
+          <div class="live-timer">
+            <div class="live-timer-label" id="inlineTimerLabel">${getTimerLabel()}</div>
+            <div class="live-timer-value" id="inlineTimerValue">${formatTime(currentTimerSeconds)}</div>
           </div>
 
-          <div class="focus-actions">
+          <div class="live-actions">
+            <button class="mini mini-prev" onclick="goToPreviousExercise()">⏮ Previous</button>
             <button class="mini mini-work" onclick="startActivityTimer()">▶ Start Set</button>
             <button class="mini mini-rest" onclick="startRestTimer()">⏸ Rest</button>
             <button class="mini mini-stop" onclick="stopTimer()">■ Stop</button>
             <button class="mini mini-next" onclick="goToNextExercise()">⏭ Next</button>
             <a class="mini mini-video" href="${ex.video}" target="_blank">🎥 Video</a>
           </div>
-        </div>
-      `;
-    }
-
-    function renderExercises(type){
-      const list = document.getElementById("exerciseList");
-      const workout = workouts[type];
-      const draft = ensureDraft(type);
-
-      list.innerHTML = "";
-
-      workout.exercises.forEach((exercise, exIndex) => {
-        const sets = draft[exIndex];
-        const currentClass = exIndex === currentExerciseIndex ? " current" : "";
-
-        const card = document.createElement("div");
-        card.className = "exercise-card" + currentClass;
-        card.innerHTML = `
-          <div class="exercise-top">
-            <img class="exercise-img" src="${exercise.img}" alt="${exercise.name}">
-            <div class="exercise-info">
-              <h4>${exercise.name}</h4>
-              <div class="exercise-muscle">${exercise.muscle}</div>
-              <div class="exercise-rest">Rest time - ${getProfile().rest}s</div>
-            </div>
-            <button class="video-icon" onclick="window.open('${exercise.video}','_blank')">🎥</button>
-          </div>
 
           <div class="sets-box">
             ${sets.map((set, setIndex) => `
               <div class="set-row">
-                <input class="set-check" type="checkbox" ${set.done ? "checked" : ""} onchange="toggleDone('${type}', ${exIndex}, ${setIndex}, this.checked)">
+                <input class="set-check" type="checkbox" ${set.done ? "checked" : ""} onchange="toggleDone('${currentWorkoutKey}', ${currentExerciseIndex}, ${setIndex}, this.checked)">
                 <div class="set-name">${setIndex + 1} Set</div>
 
                 <div class="field">
-                  <input type="number" value="${set.reps}" min="1" onchange="changeReps('${type}', ${exIndex}, ${setIndex}, this.value)">
+                  <input type="number" value="${set.reps}" min="1" onchange="changeReps('${currentWorkoutKey}', ${currentExerciseIndex}, ${setIndex}, this.value)">
                   <span>Reps</span>
                 </div>
 
                 <div class="field">
-                  <input type="number" value="${set.weight}" min="0" step="0.5" onchange="changeWeight('${type}', ${exIndex}, ${setIndex}, this.value)">
+                  <input type="number" value="${set.weight}" min="0" step="0.5" onchange="changeWeight('${currentWorkoutKey}', ${currentExerciseIndex}, ${setIndex}, this.value)">
                   <span>Kg</span>
                 </div>
               </div>
             `).join("")}
           </div>
-        `;
-        list.appendChild(card);
-      });
+        </div>
+      `;
 
-      renderFocusCard();
-      updateProgress();
-      scrollToCurrent();
+      updateInlineTimerUI();
     }
 
     function updateInlineTimerUI(){
@@ -1170,20 +1052,14 @@
       document.getElementById("progressFill").style.width = `${percent}%`;
     }
 
-    function scrollToCurrent(){
-      const cards = document.querySelectorAll(".exercise-card");
-      if (cards[currentExerciseIndex]) {
-        cards[currentExerciseIndex].scrollIntoView({behavior:"smooth", block:"center"});
-      }
-    }
-
     function showWorkout(type, btn = null, keepScreen = false){
       currentWorkoutKey = type;
       currentExerciseIndex = 0;
       setActiveTab(type);
       document.getElementById("workoutTitle").innerText = workouts[type].title;
       stopTimer(true);
-      renderExercises(type);
+      renderLiveExercise();
+      updateProgress();
       showScreen("workoutScreen");
     }
 
@@ -1203,8 +1079,7 @@
       clearInterval(timerInterval);
       currentTimerType = "work";
       currentTimerSeconds = 0;
-      renderFocusCard();
-      updateInlineTimerUI();
+      renderLiveExercise();
 
       timerInterval = setInterval(() => {
         currentTimerSeconds++;
@@ -1216,8 +1091,7 @@
       clearInterval(timerInterval);
       currentTimerType = "rest";
       currentTimerSeconds = Number(getProfile().rest);
-      renderFocusCard();
-      updateInlineTimerUI();
+      renderLiveExercise();
 
       timerInterval = setInterval(() => {
         currentTimerSeconds--;
@@ -1229,7 +1103,7 @@
           showToast("REST IS DONE");
           speak("REST IS DONE");
           currentTimerType = null;
-          renderFocusCard();
+          renderLiveExercise();
           goToNextExercise(true);
         }
       }, 1000);
@@ -1244,7 +1118,7 @@
       currentTimerType = null;
       currentTimerSeconds = 0;
       updateInlineTimerUI();
-      renderFocusCard();
+      if (currentWorkoutKey) renderLiveExercise();
     }
 
     function goToNextExercise(fromAuto = false){
@@ -1252,10 +1126,23 @@
       const total = workouts[currentWorkoutKey].exercises.length;
       if (currentExerciseIndex < total - 1) {
         currentExerciseIndex++;
-        renderExercises(currentWorkoutKey);
+        renderLiveExercise();
+        updateProgress();
         if (!fromAuto) showToast("Moved to next exercise");
       } else {
         showToast("Last exercise");
+      }
+    }
+
+    function goToPreviousExercise(){
+      if (!currentWorkoutKey) return;
+      if (currentExerciseIndex > 0) {
+        currentExerciseIndex--;
+        renderLiveExercise();
+        updateProgress();
+        showToast("Moved to previous exercise");
+      } else {
+        showToast("First exercise");
       }
     }
 
@@ -1272,16 +1159,6 @@
           sets: draft[i]
         }))
       };
-    }
-
-    function saveCurrentWorkout(){
-      const payload = buildWorkoutPayload();
-      if (!payload) return;
-      const history = getHistory();
-      history.unshift(payload);
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-      updateHomeStats();
-      showToast("Workout saved");
     }
 
     function finishWorkout(){
