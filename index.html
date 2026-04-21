@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout App Expanded</title>
+  <title>My Workout Plan</title>
   <style>
     :root{
       --bg:#0b0f14;--bg2:#121923;--panel:#121821;--panel2:#0f141c;--line:rgba(255,255,255,.06);
@@ -11,44 +11,38 @@
       --shadow:0 18px 40px rgba(0,0,0,.30)
     }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0;padding:0;background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);color:var(--text);font-family:Arial,sans-serif}
-    body{min-height:100vh}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);color:var(--text);font-family:Arial,sans-serif;min-height:100vh}
     .hidden{display:none!important}
-    .app{width:min(430px,100%);margin:0 auto;min-height:100vh;padding-bottom:118px}
+    .app{width:min(430px,100%);margin:0 auto;min-height:100vh;padding-bottom:120px}
     .topbar{position:sticky;top:0;z-index:50;padding:14px 14px 10px;background:rgba(11,15,20,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-    .plan-shell{display:grid;grid-template-columns:1fr 56px;gap:10px;align-items:center}
-    .plan-box,.hero,.progress-card,.live-card,.panel-card,.history-card,.workout-card,.stat{
+    .top-shell{display:grid;grid-template-columns:1fr 56px;gap:10px;align-items:center}
+    .plan-box,.hero,.card,.exercise-card,.history-card,.stat-card,.editor-card{
       background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
       border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)
     }
-    .plan-box{padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
-    .plan-title{font-size:16px;font-weight:900}
-    .menu-btn{width:56px;height:56px;border:none;border-radius:18px;background:#070b10;color:#fff;font-size:22px;border:1px solid var(--line);box-shadow:var(--shadow);cursor:pointer}
+    .plan-box{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;font-weight:900;font-size:18px}
+    .menu-btn{width:56px;height:56px;border:none;border-radius:18px;background:#070b10;color:#fff;font-size:22px;border:1px solid var(--line);cursor:pointer}
     .screen{padding:14px}
     .hero{padding:18px;margin-bottom:16px;background:linear-gradient(135deg,#18212d 0%,#10161f 100%)}
     .hero h1{margin:0 0 6px;font-size:26px;line-height:1.05;font-weight:900}
     .hero p,.small{margin:0;color:rgba(255,255,255,.86);font-size:14px;line-height:1.45}
-    .hero-actions,.bottom-tools,.editor-actions,.live-actions,.inline-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-    .pill,.mini,.tool-btn,.tag{
-      border:none;border-radius:999px;padding:10px 14px;font-size:12px;font-weight:900;cursor:pointer;
-      display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none
-    }
-    .pill-dark,.mini-next,.tool-primary{background:var(--green);color:#06200f}
-    .pill-light,.tool-secondary,.mini-prev,.mini-video{background:#111722;color:#fff}
-    .tool-danger,.mini-stop{background:#4a1c23;color:#fff}
-    .mini-work{background:#193325;color:#d7ffe5}
-    .mini-rest{background:#243244;color:#fff}
+    .today-box{margin-top:12px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);font-size:14px;font-weight:900}
+    .actions,.inline-actions,.editor-actions,.live-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+    .btn,.pill{border:none;border-radius:999px;padding:10px 14px;font-size:12px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+    .btn-primary,.pill-primary{background:var(--green);color:#06200f}
+    .btn-secondary,.pill-secondary{background:#111722;color:#fff}
+    .btn-danger{background:#4a1c23;color:#fff}
     .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-    .stat{padding:12px}
+    .stat-card{padding:12px}
     .stat-value{font-size:22px;font-weight:900;margin-bottom:4px}
     .stat-label{font-size:12px;color:rgba(255,255,255,.72)}
     .workout-list{display:grid;gap:12px}
-    .workout-card{padding:16px;cursor:pointer}
-    .workout-card h3,.panel-card h3,.history-card h3{margin:0 0 6px;font-size:20px;font-weight:900}
-    .workout-card p,.panel-card p,.history-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
+    .card{padding:16px;cursor:pointer}
+    .card h3,.history-card h3,.editor-card h3{margin:0 0 6px;font-size:20px;font-weight:900}
+    .card p,.history-card p,.editor-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
     .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
-    .back-btn{border:none;border-radius:999px;background:#111722;color:#fff;padding:10px 14px;font-size:12px;font-weight:900;cursor:pointer}
     .section-title{margin:0;font-size:28px;font-weight:900;line-height:1.1}
+    .back-btn{border:none;border-radius:999px;background:#111722;color:#fff;padding:10px 14px;font-size:12px;font-weight:900;cursor:pointer}
     .tabs{display:flex;gap:16px;overflow:auto;scrollbar-width:none;padding-bottom:2px;margin-bottom:14px}
     .tabs::-webkit-scrollbar{display:none}
     .tab{border:none;background:none;color:#758395;font-size:15px;font-weight:900;cursor:pointer;white-space:nowrap;padding:8px 0;border-bottom:2px solid transparent}
@@ -57,55 +51,45 @@
     .progress-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
     .progress-bar{width:100%;height:10px;background:#1b2430;border-radius:999px;overflow:hidden}
     .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--green2));border-radius:999px;transition:width .25s ease}
-    .live-card{padding:14px}
-    .live-top{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:center}
-    .live-img{width:92px;height:92px;border-radius:20px;object-fit:cover;background:#fff;border:1px solid rgba(255,255,255,.06)}
-    .live-kicker{color:var(--green);font-size:12px;font-weight:900;margin-bottom:4px}
-    .live-title{font-size:22px;font-weight:900;line-height:1.08;margin-bottom:6px}
-    .live-sub{font-size:13px;color:var(--muted);line-height:1.35}
-    .live-timer{margin-top:14px;background:#0d131b;border:1px solid rgba(255,255,255,.05);border-radius:18px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .live-timer-label{font-size:12px;color:var(--muted);font-weight:800}
-    .live-timer-value{font-size:30px;font-weight:900;letter-spacing:1px}
+    .exercise-card{padding:14px}
+    .exercise-top{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:center}
+    .exercise-img{width:92px;height:92px;border-radius:20px;object-fit:cover;background:#fff;border:1px solid rgba(255,255,255,.06)}
+    .exercise-title{font-size:22px;font-weight:900;line-height:1.08;margin-bottom:6px}
+    .exercise-sub{font-size:13px;color:var(--muted);line-height:1.35}
+    .exercise-kicker{color:var(--green);font-size:12px;font-weight:900;margin-bottom:4px}
+    .timer-box{margin-top:14px;background:#0d131b;border:1px solid rgba(255,255,255,.05);border-radius:18px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .timer-label{font-size:12px;color:var(--muted);font-weight:800}
+    .timer-value{font-size:30px;font-weight:900;letter-spacing:1px}
     .sets-box{margin-top:14px;background:#070b10;border-radius:18px;padding:12px 14px 14px}
     .set-row{display:grid;grid-template-columns:20px 48px 1fr 1fr;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
     .set-row:last-child{border-bottom:none;padding-bottom:0}
     .set-check{width:16px;height:16px;accent-color:var(--green);justify-self:center}
     .set-name{font-size:13px;color:#dce5ef;font-weight:800}
-    .field,.editor-box,.search-input,.finder-select{
-      background:#121a24;border-radius:12px;border:1px solid rgba(255,255,255,.04)
-    }
+    .field,.input,.select,.search-input,.finder-select{background:#121a24;border-radius:12px;border:1px solid rgba(255,255,255,.04)}
     .field{display:flex;align-items:center;gap:6px;padding:8px 10px}
     .field input{width:100%;border:none;outline:none;background:transparent;color:#fff;font-size:14px;text-align:center}
     .field span{color:#90a0b3;font-size:12px;white-space:nowrap}
-    .history-card,.panel-card{padding:16px}
-    .history-item,.editor-item,.result-card{padding:12px 0;border-top:1px solid rgba(255,255,255,.06)}
-    .history-item:first-child,.editor-item:first-child,.result-card:first-child{border-top:none;padding-top:0}
+    .history-card,.editor-card{padding:16px}
+    .history-item,.editor-item,.finder-result{padding:12px 0;border-top:1px solid rgba(255,255,255,.06)}
+    .history-item:first-child,.editor-item:first-child,.finder-result:first-child{border-top:none}
     .history-title{font-size:14px;font-weight:900;margin-bottom:4px}
     .history-meta{font-size:12px;color:var(--muted)}
-    .profile-list,.editor-list,.results-list{display:grid;gap:12px;margin-top:12px}
-    .profile-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid rgba(255,255,255,.06)}
-    .profile-row:first-child{border-top:none;padding-top:0}
-    .profile-row strong{display:block;font-size:14px}
-    .profile-row small{color:var(--muted);font-size:12px}
-    .profile-row select,.editor-box input,.search-input,.finder-select{
-      width:100%;background:#121a24;border:1px solid var(--line);color:#fff;border-radius:12px;padding:12px 12px
-    }
     .editor-grid{display:grid;gap:8px;margin-top:10px}
     .editor-grid.two{grid-template-columns:1fr 1fr}
     .editor-grid.three{grid-template-columns:1fr 1fr 1fr}
-    .editor-box{padding:10px 12px}
-    .editor-box label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:800}
-    .catalog-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
-    .result-card{display:grid;grid-template-columns:78px 1fr auto;gap:12px;align-items:center}
-    .result-thumb{width:78px;height:78px;border-radius:16px;object-fit:cover;background:#111722;border:1px solid rgba(255,255,255,.06)}
-    .tag{font-size:11px;padding:4px 8px;background:#223244;color:#dfe7f1}
-    .today-status{margin-top:12px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);font-size:14px;font-weight:900}
+    .input,.select,.search-input,.finder-select{width:100%;background:#121a24;border:1px solid var(--line);color:#fff;border-radius:12px;padding:12px 12px}
+    .finder-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+    .results-list{display:grid;gap:12px;margin-top:12px}
+    .finder-result{display:grid;grid-template-columns:24px 78px 1fr auto;gap:12px;align-items:center}
+    .finder-thumb{width:78px;height:78px;border-radius:16px;object-fit:cover;background:#111722;border:1px solid rgba(255,255,255,.06)}
+    .tag{display:inline-flex;align-items:center;justify-content:center;font-size:11px;padding:4px 8px;border-radius:999px;background:#223244;color:#dfe7f1}
+    .finder-check{width:18px;height:18px;accent-color:var(--green)}
+    .selection-bar{margin-top:12px;padding:12px 14px;border-radius:16px;background:rgba(30,215,96,.08);border:1px solid rgba(30,215,96,.2);display:flex;justify-content:space-between;align-items:center;gap:10px}
     .bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(430px,100%);background:#0c1016;border-top:1px solid var(--line);padding:12px 12px 14px;z-index:40}
     .bottom-pill{background:#121923;border:1px solid var(--line);border-radius:999px;padding:10px 14px;display:flex;justify-content:space-around;align-items:center;gap:12px;box-shadow:var(--shadow);margin-bottom:10px}
     .bottom-pill button{border:none;background:none;color:#dfe7f1;font-size:20px;font-weight:900;cursor:pointer;width:42px;height:42px;border-radius:14px}
     .nav-icons{display:flex;justify-content:space-around;color:#8d99aa;font-size:12px}
     .nav-icons span{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
-    .spotify-embed{margin-top:10px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
     .toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;border-radius:14px;padding:12px 16px;font-weight:900;z-index:100;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.08)}
   </style>
 </head>
@@ -114,11 +98,8 @@
     <div id="toast" class="toast hidden"></div>
 
     <div class="topbar">
-      <div class="plan-shell">
-        <div class="plan-box">
-          <div class="plan-title">My Workout Plan Expanded</div>
-          <div>⌄</div>
-        </div>
+      <div class="top-shell">
+        <div class="plan-box"><div>My Workout Plan</div><div>⌄</div></div>
         <button class="menu-btn" onclick="showHistory()">⋮</button>
       </div>
     </div>
@@ -126,31 +107,22 @@
     <div class="screen" id="homeScreen">
       <div class="hero">
         <h1>Your Workout</h1>
-        <p>מאגר תרגילים רחב, לא מוגבל לאימונים הקיימים שלך.</p>
-        <div class="hero-actions">
-          <button class="pill pill-dark" onclick="startTodayWorkout()">▶ Start Today Workout</button>
-          <button class="pill pill-light" onclick="showEditor()">✏️ Editor</button>
+        <p>4 אימונים שמורים + בחירה מרובה של תרגילים מתוך מאגר רחב.</p>
+
+        <div class="actions">
+          <button class="pill pill-primary" onclick="startTodayWorkout()">▶ Start Today Workout</button>
+          <button class="pill pill-secondary" onclick="showEditor()">✏️ Editor</button>
         </div>
 
-        <div id="todayWorkoutStatus" class="today-status"></div>
+        <div id="todayWorkoutStatus" class="today-box"></div>
 
         <div class="stats-grid">
-          <div class="stat">
-            <div class="stat-value" id="totalWorkoutsStat">0</div>
-            <div class="stat-label">Completed workouts</div>
-          </div>
-          <div class="stat">
-            <div class="stat-value" id="weeklyWorkoutsStat">0</div>
-            <div class="stat-label">Workouts this week</div>
-          </div>
+          <div class="stat-card"><div class="stat-value" id="totalWorkoutsStat">0</div><div class="stat-label">Completed workouts</div></div>
+          <div class="stat-card"><div class="stat-value" id="weeklyWorkoutsStat">0</div><div class="stat-label">Workouts this week</div></div>
         </div>
       </div>
 
       <div class="workout-list" id="homeWorkoutList"></div>
-
-      <div class="spotify-embed">
-        <iframe style="border-radius:16px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator" width="100%" height="80" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-      </div>
     </div>
 
     <div class="screen hidden" id="workoutScreen">
@@ -158,19 +130,20 @@
         <button class="back-btn" onclick="showHome()">⬅ Back</button>
         <h2 class="section-title" id="workoutTitle"></h2>
       </div>
+
       <div class="tabs" id="workoutTabs"></div>
+
       <div class="progress-card">
-        <div class="progress-top">
-          <strong>Workout Progress</strong>
-          <span id="progressText">0/6</span>
-        </div>
+        <div class="progress-top"><strong>Workout Progress</strong><span id="progressText">0/6</span></div>
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
       </div>
+
       <div id="liveExerciseArea"></div>
+
       <div class="bottom-tools">
-        <button class="tool-btn tool-primary" onclick="finishWorkout()">✅ Finish Workout</button>
-        <button class="tool-btn tool-secondary" onclick="goToPreviousExercise()">⏮ Previous</button>
-        <button class="tool-btn tool-secondary" onclick="goToNextExercise()">⏭ Next</button>
+        <button class="btn btn-primary" onclick="finishWorkout()">✅ Finish Workout</button>
+        <button class="btn btn-secondary" onclick="goToPreviousExercise()">⏮ Previous</button>
+        <button class="btn btn-secondary" onclick="goToNextExercise()">⏭ Next</button>
       </div>
     </div>
 
@@ -179,12 +152,13 @@
         <button class="back-btn" onclick="showHome()">⬅ Back</button>
         <h2 class="section-title">Workout History</h2>
       </div>
+
       <div class="history-card">
         <h3 style="margin-top:0">Saved Workouts</h3>
         <p class="small">Saved locally in your browser</p>
         <div id="historyList"></div>
-        <div class="bottom-tools">
-          <button class="tool-btn tool-danger" onclick="clearHistory()">🗑 Delete History</button>
+        <div class="actions">
+          <button class="btn btn-danger" onclick="clearHistory()">🗑 Delete History</button>
         </div>
       </div>
     </div>
@@ -194,13 +168,15 @@
         <button class="back-btn" onclick="showHome()">⬅ Back</button>
         <h2 class="section-title">Stats</h2>
       </div>
+
       <div class="stats-grid">
-        <div class="stat"><div class="stat-value" id="statsTotalWorkouts">0</div><div class="stat-label">Total workouts</div></div>
-        <div class="stat"><div class="stat-value" id="statsWeekly">0</div><div class="stat-label">This week</div></div>
-        <div class="stat"><div class="stat-value" id="statsTotalSets">0</div><div class="stat-label">Checked sets</div></div>
-        <div class="stat"><div class="stat-value" id="statsVolume">0</div><div class="stat-label">Volume</div></div>
+        <div class="stat-card"><div class="stat-value" id="statsTotalWorkouts">0</div><div class="stat-label">Total workouts</div></div>
+        <div class="stat-card"><div class="stat-value" id="statsWeekly">0</div><div class="stat-label">This week</div></div>
+        <div class="stat-card"><div class="stat-value" id="statsTotalSets">0</div><div class="stat-label">Checked sets</div></div>
+        <div class="stat-card"><div class="stat-value" id="statsVolume">0</div><div class="stat-label">Volume</div></div>
       </div>
-      <div class="panel-card" style="margin-top:14px">
+
+      <div class="card" style="margin-top:14px">
         <h3>Top Exercise</h3>
         <p id="topExerciseText">No data yet</p>
       </div>
@@ -211,32 +187,24 @@
         <button class="back-btn" onclick="showHome()">⬅ Back</button>
         <h2 class="section-title">Profile</h2>
       </div>
-      <div class="panel-card">
+
+      <div class="card" style="padding:16px">
         <h3>Preferences</h3>
-        <div class="profile-list">
-          <div class="profile-row">
-            <div><strong>Default Rest Time</strong><small>Used when pressing rest</small></div>
-            <select id="restSelect" onchange="saveProfile()">
-              <option value="45">45s</option>
-              <option value="60">60s</option>
-              <option value="90">90s</option>
-              <option value="120">120s</option>
-            </select>
-          </div>
-          <div class="profile-row">
-            <div><strong>Voice Language</strong><small>For rest finished message</small></div>
-            <select id="voiceLangSelect" onchange="saveProfile()">
-              <option value="en-US">English</option>
-              <option value="he-IL">Hebrew</option>
-            </select>
-          </div>
-          <div class="profile-row">
-            <div><strong>Auto Rest on set check</strong><small>Starts rest automatically when you mark a set</small></div>
-            <select id="autoRestSelect" onchange="saveProfile()">
-              <option value="off">Off</option>
-              <option value="on">On</option>
-            </select>
-          </div>
+        <div class="editor-grid">
+          <select class="select" id="restSelect" onchange="saveProfile()">
+            <option value="45">Rest 45s</option>
+            <option value="60">Rest 60s</option>
+            <option value="90">Rest 90s</option>
+            <option value="120">Rest 120s</option>
+          </select>
+          <select class="select" id="voiceLangSelect" onchange="saveProfile()">
+            <option value="en-US">Voice English</option>
+            <option value="he-IL">Voice Hebrew</option>
+          </select>
+          <select class="select" id="autoRestSelect" onchange="saveProfile()">
+            <option value="off">Auto Rest Off</option>
+            <option value="on">Auto Rest On</option>
+          </select>
         </div>
       </div>
     </div>
@@ -247,31 +215,31 @@
         <h2 class="section-title">Workout Editor</h2>
       </div>
 
-      <div class="panel-card">
-        <h3>Workouts</h3>
-        <p class="small">Edit, duplicate, delete, add and reorder.</p>
-        <div class="bottom-tools">
-          <button class="tool-btn tool-primary" onclick="addWorkout()">＋ Add Workout</button>
+      <div class="editor-card">
+        <h3>Saved Workouts</h3>
+        <p class="small">4 האימונים נשמרים, ואפשר להוסיף אימון חדש בלי לפגוע בהם.</p>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="addWorkout()">＋ Add Workout</button>
         </div>
         <div class="editor-list" id="editorWorkoutList"></div>
       </div>
 
-      <div class="panel-card" style="margin-top:14px">
+      <div class="editor-card" style="margin-top:14px">
         <h3 id="editorWorkoutTitle">Select a workout</h3>
-        <p class="small">כאן אתה מוסיף תרגילים ממאגר רחב שלא תלוי בתרגילים שכבר שמורים באימונים שלך.</p>
+        <p class="small">בחר אימון, ואז הוסף תרגיל בודד או כמה תרגילים יחד מתוך המאגר.</p>
 
-        <div class="bottom-tools">
-          <button class="tool-btn tool-primary" onclick="addCustomExercise()">＋ Add Custom Exercise</button>
-          <button class="tool-btn tool-secondary" onclick="toggleFinder()">📚 Exercise Finder</button>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="addCustomExercise()">＋ Add Custom Exercise</button>
+          <button class="btn btn-secondary" onclick="toggleFinder()">📚 Exercise Finder</button>
         </div>
 
         <div id="finderArea" class="hidden">
           <div style="height:1px;background:rgba(255,255,255,.06);margin:12px 0"></div>
           <h3 style="font-size:18px;margin:0 0 6px">Exercise Finder</h3>
-          <p class="small">בחר שריר, ציוד ותרגיל מתוך מאגר מורחב. התמונה והווידאו נטענים מיד.</p>
+          <p class="small">בחירה מרובה לפי שריר, ציוד וחיפוש חופשי. אחר כך Add Selected.</p>
 
-          <div class="catalog-grid">
-            <select class="finder-select" id="finderMuscle" onchange="updateExerciseDropdown()">
+          <div class="finder-grid">
+            <select class="finder-select" id="finderMuscle" onchange="updateFinderResults()">
               <option value="">בחר שריר</option>
               <option value="Chest">Chest</option>
               <option value="Back">Back</option>
@@ -281,7 +249,7 @@
               <option value="Legs">Legs</option>
             </select>
 
-            <select class="finder-select" id="finderEquipment" onchange="updateExerciseDropdown()">
+            <select class="finder-select" id="finderEquipment" onchange="updateFinderResults()">
               <option value="">בחר ציוד</option>
               <option value="Barbell">Barbell</option>
               <option value="Dumbbells">Dumbbells</option>
@@ -290,18 +258,18 @@
               <option value="Bodyweight">Bodyweight</option>
             </select>
 
-            <select class="finder-select" id="finderExercise" onchange="renderFinderPreview()">
-              <option value="">בחר תרגיל</option>
-            </select>
+            <input class="search-input" id="finderSearch" placeholder="חיפוש בשם..." oninput="updateFinderResults()">
           </div>
 
-          <input class="search-input" id="finderSearch" placeholder="חיפוש נוסף בשם תרגיל..." oninput="updateExerciseDropdown()">
-
-          <div class="results-list" id="finderPreview"></div>
-
-          <div class="inline-actions">
-            <button class="tool-btn tool-primary" onclick="addCurrentFinderExercise()">➕ Add Exercise</button>
+          <div class="selection-bar">
+            <div><strong id="selectedCount">0</strong> selected</div>
+            <div class="actions" style="margin-top:0">
+              <button class="btn btn-secondary" onclick="clearFinderSelection()">Clear</button>
+              <button class="btn btn-primary" onclick="addSelectedExercises()">Add Selected</button>
+            </div>
           </div>
+
+          <div class="results-list" id="finderResults"></div>
         </div>
 
         <div class="editor-list" id="editorExerciseList"></div>
@@ -313,15 +281,16 @@
         <button class="back-btn" onclick="showHome()">⬅ Back</button>
         <h2 class="section-title">Workout Summary</h2>
       </div>
-      <div class="panel-card">
+
+      <div class="card" style="padding:16px">
         <h3>Finished Workout</h3>
         <div class="stats-grid">
-          <div class="stat"><div class="stat-value" id="summarySets">0</div><div class="stat-label">Checked sets</div></div>
-          <div class="stat"><div class="stat-value" id="summaryVolume">0</div><div class="stat-label">Volume</div></div>
+          <div class="stat-card"><div class="stat-value" id="summarySets">0</div><div class="stat-label">Checked sets</div></div>
+          <div class="stat-card"><div class="stat-value" id="summaryVolume">0</div><div class="stat-label">Volume</div></div>
         </div>
-        <div class="bottom-tools">
-          <button class="tool-btn tool-primary" onclick="showHome()">Done</button>
-          <button class="tool-btn tool-secondary" onclick="showStats()">View Stats</button>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="showHome()">Done</button>
+          <button class="btn btn-secondary" onclick="showStats()">View Stats</button>
         </div>
       </div>
     </div>
@@ -345,23 +314,104 @@
   </div>
 
   <script>
-    const HISTORY_KEY="workout_history_expanded";
-    const DRAFT_KEY="workout_draft_expanded";
-    const PROFILE_KEY="workout_profile_expanded";
-    const WORKOUTS_KEY="workout_defs_expanded";
-    const LAST_WEIGHTS_KEY="last_weights_expanded";
+    const HISTORY_KEY="workout_history_multi";
+    const DRAFT_KEY="workout_draft_multi";
+    const PROFILE_KEY="workout_profile_multi";
+    const WORKOUTS_KEY="workout_defs_multi";
+    const LAST_WEIGHTS_KEY="last_weights_multi";
+    const WORKOUT_DAYS=[1,3,5,6];
 
-    const WORKOUT_DAYS = [1,3,5,6]; // שני, רביעי, שישי, שבת
+    const defaultWorkouts = {
+      monday:{title:"שני - חזה + יד קדמית",exercises:[
+        {name:"Machine Chest Press",muscle:"Chest",equipment:"Machine",img:"https://img.youtube.com/vi/sqNwDkUU_Ps/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=machine+chest+press",sets:3,defaultReps:8,defaultWeight:20},
+        {name:"Incline Dumbbell Press",muscle:"Chest",equipment:"Dumbbells",img:"https://img.youtube.com/vi/8iPEnn-ltC8/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=incline+dumbbell+press",sets:3,defaultReps:8,defaultWeight:18},
+        {name:"Pec Deck Fly",muscle:"Chest",equipment:"Machine",img:"https://img.youtube.com/vi/8j6SPW5DzzE/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=pec+deck+fly",sets:3,defaultReps:10,defaultWeight:14},
+        {name:"Cable Chest Fly",muscle:"Chest",equipment:"Cable",img:"https://img.youtube.com/vi/eozdVDA78K0/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=cable+chest+fly",sets:3,defaultReps:10,defaultWeight:12},
+        {name:"Hammer Curl",muscle:"Biceps",equipment:"Dumbbells",img:"https://img.youtube.com/vi/zC3nLlEvin4/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=hammer+curl",sets:3,defaultReps:10,defaultWeight:10},
+        {name:"Cable Curl",muscle:"Biceps",equipment:"Cable",img:"https://img.youtube.com/vi/NFzTWp2qpiE/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=cable+curl",sets:3,defaultReps:10,defaultWeight:10}
+      ]},
+      wednesday:{title:"רביעי - גב + יד אחורית",exercises:[
+        {name:"Lat Pulldown",muscle:"Back",equipment:"Cable",img:"https://img.youtube.com/vi/SALxEARiMkw/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=lat+pulldown",sets:3,defaultReps:8,defaultWeight:30},
+        {name:"Seated Cable Row",muscle:"Back",equipment:"Cable",img:"https://img.youtube.com/vi/GZbfZ033f74/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=seated+cable+row",sets:3,defaultReps:8,defaultWeight:30},
+        {name:"Chest Supported Row",muscle:"Back",equipment:"Machine",img:"https://img.youtube.com/vi/Ze79BVvExdA/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=chest+supported+row",sets:3,defaultReps:10,defaultWeight:24},
+        {name:"Rope Triceps Pushdown",muscle:"Triceps",equipment:"Cable",img:"https://img.youtube.com/vi/vB5OHsJ3EME/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=rope+triceps+pushdown",sets:3,defaultReps:10,defaultWeight:20},
+        {name:"Overhead Cable Extension",muscle:"Triceps",equipment:"Cable",img:"https://img.youtube.com/vi/tmgfpdpQ5sk/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=overhead+cable+extension",sets:3,defaultReps:10,defaultWeight:18},
+        {name:"Single Arm Cable Pushdown",muscle:"Triceps",equipment:"Cable",img:"https://img.youtube.com/vi/kiuVAaQawxk/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=single+arm+cable+triceps+pushdown",sets:3,defaultReps:10,defaultWeight:12}
+      ]},
+      friday:{title:"שישי - כתפיים + רגליים",exercises:[
+        {name:"Arnold Press",muscle:"Shoulders",equipment:"Dumbbells",img:"https://img.youtube.com/vi/6Z15_WdXmVw/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=arnold+press",sets:3,defaultReps:10,defaultWeight:12},
+        {name:"Dumbbell Shoulder Press",muscle:"Shoulders",equipment:"Dumbbells",img:"https://img.youtube.com/vi/qEwKCR5JCog/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=dumbbell+shoulder+press",sets:3,defaultReps:8,defaultWeight:14},
+        {name:"Alternating Lateral Raise",muscle:"Shoulders",equipment:"Dumbbells",img:"https://img.youtube.com/vi/wc371SfWq2w/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=alternating+lateral+raise",sets:3,defaultReps:12,defaultWeight:8},
+        {name:"Barbell Squat",muscle:"Legs",equipment:"Barbell",img:"https://img.youtube.com/vi/xqvCmoLULNY/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=barbell+squat",sets:3,defaultReps:8,defaultWeight:40},
+        {name:"Goblet Squat",muscle:"Legs",equipment:"Dumbbells",img:"https://img.youtube.com/vi/6xwGFn-J_Q4/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=goblet+squat",sets:3,defaultReps:10,defaultWeight:16},
+        {name:"Bulgarian Split Squat",muscle:"Legs",equipment:"Dumbbells",img:"https://img.youtube.com/vi/2C-uNgKwPLE/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=bulgarian+split+squat",sets:3,defaultReps:10,defaultWeight:12}
+      ]},
+      saturday:{title:"שבת - אימון משולב",exercises:[
+        {name:"Smith Machine Bench Press",muscle:"Chest",equipment:"Machine",img:"https://img.youtube.com/vi/SCVCLChPQFY/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=smith+machine+bench+press",sets:3,defaultReps:8,defaultWeight:30},
+        {name:"Neutral Grip Lat Pulldown",muscle:"Back",equipment:"Cable",img:"https://img.youtube.com/vi/jJXPqY4nw4U/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=neutral+grip+lat+pulldown",sets:3,defaultReps:8,defaultWeight:30},
+        {name:"Dumbbell Shoulder Press",muscle:"Shoulders",equipment:"Dumbbells",img:"https://img.youtube.com/vi/qEwKCR5JCog/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=dumbbell+shoulder+press",sets:3,defaultReps:8,defaultWeight:14},
+        {name:"Cable Curl",muscle:"Biceps",equipment:"Cable",img:"https://img.youtube.com/vi/NFzTWp2qpiE/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=cable+curl",sets:3,defaultReps:10,defaultWeight:10},
+        {name:"Rope Pushdown",muscle:"Triceps",equipment:"Cable",img:"https://img.youtube.com/vi/vB5OHsJ3EME/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=rope+pushdown",sets:3,defaultReps:10,defaultWeight:18},
+        {name:"Leg Press",muscle:"Legs",equipment:"Machine",img:"https://img.youtube.com/vi/Aq5uxXrXq7c/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=leg+press",sets:3,defaultReps:10,defaultWeight:80}
+      ]}
+    };
 
-    const defaultWorkouts = REPLACE_DEFAULTS;
-    const exerciseLibrary = REPLACE_LIBRARY;
+    const exerciseLibrary = [
+      {name:"Bench Press",muscle:"Chest",equipment:"Barbell",img:"https://img.youtube.com/vi/rT7DgCr-3pg/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=bench+press",sets:3,defaultReps:8,defaultWeight:40},
+      {name:"Incline Barbell Press",muscle:"Chest",equipment:"Barbell",img:"https://img.youtube.com/vi/jPLdzuHckI8/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=incline+barbell+press",sets:3,defaultReps:8,defaultWeight:35},
+      {name:"Decline Barbell Press",muscle:"Chest",equipment:"Barbell",img:"https://img.youtube.com/vi/LfyQBUKR8SE/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=decline+barbell+press",sets:3,defaultReps:8,defaultWeight:35},
+      {name:"Incline Dumbbell Press",muscle:"Chest",equipment:"Dumbbells",img:"https://img.youtube.com/vi/8iPEnn-ltC8/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=incline+dumbbell+press",sets:3,defaultReps:8,defaultWeight:18},
+      {name:"Flat Dumbbell Press",muscle:"Chest",equipment:"Dumbbells",img:"https://img.youtube.com/vi/VmB1G1K7v94/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=flat+dumbbell+press",sets:3,defaultReps:8,defaultWeight:18},
+      {name:"Dumbbell Fly",muscle:"Chest",equipment:"Dumbbells",img:"https://img.youtube.com/vi/eozdVDA78K0/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=dumbbell+fly",sets:3,defaultReps:10,defaultWeight:10},
+      {name:"Machine Chest Press",muscle:"Chest",equipment:"Machine",img:"https://img.youtube.com/vi/sqNwDkUU_Ps/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=machine+chest+press",sets:3,defaultReps:8,defaultWeight:20},
+      {name:"Pec Deck Fly",muscle:"Chest",equipment:"Machine",img:"https://img.youtube.com/vi/8j6SPW5DzzE/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=pec+deck+fly",sets:3,defaultReps:10,defaultWeight:14},
+      {name:"Cable Chest Fly",muscle:"Chest",equipment:"Cable",img:"https://img.youtube.com/vi/eozdVDA78K0/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=cable+chest+fly",sets:3,defaultReps:10,defaultWeight:12},
+      {name:"Push Up",muscle:"Chest",equipment:"Bodyweight",img:"https://img.youtube.com/vi/IODxDxX7oi4/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=push+up",sets:3,defaultReps:12,defaultWeight:0},
 
-    let currentWorkoutKey=null;
-    let currentExerciseIndex=0;
-    let timerInterval=null;
-    let currentTimerType=null;
-    let currentTimerSeconds=0;
-    let editorWorkoutKey=null;
+      {name:"Barbell Row",muscle:"Back",equipment:"Barbell",img:"https://img.youtube.com/vi/vT2GjY_Umpw/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=barbell+row",sets:3,defaultReps:8,defaultWeight:40},
+      {name:"Bent Over Row",muscle:"Back",equipment:"Barbell",img:"https://img.youtube.com/vi/FWJR5Ve8bnQ/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=bent+over+row",sets:3,defaultReps:8,defaultWeight:40},
+      {name:"Deadlift",muscle:"Back",equipment:"Barbell",img:"https://img.youtube.com/vi/op9kVnSso6Q/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=deadlift",sets:3,defaultReps:5,defaultWeight:60},
+      {name:"One Arm Dumbbell Row",muscle:"Back",equipment:"Dumbbells",img:"https://img.youtube.com/vi/pYcpY20QaE8/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=one+arm+dumbbell+row",sets:3,defaultReps:10,defaultWeight:18},
+      {name:"Chest Supported Row",muscle:"Back",equipment:"Machine",img:"https://img.youtube.com/vi/Ze79BVvExdA/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=chest+supported+row",sets:3,defaultReps:10,defaultWeight:24},
+      {name:"Lat Pulldown",muscle:"Back",equipment:"Cable",img:"https://img.youtube.com/vi/SALxEARiMkw/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=lat+pulldown",sets:3,defaultReps:8,defaultWeight:30},
+      {name:"Seated Cable Row",muscle:"Back",equipment:"Cable",img:"https://img.youtube.com/vi/GZbfZ033f74/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=seated+cable+row",sets:3,defaultReps:8,defaultWeight:30},
+      {name:"Straight Arm Pulldown",muscle:"Back",equipment:"Cable",img:"https://img.youtube.com/vi/MFQxZJYjhz4/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=straight+arm+pulldown",sets:3,defaultReps:12,defaultWeight:16},
+      {name:"Pull Up",muscle:"Back",equipment:"Bodyweight",img:"https://img.youtube.com/vi/eGo4IYlbE5g/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=pull+up",sets:3,defaultReps:8,defaultWeight:0},
+
+      {name:"Overhead Press",muscle:"Shoulders",equipment:"Barbell",img:"https://img.youtube.com/vi/2yjwXTZQDDI/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=overhead+press",sets:3,defaultReps:8,defaultWeight:30},
+      {name:"Dumbbell Shoulder Press",muscle:"Shoulders",equipment:"Dumbbells",img:"https://img.youtube.com/vi/qEwKCR5JCog/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=dumbbell+shoulder+press",sets:3,defaultReps:8,defaultWeight:14},
+      {name:"Arnold Press",muscle:"Shoulders",equipment:"Dumbbells",img:"https://img.youtube.com/vi/6Z15_WdXmVw/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=arnold+press",sets:3,defaultReps:10,defaultWeight:12},
+      {name:"Lateral Raise",muscle:"Shoulders",equipment:"Dumbbells",img:"https://img.youtube.com/vi/3VcKaXpzqRo/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=lateral+raise",sets:3,defaultReps:12,defaultWeight:8},
+      {name:"Front Raise",muscle:"Shoulders",equipment:"Dumbbells",img:"https://img.youtube.com/vi/-t7fuZ0KhDA/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=front+raise",sets:3,defaultReps:12,defaultWeight:6},
+      {name:"Machine Shoulder Press",muscle:"Shoulders",equipment:"Machine",img:"https://img.youtube.com/vi/Wqq43dKW1TU/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=machine+shoulder+press",sets:3,defaultReps:8,defaultWeight:20},
+      {name:"Face Pull",muscle:"Shoulders",equipment:"Cable",img:"https://img.youtube.com/vi/rep-qVOkqgk/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=face+pull",sets:3,defaultReps:12,defaultWeight:12},
+
+      {name:"EZ Bar Curl",muscle:"Biceps",equipment:"Barbell",img:"https://img.youtube.com/vi/kwG2ipFRgfo/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=ez+bar+curl",sets:3,defaultReps:10,defaultWeight:20},
+      {name:"Standing Dumbbell Curl",muscle:"Biceps",equipment:"Dumbbells",img:"https://img.youtube.com/vi/ykJmrZ5v0Oo/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=standing+dumbbell+curl",sets:3,defaultReps:10,defaultWeight:10},
+      {name:"Hammer Curl",muscle:"Biceps",equipment:"Dumbbells",img:"https://img.youtube.com/vi/zC3nLlEvin4/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=hammer+curl",sets:3,defaultReps:10,defaultWeight:10},
+      {name:"Incline Dumbbell Curl",muscle:"Biceps",equipment:"Dumbbells",img:"https://img.youtube.com/vi/soxrZlIl35U/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=incline+dumbbell+curl",sets:3,defaultReps:10,defaultWeight:8},
+      {name:"Cable Curl",muscle:"Biceps",equipment:"Cable",img:"https://img.youtube.com/vi/NFzTWp2qpiE/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=cable+curl",sets:3,defaultReps:10,defaultWeight:10},
+      {name:"Preacher Curl Machine",muscle:"Biceps",equipment:"Machine",img:"https://img.youtube.com/vi/fIWP-FRFNU0/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=preacher+curl+machine",sets:3,defaultReps:10,defaultWeight:18},
+
+      {name:"Close Grip Bench Press",muscle:"Triceps",equipment:"Barbell",img:"https://img.youtube.com/vi/nEF0bv2FW94/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=close+grip+bench+press",sets:3,defaultReps:8,defaultWeight:35},
+      {name:"Overhead Dumbbell Extension",muscle:"Triceps",equipment:"Dumbbells",img:"https://img.youtube.com/vi/YbX7Wd8jQ-Q/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=overhead+dumbbell+triceps+extension",sets:3,defaultReps:10,defaultWeight:10},
+      {name:"Kickback",muscle:"Triceps",equipment:"Dumbbells",img:"https://img.youtube.com/vi/6SS6K3lAwZ8/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=triceps+kickback",sets:3,defaultReps:12,defaultWeight:6},
+      {name:"Rope Pushdown",muscle:"Triceps",equipment:"Cable",img:"https://img.youtube.com/vi/vB5OHsJ3EME/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=rope+pushdown",sets:3,defaultReps:10,defaultWeight:18},
+      {name:"Overhead Cable Extension",muscle:"Triceps",equipment:"Cable",img:"https://img.youtube.com/vi/tmgfpdpQ5sk/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=overhead+cable+extension",sets:3,defaultReps:10,defaultWeight:18},
+      {name:"Dip",muscle:"Triceps",equipment:"Bodyweight",img:"https://img.youtube.com/vi/2z8JmcrW-As/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=dips+triceps",sets:3,defaultReps:10,defaultWeight:0},
+
+      {name:"Barbell Squat",muscle:"Legs",equipment:"Barbell",img:"https://img.youtube.com/vi/xqvCmoLULNY/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=barbell+squat",sets:3,defaultReps:8,defaultWeight:40},
+      {name:"Romanian Deadlift",muscle:"Legs",equipment:"Barbell",img:"https://img.youtube.com/vi/2SHsk9AzdjA/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=romanian+deadlift",sets:3,defaultReps:8,defaultWeight:50},
+      {name:"Goblet Squat",muscle:"Legs",equipment:"Dumbbells",img:"https://img.youtube.com/vi/6xwGFn-J_Q4/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=goblet+squat",sets:3,defaultReps:10,defaultWeight:16},
+      {name:"Bulgarian Split Squat",muscle:"Legs",equipment:"Dumbbells",img:"https://img.youtube.com/vi/2C-uNgKwPLE/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=bulgarian+split+squat",sets:3,defaultReps:10,defaultWeight:12},
+      {name:"Leg Press",muscle:"Legs",equipment:"Machine",img:"https://img.youtube.com/vi/Aq5uxXrXq7c/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=leg+press",sets:3,defaultReps:10,defaultWeight:80},
+      {name:"Leg Extension",muscle:"Legs",equipment:"Machine",img:"https://img.youtube.com/vi/YyvSfVjQeL0/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=leg+extension",sets:3,defaultReps:12,defaultWeight:25},
+      {name:"Leg Curl",muscle:"Legs",equipment:"Machine",img:"https://img.youtube.com/vi/1Tq3QdYUuHs/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=leg+curl",sets:3,defaultReps:12,defaultWeight:25},
+      {name:"Walking Lunge",muscle:"Legs",equipment:"Bodyweight",img:"https://img.youtube.com/vi/L8fvypPrzzs/hqdefault.jpg",video:"https://www.youtube.com/results?search_query=walking+lunge",sets:3,defaultReps:12,defaultWeight:0}
+    ];
+
+    let currentWorkoutKey=null,currentExerciseIndex=0,timerInterval=null,currentTimerType=null,currentTimerSeconds=0,editorWorkoutKey=null;
+    let selectedFinderNames=[];
 
     function getWorkouts(){
       try{
@@ -371,44 +421,22 @@
       localStorage.setItem(WORKOUTS_KEY,JSON.stringify(defaultWorkouts));
       return JSON.parse(JSON.stringify(defaultWorkouts));
     }
-
     function saveWorkouts(data){localStorage.setItem(WORKOUTS_KEY,JSON.stringify(data))}
     function getFirstWorkoutKey(){return Object.keys(getWorkouts())[0]}
-    function formatTime(seconds){
-      const m=String(Math.floor(seconds/60)).padStart(2,"0");
-      const s=String(seconds%60).padStart(2,"0");
-      return `${m}:${s}`;
-    }
-
-    function showToast(message){
-      const toast=document.getElementById("toast");
-      toast.innerText=message;
-      toast.classList.remove("hidden");
-      setTimeout(()=>toast.classList.add("hidden"),2200);
-    }
-
-    function getProfile(){
-      try{return JSON.parse(localStorage.getItem(PROFILE_KEY)||'{"rest":"60","voice":"en-US","autoRest":"off"}')}
-      catch(e){return{rest:"60",voice:"en-US",autoRest:"off"}}
-    }
-
+    function formatTime(seconds){const m=String(Math.floor(seconds/60)).padStart(2,"0");const s=String(seconds%60).padStart(2,"0");return `${m}:${s}`;}
+    function showToast(message){const toast=document.getElementById("toast");toast.innerText=message;toast.classList.remove("hidden");setTimeout(()=>toast.classList.add("hidden"),2200);}
+    function getProfile(){try{return JSON.parse(localStorage.getItem(PROFILE_KEY)||'{"rest":"60","voice":"en-US","autoRest":"off"}')}catch(e){return{rest:"60",voice:"en-US",autoRest:"off"}}}
     function saveProfile(){
-      const profile={
-        rest:document.getElementById("restSelect").value,
-        voice:document.getElementById("voiceLangSelect").value,
-        autoRest:document.getElementById("autoRestSelect").value
-      };
+      const profile={rest:document.getElementById("restSelect").value,voice:document.getElementById("voiceLangSelect").value,autoRest:document.getElementById("autoRestSelect").value};
       localStorage.setItem(PROFILE_KEY,JSON.stringify(profile));
       showToast("Profile saved");
     }
-
     function loadProfileUI(){
       const p=getProfile();
       document.getElementById("restSelect").value=p.rest;
       document.getElementById("voiceLangSelect").value=p.voice;
       document.getElementById("autoRestSelect").value=p.autoRest;
     }
-
     function speak(text){
       if(!("speechSynthesis" in window)){showToast(text);return}
       const msg=new SpeechSynthesisUtterance(text);
@@ -417,59 +445,32 @@
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(msg);
     }
-
-    function getHistory(){
-      try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]")}
-      catch(e){return[]}
-    }
-
-    function getLastWeights(){
-      try{return JSON.parse(localStorage.getItem(LAST_WEIGHTS_KEY)||"{}")}
-      catch(e){return{}}
-    }
-
-    function saveLastWeights(data){
-      localStorage.setItem(LAST_WEIGHTS_KEY,JSON.stringify(data));
-    }
-
-    function isWorkoutDay(){
-      const today = new Date().getDay();
-      return WORKOUT_DAYS.includes(today);
-    }
-
+    function getHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]")}catch(e){return[]}}
+    function getLastWeights(){try{return JSON.parse(localStorage.getItem(LAST_WEIGHTS_KEY)||"{}")}catch(e){return{}}}
+    function saveLastWeights(data){localStorage.setItem(LAST_WEIGHTS_KEY,JSON.stringify(data))}
+    function isWorkoutDay(){return WORKOUT_DAYS.includes(new Date().getDay())}
     function getTodayWorkoutKey(){
-      const day = new Date().getDay();
-      if(day===1) return "chest";      // שני
-      if(day===3) return "back";       // רביעי
-      if(day===5) return "shoulders";  // שישי
-      if(day===6) return "fullbody";   // שבת
-      return "chest";
+      const day=new Date().getDay();
+      if(day===1)return"monday";
+      if(day===3)return"wednesday";
+      if(day===5)return"friday";
+      if(day===6)return"saturday";
+      return"monday";
     }
-
-    function startTodayWorkout(){
-      showWorkout(getTodayWorkoutKey());
-    }
-
+    function startTodayWorkout(){showWorkout(getTodayWorkoutKey())}
     function updateWorkoutDayStatus(){
-      const status = document.getElementById("todayWorkoutStatus");
-      const today = new Date().getDay();
-      const names = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
-      const workoutMap = {
-        1:"חזה + יד קדמית",
-        3:"גב + יד אחורית",
-        5:"כתפיים + רגליים",
-        6:"אימון משולב"
-      };
-
+      const status=document.getElementById("todayWorkoutStatus");
+      const today=new Date().getDay();
+      const names=["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
+      const workoutMap={1:"חזה + יד קדמית",3:"גב + יד אחורית",5:"כתפיים + רגליים",6:"אימון משולב"};
       if(isWorkoutDay()){
-        status.innerText = `🔥 היום ${names[today]} — יום אימון: ${workoutMap[today]}`;
-        status.style.color = "#1ed760";
-      } else {
-        status.innerText = `🛌 היום ${names[today]} — יום מנוחה`;
-        status.style.color = "#b6c2cf";
+        status.innerText=`🔥 היום ${names[today]} — יום אימון: ${workoutMap[today]}`;
+        status.style.color="#1ed760";
+      }else{
+        status.innerText=`🛌 היום ${names[today]} — יום מנוחה`;
+        status.style.color="#c4cfda";
       }
     }
-
     function updateHomeStats(){
       const history=getHistory();
       document.getElementById("totalWorkoutsStat").innerText=history.length;
@@ -477,47 +478,22 @@
       renderHomeWorkouts();
       updateWorkoutDayStatus();
     }
-
     function getWeeklyWorkoutsCount(){
-      const history=getHistory();
-      const weekAgo=new Date();
+      const history=getHistory(),weekAgo=new Date();
       weekAgo.setDate(weekAgo.getDate()-7);
       return history.filter(item=>new Date(item.savedAt)>=weekAgo).length;
     }
-
     function showScreen(id){
-      ["homeScreen","workoutScreen","historyScreen","statsScreen","profileScreen","editorScreen","summaryScreen"]
-        .forEach(x=>document.getElementById(x).classList.add("hidden"));
+      ["homeScreen","workoutScreen","historyScreen","statsScreen","profileScreen","editorScreen","summaryScreen"].forEach(x=>document.getElementById(x).classList.add("hidden"));
       document.getElementById(id).classList.remove("hidden");
     }
-
-    function showHome(){
-      showScreen("homeScreen");
-      updateHomeStats();
-      stopTimer(true);
-    }
-
-    function showStats(){
-      renderStats();
-      showScreen("statsScreen");
-      stopTimer(true);
-    }
-
-    function showProfile(){
-      loadProfileUI();
-      showScreen("profileScreen");
-      stopTimer(true);
-    }
+    function showHome(){showScreen("homeScreen");updateHomeStats();stopTimer(true)}
+    function showStats(){renderStats();showScreen("statsScreen");stopTimer(true)}
+    function showProfile(){loadProfileUI();showScreen("profileScreen");stopTimer(true)}
 
     function renderHomeWorkouts(){
-      const container=document.getElementById("homeWorkoutList");
-      const workouts=getWorkouts();
-      container.innerHTML=Object.entries(workouts).map(([key,workout])=>
-        `<div class="workout-card" onclick="showWorkout('${key}')">
-          <h3>${workout.title}</h3>
-          <p>${workout.exercises.length} exercises</p>
-        </div>`
-      ).join("");
+      const container=document.getElementById("homeWorkoutList"),workouts=getWorkouts();
+      container.innerHTML=Object.entries(workouts).map(([key,workout])=>`<div class="card" onclick="showWorkout('${key}')"><h3>${workout.title}</h3><p>${workout.exercises.length} exercises</p></div>`).join("");
     }
 
     function setActiveTab(type){
@@ -535,7 +511,7 @@
         for(const ex of workout.exercises){
           if(ex.name===name){
             const doneSets=ex.sets.filter(s=>s.done);
-            if(doneSets.length===ex.sets.length && doneSets.length){
+            if(doneSets.length===ex.sets.length&&doneSets.length){
               const last=doneSets[doneSets.length-1];
               return Number(last.weight||defaultWeight)+2.5;
             }
@@ -555,15 +531,8 @@
       });
     }
 
-    function getDrafts(){
-      try{return JSON.parse(localStorage.getItem(DRAFT_KEY)||"{}")}
-      catch(e){return{}}
-    }
-
-    function saveDrafts(drafts){
-      localStorage.setItem(DRAFT_KEY,JSON.stringify(drafts));
-    }
-
+    function getDrafts(){try{return JSON.parse(localStorage.getItem(DRAFT_KEY)||"{}")}catch(e){return{}}}
+    function saveDrafts(drafts){localStorage.setItem(DRAFT_KEY,JSON.stringify(drafts))}
     function ensureDraft(type){
       const drafts=getDrafts();
       if(!drafts[type]){
@@ -572,7 +541,6 @@
       }
       return drafts[type];
     }
-
     function resetDraft(type){
       const drafts=getDrafts();
       drafts[type]=createDefaultDraft(type);
@@ -596,72 +564,55 @@
 
     function renderWorkoutTabs(){
       const tabs=document.getElementById("workoutTabs"),workouts=getWorkouts();
-      tabs.innerHTML=Object.entries(workouts).map(([key,workout])=>
-        `<button class="tab ${key===currentWorkoutKey?'active':''}" id="tab-${key}" onclick="showWorkout('${key}')">${workout.title}</button>`
-      ).join("");
+      tabs.innerHTML=Object.entries(workouts).map(([key,workout])=>`<button class="tab ${key===currentWorkoutKey?'active':''}" id="tab-${key}" onclick="showWorkout('${key}')">${workout.title}</button>`).join("");
     }
 
     function renderLiveExercise(){
       if(!currentWorkoutKey)return;
       const workouts=getWorkouts(),workout=workouts[currentWorkoutKey],draft=ensureDraft(currentWorkoutKey),ex=workout.exercises[currentExerciseIndex],sets=draft[currentExerciseIndex];
-      document.getElementById("liveExerciseArea").innerHTML=
-        `<div class="live-card">
-          <div class="live-top">
-            <img class="live-img" src="${ex.img}" alt="${ex.name}">
-            <div>
-              <div class="live-kicker">LIVE WORKOUT</div>
-              <div class="live-title">${ex.name}</div>
-              <div class="live-sub">${ex.muscle} • ${ex.equipment||"Equipment"} • Exercise ${currentExerciseIndex+1} of ${workout.exercises.length}</div>
-            </div>
+      document.getElementById("liveExerciseArea").innerHTML=`<div class="exercise-card">
+        <div class="exercise-top">
+          <img class="exercise-img" src="${ex.img}" alt="${ex.name}">
+          <div>
+            <div class="exercise-kicker">LIVE WORKOUT</div>
+            <div class="exercise-title">${ex.name}</div>
+            <div class="exercise-sub">${ex.muscle} • ${ex.equipment||"Equipment"} • Exercise ${currentExerciseIndex+1} of ${workout.exercises.length}</div>
           </div>
-
-          <div class="live-timer">
-            <div class="live-timer-label" id="inlineTimerLabel">${getTimerLabel()}</div>
-            <div class="live-timer-value" id="inlineTimerValue">${formatTime(currentTimerSeconds)}</div>
-          </div>
-
-          <div class="small" style="margin-top:8px">Suggested start weight: ${sets[0]?.weight ?? ex.defaultWeight ?? 0} Kg</div>
-
-          <div class="live-actions">
-            <button class="mini mini-prev" onclick="goToPreviousExercise()">⏮ Previous</button>
-            <button class="mini mini-work" onclick="startActivityTimer()">▶ Start Set</button>
-            <button class="mini mini-rest" onclick="startRestTimer()">⏸ Rest</button>
-            <button class="mini mini-stop" onclick="stopTimer()">■ Stop</button>
-            <button class="mini mini-next" onclick="goToNextExercise()">⏭ Next</button>
-            <a class="mini mini-video" href="${ex.video}" target="_blank">🎥 Video</a>
-          </div>
-
-          <div class="sets-box">
-            ${sets.map((set,setIndex)=>
-              `<div class="set-row">
-                <input class="set-check" type="checkbox" ${set.done?"checked":""} onchange="toggleDoneAndMaybeRest('${currentWorkoutKey}',${currentExerciseIndex},${setIndex},this.checked)">
-                <div class="set-name">${setIndex+1} Set</div>
-                <div class="field">
-                  <input type="number" value="${set.reps}" min="1" onchange="changeReps('${currentWorkoutKey}',${currentExerciseIndex},${setIndex},this.value)">
-                  <span>Reps</span>
-                </div>
-                <div class="field">
-                  <input type="number" value="${set.weight}" min="0" step="0.5" onchange="changeWeight('${currentWorkoutKey}',${currentExerciseIndex},${setIndex},this.value)">
-                  <span>Kg</span>
-                </div>
-              </div>`
-            ).join("")}
-          </div>
-        </div>`;
+        </div>
+        <div class="timer-box">
+          <div class="timer-label">${getTimerLabel()}</div>
+          <div class="timer-value" id="inlineTimerValue">${formatTime(currentTimerSeconds)}</div>
+        </div>
+        <div class="small" style="margin-top:8px">Suggested start weight: ${sets[0]?.weight ?? ex.defaultWeight ?? 0} Kg</div>
+        <div class="live-actions">
+          <button class="btn btn-secondary" onclick="goToPreviousExercise()">⏮ Previous</button>
+          <button class="btn btn-primary" onclick="startActivityTimer()">▶ Start Set</button>
+          <button class="btn btn-secondary" onclick="startRestTimer()">⏸ Rest</button>
+          <button class="btn btn-danger" onclick="stopTimer()">■ Stop</button>
+          <button class="btn btn-secondary" onclick="goToNextExercise()">⏭ Next</button>
+          <a class="btn btn-secondary" href="${ex.video}" target="_blank">🎥 Video</a>
+        </div>
+        <div class="sets-box">
+          ${sets.map((set,setIndex)=>`<div class="set-row">
+            <input class="set-check" type="checkbox" ${set.done?"checked":""} onchange="toggleDoneAndMaybeRest('${currentWorkoutKey}',${currentExerciseIndex},${setIndex},this.checked)">
+            <div class="set-name">${setIndex+1} Set</div>
+            <div class="field"><input type="number" value="${set.reps}" min="1" onchange="changeReps('${currentWorkoutKey}',${currentExerciseIndex},${setIndex},this.value)"><span>Reps</span></div>
+            <div class="field"><input type="number" value="${set.weight}" min="0" step="0.5" onchange="changeWeight('${currentWorkoutKey}',${currentExerciseIndex},${setIndex},this.value)"><span>Kg</span></div>
+          </div>`).join("")}
+        </div>
+      </div>`;
     }
 
     function toggleDoneAndMaybeRest(type,exIndex,setIndex,checked){
       toggleDone(type,exIndex,setIndex,checked);
-      if(checked && getProfile().autoRest==="on") startRestTimer();
+      if(checked&&getProfile().autoRest==="on")startRestTimer();
     }
-
     function updateProgress(){
       if(!currentWorkoutKey)return;
       const draft=ensureDraft(currentWorkoutKey),doneExercises=draft.filter(ex=>ex.every(s=>s.done)).length,total=draft.length,percent=Math.round(doneExercises/total*100);
       document.getElementById("progressText").innerText=`${doneExercises}/${total}`;
       document.getElementById("progressFill").style.width=`${percent}%`;
     }
-
     function showWorkout(type){
       const workouts=getWorkouts();
       currentWorkoutKey=type;
@@ -674,7 +625,6 @@
       updateProgress();
       showScreen("workoutScreen");
     }
-
     function changeReps(type,exIndex,setIndex,value){updateSet(type,exIndex,setIndex,"reps",Number(value))}
     function changeWeight(type,exIndex,setIndex,value){updateSet(type,exIndex,setIndex,"weight",Number(value))}
     function toggleDone(type,exIndex,setIndex,checked){updateSet(type,exIndex,setIndex,"done",checked)}
@@ -687,10 +637,9 @@
       timerInterval=setInterval(()=>{
         currentTimerSeconds++;
         const el=document.getElementById("inlineTimerValue");
-        if(el) el.innerText=formatTime(currentTimerSeconds);
+        if(el)el.innerText=formatTime(currentTimerSeconds);
       },1000);
     }
-
     function startRestTimer(){
       clearInterval(timerInterval);
       currentTimerType="rest";
@@ -699,7 +648,7 @@
       timerInterval=setInterval(()=>{
         currentTimerSeconds--;
         const el=document.getElementById("inlineTimerValue");
-        if(el) el.innerText=formatTime(Math.max(0,currentTimerSeconds));
+        if(el)el.innerText=formatTime(Math.max(0,currentTimerSeconds));
         if(currentTimerSeconds<0){
           clearInterval(timerInterval);
           showToast("REST IS DONE");
@@ -709,18 +658,13 @@
         }
       },1000);
     }
-
     function stopTimer(silent=false){
       clearInterval(timerInterval);
-      if(!silent&&currentTimerType==="rest"){
-        showToast("REST IS DONE");
-        speak("REST IS DONE");
-      }
+      if(!silent&&currentTimerType==="rest"){showToast("REST IS DONE");speak("REST IS DONE")}
       currentTimerType=null;
       currentTimerSeconds=0;
       if(currentWorkoutKey&&document.getElementById("workoutScreen")&&!document.getElementById("workoutScreen").classList.contains("hidden"))renderLiveExercise();
     }
-
     function goToNextExercise(fromAuto=false){
       if(!currentWorkoutKey)return;
       const total=getWorkouts()[currentWorkoutKey].exercises.length;
@@ -729,11 +673,8 @@
         renderLiveExercise();
         updateProgress();
         if(!fromAuto)showToast("Moved to next exercise");
-      }else{
-        showToast("Last exercise");
-      }
+      }else showToast("Last exercise");
     }
-
     function goToPreviousExercise(){
       if(!currentWorkoutKey)return;
       if(currentExerciseIndex>0){
@@ -741,9 +682,7 @@
         renderLiveExercise();
         updateProgress();
         showToast("Moved to previous exercise");
-      }else{
-        showToast("First exercise");
-      }
+      }else showToast("First exercise");
     }
 
     function buildWorkoutPayload(){
@@ -756,7 +695,6 @@
         exercises:workouts[currentWorkoutKey].exercises.map((ex,i)=>({name:ex.name,muscle:ex.muscle,equipment:ex.equipment||"",sets:draft[i]}))
       };
     }
-
     function rememberLastWeights(payload){
       const map=getLastWeights();
       payload.exercises.forEach(ex=>{
@@ -765,7 +703,6 @@
       });
       saveLastWeights(map);
     }
-
     function finishWorkout(){
       const payload=buildWorkoutPayload();
       if(!payload)return;
@@ -774,10 +711,8 @@
       localStorage.setItem(HISTORY_KEY,JSON.stringify(history));
       rememberLastWeights(payload);
       updateHomeStats();
-
       const checkedSets=payload.exercises.reduce((sum,ex)=>sum+ex.sets.filter(s=>s.done).length,0);
       const volume=payload.exercises.reduce((sum,ex)=>sum+ex.sets.reduce((a,s)=>a+(Number(s.weight||0)*Number(s.reps||0)),0),0);
-
       document.getElementById("summarySets").innerText=checkedSets;
       document.getElementById("summaryVolume").innerText=Math.round(volume);
       showScreen("summaryScreen");
@@ -785,38 +720,25 @@
 
     function renderHistory(){
       const history=getHistory(),box=document.getElementById("historyList");
-      if(!history.length){
-        box.innerHTML=`<div class="history-meta">No workouts saved yet</div>`;
-        return;
-      }
+      if(!history.length){box.innerHTML=`<div class="history-meta">No workouts saved yet</div>`;return}
       box.innerHTML=history.map(item=>{
         const completed=item.exercises.reduce((sum,ex)=>sum+ex.sets.filter(s=>s.done).length,0);
-        return `<div class="history-item">
-          <div class="history-title">${item.workoutTitle}</div>
-          <div class="history-meta">${new Date(item.savedAt).toLocaleString()} • Checked sets: ${completed}</div>
-        </div>`;
+        return `<div class="history-item"><div class="history-title">${item.workoutTitle}</div><div class="history-meta">${new Date(item.savedAt).toLocaleString()} • Checked sets: ${completed}</div></div>`;
       }).join("");
     }
-
     function clearHistory(){
       localStorage.removeItem(HISTORY_KEY);
       renderHistory();
       updateHomeStats();
       showToast("History deleted");
     }
-
-    function showHistory(){
-      stopTimer(true);
-      renderHistory();
-      showScreen("historyScreen");
-    }
+    function showHistory(){stopTimer(true);renderHistory();showScreen("historyScreen")}
 
     function renderStats(){
       const history=getHistory();
       const totalWorkouts=history.length,weekly=getWeeklyWorkoutsCount();
       let totalSets=0,volume=0;
       const exerciseCount={};
-
       history.forEach(workout=>{
         workout.exercises.forEach(ex=>{
           exerciseCount[ex.name]=(exerciseCount[ex.name]||0)+1;
@@ -826,15 +748,10 @@
           });
         });
       });
-
       let topExercise="No data yet",topCount=0;
       Object.keys(exerciseCount).forEach(name=>{
-        if(exerciseCount[name]>topCount){
-          topCount=exerciseCount[name];
-          topExercise=name;
-        }
+        if(exerciseCount[name]>topCount){topCount=exerciseCount[name];topExercise=name}
       });
-
       document.getElementById("statsTotalWorkouts").innerText=totalWorkouts;
       document.getElementById("statsWeekly").innerText=weekly;
       document.getElementById("statsTotalSets").innerText=totalSets;
@@ -860,11 +777,11 @@
               <div class="history-meta">${workout.exercises.length} exercises</div>
             </div>
             <div class="editor-actions">
-              <button class="tool-btn tool-secondary" onclick="selectEditorWorkout('${key}')">Open</button>
-              <button class="tool-btn tool-secondary" onclick="moveWorkout('${key}',-1)">↑</button>
-              <button class="tool-btn tool-secondary" onclick="moveWorkout('${key}',1)">↓</button>
-              <button class="tool-btn tool-secondary" onclick="duplicateWorkout('${key}')">Duplicate</button>
-              <button class="tool-btn tool-danger" onclick="deleteWorkout('${key}')">Delete</button>
+              <button class="btn btn-secondary" onclick="selectEditorWorkout('${key}')">Open</button>
+              <button class="btn btn-secondary" onclick="moveWorkout('${key}',-1)">↑</button>
+              <button class="btn btn-secondary" onclick="moveWorkout('${key}',1)">↓</button>
+              <button class="btn btn-secondary" onclick="duplicateWorkout('${key}')">Duplicate</button>
+              <button class="btn btn-danger" onclick="deleteWorkout('${key}')">Delete</button>
             </div>
           </div>
         </div>
@@ -888,63 +805,38 @@
       box.innerHTML=workout.exercises.map((ex,idx)=>`
         <div class="editor-item">
           <div class="editor-grid two">
-            <div class="editor-box">
-              <label>Exercise Name</label>
-              <input value="${escapeHtml(ex.name)}" onchange="editExerciseField(${idx},'name',this.value)">
-            </div>
-            <div class="editor-box">
-              <label>Muscle</label>
-              <input value="${escapeHtml(ex.muscle)}" onchange="editExerciseField(${idx},'muscle',this.value)">
-            </div>
+            <input class="input" value="${escapeHtml(ex.name)}" onchange="editExerciseField(${idx},'name',this.value)">
+            <input class="input" value="${escapeHtml(ex.muscle)}" onchange="editExerciseField(${idx},'muscle',this.value)">
           </div>
-
           <div class="editor-grid two">
-            <div class="editor-box">
-              <label>Equipment</label>
-              <input value="${escapeHtml(ex.equipment||'')}" onchange="editExerciseField(${idx},'equipment',this.value)">
-            </div>
-            <div class="editor-box">
-              <label>Image URL</label>
-              <input value="${escapeHtml(ex.img)}" onchange="editExerciseField(${idx},'img',this.value)">
-            </div>
+            <input class="input" value="${escapeHtml(ex.equipment||'')}" onchange="editExerciseField(${idx},'equipment',this.value)">
+            <input class="input" value="${escapeHtml(ex.img)}" onchange="editExerciseField(${idx},'img',this.value)">
           </div>
-
           <div class="editor-grid two">
-            <div class="editor-box">
-              <label>Video URL</label>
-              <input value="${escapeHtml(ex.video)}" onchange="editExerciseField(${idx},'video',this.value)">
-            </div>
-            <div class="editor-box">
-              <label>Sets / Reps / Weight</label>
-              <div class="editor-grid three" style="margin-top:0">
-                <input type="number" min="1" value="${ex.sets||3}" onchange="editExerciseField(${idx},'sets',Number(this.value))">
-                <input type="number" min="1" value="${ex.defaultReps||8}" onchange="editExerciseField(${idx},'defaultReps',Number(this.value))">
-                <input type="number" min="0" step="0.5" value="${ex.defaultWeight||0}" onchange="editExerciseField(${idx},'defaultWeight',Number(this.value))">
-              </div>
+            <input class="input" value="${escapeHtml(ex.video)}" onchange="editExerciseField(${idx},'video',this.value)">
+            <div class="editor-grid three" style="margin-top:0">
+              <input class="input" type="number" min="1" value="${ex.sets||3}" onchange="editExerciseField(${idx},'sets',Number(this.value))">
+              <input class="input" type="number" min="1" value="${ex.defaultReps||8}" onchange="editExerciseField(${idx},'defaultReps',Number(this.value))">
+              <input class="input" type="number" min="0" step="0.5" value="${ex.defaultWeight||0}" onchange="editExerciseField(${idx},'defaultWeight',Number(this.value))">
             </div>
           </div>
-
           <div class="editor-actions">
-            <button class="tool-btn tool-secondary" onclick="moveExercise(${idx},-1)">↑</button>
-            <button class="tool-btn tool-secondary" onclick="moveExercise(${idx},1)">↓</button>
-            <button class="tool-btn tool-secondary" onclick="duplicateExercise(${idx})">Duplicate</button>
-            <button class="tool-btn tool-danger" onclick="deleteExercise(${idx})">Delete</button>
+            <button class="btn btn-secondary" onclick="moveExercise(${idx},-1)">↑</button>
+            <button class="btn btn-secondary" onclick="moveExercise(${idx},1)">↓</button>
+            <button class="btn btn-secondary" onclick="duplicateExercise(${idx})">Duplicate</button>
+            <button class="btn btn-danger" onclick="deleteExercise(${idx})">Delete</button>
           </div>
         </div>
       `).join("");
     }
 
     function escapeHtml(str){
-      return String(str??"")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;");
+      return String(str??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
     }
 
     function addWorkout(){
       const workouts=getWorkouts(),key="workout_"+Date.now();
-      workouts[key]={title:"New Workout",exercises:[]};
+      workouts[key]={title:"אימון חדש",exercises:[]};
       saveWorkouts(workouts);
       editorWorkoutKey=key;
       renderEditorWorkoutList();
@@ -952,7 +844,6 @@
       renderHomeWorkouts();
       showToast("Workout added");
     }
-
     function duplicateWorkout(key){
       const workouts=getWorkouts(),copyKey=key+"_copy_"+Date.now();
       workouts[copyKey]=JSON.parse(JSON.stringify(workouts[key]));
@@ -962,13 +853,9 @@
       renderHomeWorkouts();
       showToast("Workout duplicated");
     }
-
     function deleteWorkout(key){
       const workouts=getWorkouts();
-      if(Object.keys(workouts).length===1){
-        showToast("At least one workout required");
-        return;
-      }
+      if(Object.keys(workouts).length===1){showToast("At least one workout required");return}
       delete workouts[key];
       saveWorkouts(workouts);
       if(editorWorkoutKey===key)editorWorkoutKey=Object.keys(workouts)[0];
@@ -977,7 +864,6 @@
       renderHomeWorkouts();
       showToast("Workout deleted");
     }
-
     function moveWorkout(key,direction){
       const workouts=getWorkouts(),entries=Object.entries(workouts),idx=entries.findIndex(([k])=>k===key),newIdx=idx+direction;
       if(newIdx<0||newIdx>=entries.length)return;
@@ -1022,7 +908,6 @@
       renderHomeWorkouts();
       showToast("Exercise duplicated");
     }
-
     function deleteExercise(index){
       const workouts=getWorkouts();
       workouts[editorWorkoutKey].exercises.splice(index,1);
@@ -1032,7 +917,6 @@
       renderHomeWorkouts();
       showToast("Exercise deleted");
     }
-
     function moveExercise(index,direction){
       const workouts=getWorkouts(),arr=workouts[editorWorkoutKey].exercises,newIdx=index+direction;
       if(newIdx<0||newIdx>=arr.length)return;
@@ -1045,10 +929,10 @@
 
     function toggleFinder(){
       document.getElementById("finderArea").classList.toggle("hidden");
-      if(!document.getElementById("finderArea").classList.contains("hidden")) updateExerciseDropdown();
+      if(!document.getElementById("finderArea").classList.contains("hidden")) updateFinderResults();
     }
 
-    function updateExerciseDropdown(){
+    function updateFinderResults(){
       const muscle=document.getElementById("finderMuscle").value;
       const equipment=document.getElementById("finderEquipment").value;
       const q=(document.getElementById("finderSearch").value||"").trim().toLowerCase();
@@ -1058,29 +942,18 @@
       if(equipment) filtered=filtered.filter(x=>x.equipment===equipment);
       if(q) filtered=filtered.filter(x=>x.name.toLowerCase().includes(q));
 
-      const select=document.getElementById("finderExercise");
-      select.innerHTML='<option value="">בחר תרגיל</option>' + filtered.map(ex=>`<option value="${ex.name}">${ex.name}</option>`).join('');
-      renderFinderPreview();
-    }
+      const box=document.getElementById("finderResults");
+      document.getElementById("selectedCount").innerText=selectedFinderNames.length;
 
-    function renderFinderPreview(){
-      const selectedName=document.getElementById("finderExercise").value;
-      const box=document.getElementById("finderPreview");
-
-      if(!selectedName){
-        box.innerHTML='<div class="history-meta">בחר תרגיל מהרשימה כדי לראות תמונה וסרטון.</div>';
+      if(!filtered.length){
+        box.innerHTML='<div class="history-meta">לא נמצאו תרגילים תואמים.</div>';
         return;
       }
 
-      const ex=exerciseLibrary.find(x=>x.name===selectedName);
-      if(!ex){
-        box.innerHTML='<div class="history-meta">לא נמצא תרגיל.</div>';
-        return;
-      }
-
-      box.innerHTML=`
-        <div class="result-card">
-          <img class="result-thumb" src="${ex.img}" alt="${ex.name}">
+      box.innerHTML=filtered.map(ex=>`
+        <div class="finder-result">
+          <input class="finder-check" type="checkbox" ${selectedFinderNames.includes(ex.name)?"checked":""} onchange="toggleFinderSelection('${ex.name.replace(/'/g,"\\'")}')">
+          <img class="finder-thumb" src="${ex.img}" alt="${ex.name}">
           <div>
             <div class="history-title">${ex.name}</div>
             <div class="history-meta">
@@ -1089,37 +962,51 @@
             </div>
           </div>
           <div class="editor-actions">
-            <a class="tool-btn tool-secondary" href="${ex.video}" target="_blank">Video</a>
+            <a class="btn btn-secondary" href="${ex.video}" target="_blank">YouTube</a>
           </div>
         </div>
-      `;
+      `).join("");
     }
 
-    function addCurrentFinderExercise(){
+    function toggleFinderSelection(name){
+      if(selectedFinderNames.includes(name)){
+        selectedFinderNames=selectedFinderNames.filter(x=>x!==name);
+      }else{
+        selectedFinderNames.push(name);
+      }
+      document.getElementById("selectedCount").innerText=selectedFinderNames.length;
+      updateFinderResults();
+    }
+
+    function clearFinderSelection(){
+      selectedFinderNames=[];
+      document.getElementById("selectedCount").innerText="0";
+      updateFinderResults();
+    }
+
+    function addSelectedExercises(){
       if(!editorWorkoutKey){
         showToast("Select a workout first");
         return;
       }
-
-      const selectedName=document.getElementById("finderExercise").value;
-      if(!selectedName){
-        showToast("בחר תרגיל מהרשימה");
-        return;
-      }
-
-      const ex=exerciseLibrary.find(x=>x.name===selectedName);
-      if(!ex){
-        showToast("תרגיל לא נמצא");
+      if(!selectedFinderNames.length){
+        showToast("בחר לפחות תרגיל אחד");
         return;
       }
 
       const workouts=getWorkouts();
-      workouts[editorWorkoutKey].exercises.push(JSON.parse(JSON.stringify(ex)));
+      selectedFinderNames.forEach(name=>{
+        const ex=exerciseLibrary.find(x=>x.name===name);
+        if(ex) workouts[editorWorkoutKey].exercises.push(JSON.parse(JSON.stringify(ex)));
+      });
+
       saveWorkouts(workouts);
       resetDraft(editorWorkoutKey);
       renderEditorExerciseList();
       renderHomeWorkouts();
-      showToast("Exercise added to workout");
+      showToast(`${selectedFinderNames.length} exercises added`);
+      selectedFinderNames=[];
+      updateFinderResults();
     }
 
     updateHomeStats();
