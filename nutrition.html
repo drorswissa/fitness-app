@@ -41,9 +41,9 @@
     .macro.protein{background:linear-gradient(180deg,rgba(111,89,255,.95),rgba(75,59,189,.95))}
     .macro.carbs{background:linear-gradient(180deg,rgba(23,182,122,.95),rgba(12,124,83,.95))}
     .macro.fat{background:linear-gradient(180deg,rgba(216,132,23,.95),rgba(143,77,10,.95))}
-    .search-card{padding:14px}
-    .search-shell{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:22px;padding:10px 14px}
-    .search-shell input{width:100%;border:none;outline:none;background:transparent;color:var(--text);font-size:17px;padding:8px 0}
+    .search-card{padding:14px;position:sticky;top:10px;z-index:5}
+    .search-shell{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03));border:1px solid var(--line);border-radius:24px;padding:12px 16px;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+    .search-shell input{width:100%;border:none;outline:none;background:transparent;color:var(--text);font-size:18px;padding:10px 0;font-weight:700}
     .search-shell input::placeholder{color:#7f8aa2}
     .quick-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
     .chip{border:none;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:999px;font-size:13px;cursor:pointer}
@@ -119,7 +119,7 @@
 
   <div class="card search-card">
     <div class="search-shell">
-      <input id="searchInput" type="text" placeholder="חפש מזון בעברית... למשל: חזה עוף, אורז, ביצה" autocomplete="off" />
+      <input id="searchInput" type="text" placeholder="פשוט כתוב מזון בעברית... למשל: חזה עוף, אורז, ביצה, אבוקדו" autocomplete="off" />
     </div>
     <div class="quick-row">
       <button class="chip" onclick="quickSearch('חזה עוף')">חזה עוף</button>
@@ -261,8 +261,22 @@
 
     function filterFoods(q){
       const query = q.trim().toLowerCase();
-      if(!query) return FOODS.slice(0,6);
-      return FOODS.filter(food => food.aliases.some(a => a.toLowerCase().includes(query)) || food.he.includes(query)).slice(0,8);
+      if(!query) return FOODS.slice(0,8);
+      const scored = FOODS.map(food => {
+        const names = [food.he, ...food.aliases].map(v => String(v).toLowerCase());
+        let score = 0;
+        names.forEach(name => {
+          if(name === query) score = Math.max(score, 100);
+          else if(name.startsWith(query)) score = Math.max(score, 80);
+          else if(name.includes(query)) score = Math.max(score, 55);
+          else {
+            const compact = query.replace(/\s+/g,'');
+            if(name.replace(/\s+/g,'').includes(compact)) score = Math.max(score, 45);
+          }
+        });
+        return { food, score };
+      }).filter(x => x.score > 0).sort((a,b) => b.score - a.score);
+      return scored.slice(0,8).map(x => x.food);
     }
 
     function gramsFor(food, amount, unit){
@@ -416,7 +430,26 @@
       renderMeal('snack','snackList','snackTotal');
     }
 
-    searchInput.addEventListener('input', e => renderResults(e.target.value));
+    searchInput.addEventListener('input', e => {
+      renderResults(e.target.value);
+      const best = filterFoods(e.target.value)[0];
+      if(best){
+        state.selectedFoodId = best.id;
+        save();
+        renderSelected();
+      }
+    });
+    searchInput.addEventListener('keydown', e => {
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        const best = filterFoods(searchInput.value)[0];
+        if(best){
+          setSelected(best.id);
+          amountInput.focus();
+          amountInput.select();
+        }
+      }
+    });
     amountInput.addEventListener('input', updatePreview);
     unitSelect.addEventListener('change', updatePreview);
     addBtn.addEventListener('click', addItem);
