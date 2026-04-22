@@ -1,268 +1,1279 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TESTC 777</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workout Planner Pro</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-2: #131a2f;
+      --card: rgba(24, 34, 63, 0.92);
+      --card-2: rgba(34, 46, 84, 0.92);
+      --text: #f3f7ff;
+      --muted: #aeb9d6;
+      --line: rgba(255,255,255,0.08);
+      --accent: #8bff7a;
+      --accent-2: #62d96b;
+      --danger: #ff7070;
+      --warning: #ffd56b;
+      --info: #78c8ff;
+      --shadow: 0 18px 40px rgba(0,0,0,0.28);
+      --radius: 22px;
+    }
 
-<style>
-body{
-margin:0;
-font-family:Arial;
-background:#0b0f14;
-color:#fff;
-}
+    * { box-sizing: border-box; }
 
-.container{
-max-width:430px;
-margin:auto;
-padding:15px;
-}
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(98,217,107,0.12), transparent 24%),
+        radial-gradient(circle at left bottom, rgba(120,200,255,0.12), transparent 20%),
+        linear-gradient(180deg, #08101d 0%, #0b1020 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-.header{
-background:#121821;
-padding:15px;
-border-radius:16px;
-text-align:center;
-font-weight:bold;
-font-size:20px;
-}
+    .app {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px 14px 100px;
+    }
 
-.hero{
-margin-top:15px;
-background:#121821;
-padding:15px;
-border-radius:16px;
-text-align:center;
-}
+    .topbar {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
 
-.btn{
-background:#1ed760;
-border:none;
-padding:12px;
-border-radius:999px;
-font-weight:bold;
-margin-top:10px;
-width:100%;
-}
+    .hero, .stats-strip, .card, .modal-content, .drawer {
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
 
-.card{
-background:#121821;
-margin-top:12px;
-padding:15px;
-border-radius:16px;
-cursor:pointer;
-}
+    .hero {
+      border-radius: 28px;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 16px;
+      align-items: stretch;
+      min-height: 220px;
+    }
 
-.exercise{
-background:#111722;
-padding:12px;
-border-radius:16px;
-margin-top:10px;
-}
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 32px;
+    }
 
-.timer{
-font-size:28px;
-text-align:center;
-margin-top:10px;
-}
+    .hero p {
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0 0 16px;
+    }
 
-input{
-width:60px;
-background:#0b0f14;
-color:#fff;
-border:none;
-text-align:center;
-}
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-img{
-width:100%;
-border-radius:12px;
-margin-top:10px;
-}
+    .hero-side {
+      background: linear-gradient(180deg, rgba(139,255,122,.12), rgba(120,200,255,.08));
+      border-radius: 24px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
 
-.hidden{
-display:none;
-}
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      width: fit-content;
+    }
 
-.spotify{
-margin-top:15px;
-border-radius:16px;
-overflow:hidden;
-}
-</style>
+    .stats-strip {
+      border-radius: 28px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .stat-box {
+      background: var(--card-2);
+      border-radius: 20px;
+      padding: 14px;
+      border: 1px solid var(--line);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .sidebar, .main {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+
+    .card h2, .card h3 {
+      margin: 0 0 12px;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .days-list, .exercise-list, .history-list, .chips {
+      display: grid;
+      gap: 10px;
+    }
+
+    .day-item, .exercise-item, .history-item {
+      background: rgba(255,255,255,0.045);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .day-item.active {
+      outline: 2px solid rgba(139,255,122,0.55);
+      background: rgba(139,255,122,0.08);
+    }
+
+    .day-head, .row, .section-head, .exercise-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .day-title, .exercise-name {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .muted { color: var(--muted); }
+
+    .buttons, .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button, .button, select, input, textarea {
+      font: inherit;
+    }
+
+    button, .button {
+      border: none;
+      cursor: pointer;
+      border-radius: 16px;
+      padding: 12px 14px;
+      transition: .18s ease;
+    }
+
+    button:hover, .button:hover { transform: translateY(-1px); }
+
+    .primary {
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      color: #10200f;
+      font-weight: 700;
+    }
+
+    .secondary {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .danger {
+      background: rgba(255,112,112,0.14);
+      color: #ffd5d5;
+      border: 1px solid rgba(255,112,112,0.22);
+    }
+
+    .tiny {
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+    }
+
+    .grid-2, .grid-3 {
+      display: grid;
+      gap: 12px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      outline: none;
+    }
+
+    textarea { min-height: 90px; resize: vertical; }
+
+    .chips {
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    }
+
+    .chip {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .chip.active {
+      background: rgba(139,255,122,0.18);
+      border-color: rgba(139,255,122,0.38);
+      color: #efffea;
+    }
+
+    .progress {
+      height: 10px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .progress > div {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #9be8ff);
+      width: 0;
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 20px 10px;
+      border: 1px dashed var(--line);
+      border-radius: 16px;
+    }
+
+    .spotify-box {
+      display: grid;
+      gap: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border-radius: 18px;
+      padding: 14px;
+      border: 1px solid var(--line);
+    }
+
+    .spotify-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .modal, .drawer-wrap {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 30;
+    }
+
+    .modal.open, .drawer-wrap.open { display: block; }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+    }
+
+    .modal-content {
+      position: relative;
+      width: min(900px, calc(100vw - 24px));
+      margin: 4vh auto;
+      max-height: 92vh;
+      overflow: auto;
+      border-radius: 26px;
+      padding: 16px;
+      z-index: 2;
+    }
+
+    .drawer {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: min(430px, calc(100vw - 30px));
+      padding: 18px;
+      overflow: auto;
+      border-radius: 0 24px 24px 0;
+      z-index: 2;
+    }
+
+    .library-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .library-item {
+      display: grid;
+      gap: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      padding: 14px;
+      border-radius: 18px;
+    }
+
+    .taglist {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: rgba(255,255,255,0.08);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .footer-note {
+      color: var(--muted);
+      text-align: center;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 980px) {
+      .topbar, .layout, .hero, .stats-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app { padding: 12px 10px 100px; }
+      .hero h1 { font-size: 26px; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .stat-value { font-size: 24px; }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="app">
+    <section class="topbar">
+      <div class="hero">
+        <div>
+          <div class="badge">🏋️ מערכת אימונים חכמה</div>
+          <h1>תוכנית האימונים שלך</h1>
+          <p>
+            גרסה מלאה עם שמירת היסטוריה, סטטיסטיקה, בניית אימונים מתוך מאגר תרגילים,
+            סינון לפי שריר או אביזר, והוספת תרגילים לכל יום בלחיצות פשוטות.
+          </p>
+          <div class="hero-actions">
+            <button class="primary" id="startWorkoutBtn">התחל אימון היום</button>
+            <button class="secondary" id="openLibraryBtn">פתח מאגר תרגילים</button>
+            <button class="secondary" id="addWorkoutDayBtn">הוסף יום אימון</button>
+          </div>
+        </div>
+        <div class="hero-side">
+          <div>
+            <div class="sub">האימון הבא</div>
+            <div id="nextWorkoutName" style="font-size:26px;font-weight:700;margin-top:6px;">טוען...</div>
+            <div id="nextWorkoutHint" class="muted" style="margin-top:8px;">התאם יום אימון ובנה אותו איך שנוח לך</div>
+          </div>
+          <div class="spotify-box">
+            <div class="row">
+              <strong>🎵 פלייליסט לאימון</strong>
+              <span class="tag">Spotify</span>
+            </div>
+            <div class="muted">הקישור המובנה חזר לגרסה הזאת</div>
+            <a class="button primary spotify-link" id="spotifyLink" href="https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP" target="_blank" rel="noopener">פתח פלייליסט בספוטיפיי</a>
+          </div>
+        </div>
+      </div>
 
-<div class="container">
+      <div class="stats-strip">
+        <div class="stat-box">
+          <div class="stat-label">סך אימונים שבוצעו</div>
+          <div class="stat-value" id="totalWorkoutsStat">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">סך תרגילים שבוצעו</div>
+          <div class="stat-value" id="totalExercisesStat">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">רצף נוכחי</div>
+          <div class="stat-value" id="streakStat">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">יום הכי פעיל</div>
+          <div class="stat-value" id="favoriteDayStat">-</div>
+        </div>
+      </div>
+    </section>
 
-<div id="home">
+    <section class="layout">
+      <aside class="sidebar">
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>ימי אימון</h2>
+              <div class="sub">בחר יום והוסף אליו תרגילים</div>
+            </div>
+            <button class="secondary tiny" id="manageDaysBtn">ניהול</button>
+          </div>
+          <div class="days-list" id="daysList"></div>
+        </div>
 
-<div class="header">My Workout Plan</div>
+        <div class="card">
+          <h3>סינון מהיר למאגר</h3>
+          <div class="sub" style="margin-bottom:10px;">בחר שריר או אביזר</div>
+          <div class="chips" id="quickMuscleChips"></div>
+          <div style="height:10px"></div>
+          <div class="chips" id="quickEquipmentChips"></div>
+        </div>
 
-<div class="hero">
-<h2>Your Workout</h2>
-<button class="btn" onclick="startToday()">Start Today Workout</button>
-</div>
+        <div class="card">
+          <h3>היסטוריה אחרונה</h3>
+          <div class="history-list" id="historyList"></div>
+        </div>
+      </aside>
 
-<div class="spotify">
-<iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP"
-width="100%" height="80" frameborder="0"></iframe>
-</div>
+      <main class="main">
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2 id="selectedDayTitle">האימון שלך</h2>
+              <div class="sub" id="selectedDayMeta">טען או צור יום אימון</div>
+            </div>
+            <div class="action-row">
+              <button class="secondary" id="addExerciseToDayBtn">הוסף תרגיל</button>
+              <button class="secondary" id="editDayBtn">ערוך יום</button>
+              <button class="primary" id="completeWorkoutBtn">סיימתי אימון</button>
+            </div>
+          </div>
 
-<div id="workouts"></div>
+          <div class="progress" style="margin: 12px 0 14px;">
+            <div id="dayProgressBar"></div>
+          </div>
 
-</div>
+          <div class="exercise-list" id="exerciseList"></div>
+        </div>
 
-<div id="workoutPage" class="hidden">
+        <div class="grid-2">
+          <div class="card">
+            <h3>סטטיסטיקה לפי שרירים</h3>
+            <div id="muscleStats"></div>
+          </div>
+          <div class="card">
+            <h3>פעולות מהירות</h3>
+            <div class="buttons">
+              <button class="secondary" id="resetStatsBtn">איפוס סטטיסטיקה</button>
+              <button class="secondary" id="resetAllBtn">איפוס מלא לאפליקציה</button>
+              <button class="secondary" id="seedDefaultsBtn">שחזור ברירת מחדל</button>
+            </div>
+            <div class="footer-note">
+              כל המידע נשמר מקומית בדפדפן באמצעות Local Storage
+            </div>
+          </div>
+        </div>
+      </main>
+    </section>
+  </div>
 
-<div class="header" id="title"></div>
+  <div class="modal" id="modal">
+    <div class="overlay" data-close="modal"></div>
+    <div class="modal-content" id="modalContent"></div>
+  </div>
 
-<div id="exerciseArea"></div>
+  <div class="drawer-wrap" id="libraryDrawerWrap">
+    <div class="overlay" data-close="drawer"></div>
+    <div class="drawer">
+      <div class="section-head">
+        <div>
+          <h2>מאגר תרגילים</h2>
+          <div class="sub">סינון לפי שריר, אביזר או חיפוש חופשי</div>
+        </div>
+        <button class="secondary tiny" id="closeDrawerBtn">סגור</button>
+      </div>
 
-<button class="btn" onclick="nextExercise()">Next Exercise</button>
+      <div class="grid-2" style="margin:12px 0;">
+        <label>
+          חיפוש
+          <input id="librarySearch" placeholder="למשל: לחיצת חזה" />
+        </label>
+        <label>
+          שריר
+          <select id="libraryMuscleFilter"></select>
+        </label>
+        <label>
+          אביזר
+          <select id="libraryEquipmentFilter"></select>
+        </label>
+        <label>
+          הוסף ליום
+          <select id="libraryDayTarget"></select>
+        </label>
+      </div>
 
-</div>
+      <div class="buttons" style="margin-bottom: 12px;">
+        <button class="secondary tiny" id="clearLibraryFiltersBtn">נקה סינון</button>
+        <button class="secondary tiny" id="openCreateExerciseBtn">צור תרגיל חדש</button>
+      </div>
 
-</div>
+      <div class="library-grid" id="libraryGrid"></div>
+    </div>
+  </div>
 
-<script>
+  <script>
+    const STORAGE_KEY = 'workoutPlannerPro_v3';
 
-let workouts={
-monday:{title:"שני - חזה + יד קדמית",ex:[
-{name:"Bench Press",img:"https://img.youtube.com/vi/rT7DgCr-3pg/hqdefault.jpg"},
-{name:"Incline DB Press",img:"https://img.youtube.com/vi/8iPEnn-ltC8/hqdefault.jpg"},
-{name:"Cable Fly",img:"https://img.youtube.com/vi/eozdVDA78K0/hqdefault.jpg"},
-{name:"Curl",img:"https://img.youtube.com/vi/ykJmrZ5v0Oo/hqdefault.jpg"},
-{name:"Hammer Curl",img:"https://img.youtube.com/vi/zC3nLlEvin4/hqdefault.jpg"},
-{name:"Cable Curl",img:"https://img.youtube.com/vi/NFzTWp2qpiE/hqdefault.jpg"}
-]},
+    const EXERCISE_LIBRARY = [
+      { id: 'ex1', name: 'לחיצת חזה במכונה', muscle: 'חזה', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'שליטה מלאה בירידה', video: 'https://www.youtube.com/results?search_query=machine+chest+press' },
+      { id: 'ex2', name: 'פרפר חזה במכונה', muscle: 'חזה', equipment: 'מכונה', sets: 3, reps: '10-15', notes: 'כיווץ חזק בסוף התנועה', video: 'https://www.youtube.com/results?search_query=pec+deck+fly' },
+      { id: 'ex3', name: 'כבל קרוס עליון', muscle: 'חזה', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'טווח תנועה מלא', video: 'https://www.youtube.com/results?search_query=cable+crossover' },
+      { id: 'ex4', name: 'כפיפת מרפקים עם משקולות', muscle: 'יד קדמית', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12', notes: 'לא לנענע גוף', video: 'https://www.youtube.com/results?search_query=dumbbell+biceps+curl' },
+      { id: 'ex5', name: 'כפיפת מרפקים בכבל', muscle: 'יד קדמית', equipment: 'כבלים', sets: 3, reps: '10-12', notes: 'שליטה בקצב', video: 'https://www.youtube.com/results?search_query=cable+biceps+curl' },
+      { id: 'ex6', name: 'פולי עליון רחב', muscle: 'גב', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'למשוך למעלה החזה', video: 'https://www.youtube.com/results?search_query=lat+pulldown' },
+      { id: 'ex7', name: 'חתירה בישיבה', muscle: 'גב', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'שכמות לאחור', video: 'https://www.youtube.com/results?search_query=seated+cable+row' },
+      { id: 'ex8', name: 'פולאובר בכבל', muscle: 'גב', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'מתיחה וכיווץ', video: 'https://www.youtube.com/results?search_query=straight+arm+pulldown' },
+      { id: 'ex9', name: 'פשיטת מרפקים בחבל', muscle: 'יד אחורית', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'מרפקים צמודים', video: 'https://www.youtube.com/results?search_query=rope+triceps+pushdown' },
+      { id: 'ex10', name: 'פשיטת מרפקים מעל הראש', muscle: 'יד אחורית', equipment: 'כבלים', sets: 3, reps: '10-12', notes: 'טווח מלא', video: 'https://www.youtube.com/results?search_query=overhead+cable+triceps+extension' },
+      { id: 'ex11', name: 'לחיצת כתפיים במכונה', muscle: 'כתפיים', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'ללא קשת מוגזמת בגב', video: 'https://www.youtube.com/results?search_query=machine+shoulder+press' },
+      { id: 'ex12', name: 'הרחקת כתפיים לצדדים', muscle: 'כתפיים', equipment: 'משקולות חופשיות', sets: 3, reps: '12-15', notes: 'מרפק מעט כפוף', video: 'https://www.youtube.com/results?search_query=lateral+raise' },
+      { id: 'ex13', name: 'פייס פול', muscle: 'כתפיים', equipment: 'כבלים', sets: 3, reps: '12-15', notes: 'מרפקים גבוהים', video: 'https://www.youtube.com/results?search_query=face+pull' },
+      { id: 'ex14', name: 'לחיצת רגליים', muscle: 'רגליים', equipment: 'מכונה', sets: 4, reps: '10-15', notes: 'לא לנעול ברכיים', video: 'https://www.youtube.com/results?search_query=leg+press' },
+      { id: 'ex15', name: 'פשיטת ברכיים', muscle: 'רגליים', equipment: 'מכונה', sets: 3, reps: '12-15', notes: 'שליטה מלאה', video: 'https://www.youtube.com/results?search_query=leg+extension' },
+      { id: 'ex16', name: 'כפיפת ברכיים', muscle: 'רגליים', equipment: 'מכונה', sets: 3, reps: '12-15', notes: 'עצירה קצרה בסוף', video: 'https://www.youtube.com/results?search_query=leg+curl' },
+      { id: 'ex17', name: 'סקוואט גביע', muscle: 'רגליים', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12', notes: 'ירידה מבוקרת', video: 'https://www.youtube.com/results?search_query=goblet+squat' },
+      { id: 'ex18', name: 'כפיפות בטן בכבל', muscle: 'בטן', equipment: 'כבלים', sets: 3, reps: '12-20', notes: 'לא למשוך צוואר', video: 'https://www.youtube.com/results?search_query=cable+crunch' },
+      { id: 'ex19', name: 'פלאנק', muscle: 'ליבה', equipment: 'משקל גוף', sets: 3, reps: '30-60 שניות', notes: 'בטן אסופה', video: 'https://www.youtube.com/results?search_query=plank+exercise' },
+      { id: 'ex20', name: 'דחיקת חזה בסמית', muscle: 'חזה', equipment: 'סמית', sets: 3, reps: '8-10', notes: 'מתאים גם כתרגיל ראשון', video: 'https://www.youtube.com/results?search_query=smith+machine+bench+press' },
+      { id: 'ex21', name: 'משיכת מתח בסיוע', muscle: 'גב', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'ירידה מלאה', video: 'https://www.youtube.com/results?search_query=assisted+pull+up' },
+      { id: 'ex22', name: 'הליכת מכרעיים', muscle: 'רגליים', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12 לכל רגל', notes: 'צעד נשלט', video: 'https://www.youtube.com/results?search_query=walking+lunges' },
+      { id: 'ex23', name: 'דדליפט רומני', muscle: 'רגליים', equipment: 'משקולות חופשיות', sets: 3, reps: '8-12', notes: 'גב ניטרלי', video: 'https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell' },
+      { id: 'ex24', name: 'הרמת שוקיים בעמידה', muscle: 'רגליים', equipment: 'מכונה', sets: 4, reps: '12-20', notes: 'עצירה למעלה', video: 'https://www.youtube.com/results?search_query=standing+calf+raise' }
+    ];
 
-wednesday:{title:"רביעי - גב + יד אחורית",ex:[
-{name:"Lat Pulldown",img:"https://img.youtube.com/vi/SALxEARiMkw/hqdefault.jpg"},
-{name:"Row",img:"https://img.youtube.com/vi/GZbfZ033f74/hqdefault.jpg"},
-{name:"Deadlift",img:"https://img.youtube.com/vi/op9kVnSso6Q/hqdefault.jpg"},
-{name:"Pushdown",img:"https://img.youtube.com/vi/vB5OHsJ3EME/hqdefault.jpg"},
-{name:"Extension",img:"https://img.youtube.com/vi/tmgfpdpQ5sk/hqdefault.jpg"},
-{name:"Dip",img:"https://img.youtube.com/vi/2z8JmcrW-As/hqdefault.jpg"}
-]},
+    const DEFAULT_DAYS = [
+      {
+        id: uid(),
+        name: 'שני - חזה + יד קדמית',
+        notes: 'אימון דחיפה ויד קדמית',
+        exercises: [pickExercise('ex20'), pickExercise('ex2'), pickExercise('ex3'), pickExercise('ex4'), pickExercise('ex5')]
+      },
+      {
+        id: uid(),
+        name: 'רביעי - גב + יד אחורית',
+        notes: 'אימון משיכה ויד אחורית',
+        exercises: [pickExercise('ex6'), pickExercise('ex7'), pickExercise('ex8'), pickExercise('ex9'), pickExercise('ex10')]
+      },
+      {
+        id: uid(),
+        name: 'שישי - כתפיים + רגליים',
+        notes: 'שילוב כתפיים ורגליים',
+        exercises: [pickExercise('ex11'), pickExercise('ex12'), pickExercise('ex13'), pickExercise('ex14'), pickExercise('ex16'), pickExercise('ex24')]
+      },
+      {
+        id: uid(),
+        name: 'שבת - אימון משולב',
+        notes: 'אימון כללי קצר',
+        exercises: [pickExercise('ex1'), pickExercise('ex7'), pickExercise('ex12'), pickExercise('ex17'), pickExercise('ex18')]
+      }
+    ];
 
-friday:{title:"שישי - כתפיים + רגליים",ex:[
-{name:"Shoulder Press",img:"https://img.youtube.com/vi/qEwKCR5JCog/hqdefault.jpg"},
-{name:"Arnold Press",img:"https://img.youtube.com/vi/6Z15_WdXmVw/hqdefault.jpg"},
-{name:"Lateral Raise",img:"https://img.youtube.com/vi/3VcKaXpzqRo/hqdefault.jpg"},
-{name:"Squat",img:"https://img.youtube.com/vi/xqvCmoLULNY/hqdefault.jpg"},
-{name:"Lunge",img:"https://img.youtube.com/vi/L8fvypPrzzs/hqdefault.jpg"},
-{name:"Leg Press",img:"https://img.youtube.com/vi/Aq5uxXrXq7c/hqdefault.jpg"}
-]},
+    function uid() {
+      return 'id-' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+    }
 
-saturday:{title:"שבת - אימון משולב",ex:[
-{name:"Bench",img:"https://img.youtube.com/vi/rT7DgCr-3pg/hqdefault.jpg"},
-{name:"Row",img:"https://img.youtube.com/vi/GZbfZ033f74/hqdefault.jpg"},
-{name:"Shoulder",img:"https://img.youtube.com/vi/qEwKCR5JCog/hqdefault.jpg"},
-{name:"Curl",img:"https://img.youtube.com/vi/ykJmrZ5v0Oo/hqdefault.jpg"},
-{name:"Pushdown",img:"https://img.youtube.com/vi/vB5OHsJ3EME/hqdefault.jpg"},
-{name:"Squat",img:"https://img.youtube.com/vi/xqvCmoLULNY/hqdefault.jpg"}
-]}
-};
+    function pickExercise(baseId) {
+      const ex = EXERCISE_LIBRARY.find(x => x.id === baseId);
+      return {
+        instanceId: uid(),
+        libraryId: ex.id,
+        name: ex.name,
+        muscle: ex.muscle,
+        equipment: ex.equipment,
+        sets: ex.sets,
+        reps: ex.reps,
+        notes: ex.notes,
+        video: ex.video,
+        completed: false
+      };
+    }
 
-let currentWorkout=null;
-let index=0;
-let timer=0;
-let interval;
+    function createInitialState() {
+      return {
+        days: JSON.parse(JSON.stringify(DEFAULT_DAYS)),
+        selectedDayId: DEFAULT_DAYS[0].id,
+        history: [],
+        customExercises: [],
+        filters: {
+          muscle: 'הכל',
+          equipment: 'הכל',
+          search: ''
+        },
+        spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP'
+      };
+    }
 
-function render(){
-let html="";
-Object.keys(workouts).forEach(k=>{
-html+=`<div class="card" onclick="openWorkout('${k}')">
-${workouts[k].title}
-</div>`;
-});
-document.getElementById("workouts").innerHTML=html;
-}
+    let state = loadState();
 
-function startToday(){
-let d=new Date().getDay();
-let map={1:"monday",3:"wednesday",5:"friday",6:"saturday"};
-openWorkout(map[d]||"monday");
-}
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return createInitialState();
+        const parsed = JSON.parse(raw);
+        if (!parsed.days || !Array.isArray(parsed.days)) return createInitialState();
+        return {
+          ...createInitialState(),
+          ...parsed,
+          filters: { muscle: 'הכל', equipment: 'הכל', search: '', ...(parsed.filters || {}) }
+        };
+      } catch {
+        return createInitialState();
+      }
+    }
 
-function openWorkout(k){
-currentWorkout=workouts[k];
-index=0;
-document.getElementById("home").classList.add("hidden");
-document.getElementById("workoutPage").classList.remove("hidden");
-document.getElementById("title").innerText=currentWorkout.title;
-renderExercise();
-}
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
 
-function renderExercise(){
-let ex=currentWorkout.ex[index];
+    function getAllLibraryExercises() {
+      return [...EXERCISE_LIBRARY, ...state.customExercises];
+    }
 
-document.getElementById("exerciseArea").innerHTML=`
-<div class="exercise">
-<h3>${ex.name}</h3>
-<img src="${ex.img}">
-<div class="timer" id="timer">00:00</div>
+    function getSelectedDay() {
+      return state.days.find(d => d.id === state.selectedDayId) || state.days[0] || null;
+    }
 
-<div>
-Reps <input type="number" value="8">
-Weight <input type="number" value="20">
-</div>
+    function render() {
+      renderDays();
+      renderSelectedDay();
+      renderHistory();
+      renderStats();
+      renderQuickChips();
+      renderLibraryFilters();
+      renderLibrary();
+      renderHero();
+      saveState();
+    }
 
-<button class="btn" onclick="startSet()">Start Set</button>
-<button class="btn" onclick="startRest()">Rest</button>
+    function renderHero() {
+      const nextWorkout = getSelectedDay();
+      document.getElementById('nextWorkoutName').textContent = nextWorkout ? nextWorkout.name : 'אין יום אימון';
+      document.getElementById('nextWorkoutHint').textContent = nextWorkout ? `${nextWorkout.exercises.length} תרגילים בתוכנית הנבחרת` : 'הוסף יום אימון חדש';
+      document.getElementById('spotifyLink').href = state.spotifyUrl || 'https://open.spotify.com/';
+    }
 
-</div>
-`;
-}
+    function renderDays() {
+      const el = document.getElementById('daysList');
+      if (!state.days.length) {
+        el.innerHTML = '<div class="empty">אין ימים כרגע. צור יום אימון חדש.</div>';
+        return;
+      }
+      el.innerHTML = state.days.map(day => {
+        const done = day.exercises.filter(x => x.completed).length;
+        const total = day.exercises.length;
+        return `
+          <div class="day-item ${day.id === state.selectedDayId ? 'active' : ''}">
+            <div class="day-head">
+              <div>
+                <div class="day-title">${escapeHtml(day.name)}</div>
+                <div class="muted">${escapeHtml(day.notes || 'ללא הערה')}</div>
+              </div>
+              <button class="secondary tiny" onclick="selectDay('${day.id}')">בחר</button>
+            </div>
+            <div class="row" style="margin-top:10px;">
+              <span class="tag">${total} תרגילים</span>
+              <span class="tag">${done}/${total} הושלמו</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
 
-function startSet(){
-clearInterval(interval);
-timer=0;
-interval=setInterval(()=>{
-timer++;
-updateTimer();
-},1000);
-}
+    function renderSelectedDay() {
+      const day = getSelectedDay();
+      const title = document.getElementById('selectedDayTitle');
+      const meta = document.getElementById('selectedDayMeta');
+      const list = document.getElementById('exerciseList');
+      const progressBar = document.getElementById('dayProgressBar');
 
-function startRest(){
-clearInterval(interval);
-timer=60;
-interval=setInterval(()=>{
-timer--;
-updateTimer();
-if(timer<=0){
-clearInterval(interval);
-speak("REST IS DONE");
-nextExercise();
-}
-},1000);
-}
+      if (!day) {
+        title.textContent = 'אין יום אימון';
+        meta.textContent = 'צור יום חדש';
+        list.innerHTML = '<div class="empty">אין תוכן להצגה</div>';
+        progressBar.style.width = '0%';
+        return;
+      }
 
-function updateTimer(){
-let m=Math.floor(timer/60).toString().padStart(2,"0");
-let s=(timer%60).toString().padStart(2,"0");
-document.getElementById("timer").innerText=m+":"+s;
-}
+      title.textContent = day.name;
+      meta.textContent = `${day.exercises.length} תרגילים • ${day.notes || 'ללא הערות'}`;
 
-function nextExercise(){
-if(index<currentWorkout.ex.length-1){
-index++;
-renderExercise();
-}
-}
+      const completed = day.exercises.filter(e => e.completed).length;
+      const progress = day.exercises.length ? Math.round((completed / day.exercises.length) * 100) : 0;
+      progressBar.style.width = progress + '%';
 
-function speak(text){
-let msg=new SpeechSynthesisUtterance(text);
-msg.lang="en-US";
-speechSynthesis.speak(msg);
-}
+      if (!day.exercises.length) {
+        list.innerHTML = '<div class="empty">אין תרגילים ביום הזה. לחץ על "הוסף תרגיל".</div>';
+        return;
+      }
 
-render();
+      list.innerHTML = day.exercises.map((ex, index) => `
+        <div class="exercise-item">
+          <div class="exercise-top">
+            <div>
+              <div class="exercise-name">${escapeHtml(ex.name)}</div>
+              <div class="muted">${escapeHtml(ex.muscle)} • ${escapeHtml(ex.equipment)}</div>
+            </div>
+            <div class="buttons">
+              <button class="secondary tiny" onclick="toggleExerciseDone('${day.id}','${ex.instanceId}')">${ex.completed ? 'בטל סימון' : 'סמן בוצע'}</button>
+              <button class="secondary tiny" onclick="moveExercise('${day.id}','${ex.instanceId}',-1)">↑</button>
+              <button class="secondary tiny" onclick="moveExercise('${day.id}','${ex.instanceId}',1)">↓</button>
+              <button class="danger tiny" onclick="removeExercise('${day.id}','${ex.instanceId}')">מחק</button>
+            </div>
+          </div>
+          <div class="grid-3" style="margin-top:12px;">
+            <div class="tag">סטים: ${escapeHtml(String(ex.sets))}</div>
+            <div class="tag">חזרות: ${escapeHtml(String(ex.reps))}</div>
+            <div class="tag">סטטוס: ${ex.completed ? 'בוצע' : 'ממתין'}</div>
+          </div>
+          <div class="muted" style="margin-top:10px;">${escapeHtml(ex.notes || 'ללא דגשים')}</div>
+          <div class="buttons" style="margin-top:10px;">
+            <a class="button secondary tiny" href="${ex.video || '#'}" target="_blank" rel="noopener">סרטון / הדגמה</a>
+            <button class="secondary tiny" onclick="openEditExerciseModal('${day.id}','${ex.instanceId}')">ערוך תרגיל</button>
+          </div>
+        </div>
+      `).join('');
+    }
 
-</script>
+    function renderHistory() {
+      const el = document.getElementById('historyList');
+      if (!state.history.length) {
+        el.innerHTML = '<div class="empty">עדיין אין היסטוריה. סיים אימון ראשון כדי להתחיל לצבור נתונים.</div>';
+        return;
+      }
+      el.innerHTML = state.history.slice().reverse().slice(0, 6).map(item => `
+        <div class="history-item">
+          <div class="row">
+            <strong>${escapeHtml(item.dayName)}</strong>
+            <span class="tag">${formatDate(item.date)}</span>
+          </div>
+          <div class="muted" style="margin-top:8px;">
+            ${item.completedExercises} מתוך ${item.totalExercises} תרגילים • ${item.focus.join(', ') || 'ללא מיקוד'}
+          </div>
+        </div>
+      `).join('');
+    }
 
+    function renderStats() {
+      const totalWorkouts = state.history.length;
+      const totalExercises = state.history.reduce((sum, item) => sum + item.completedExercises, 0);
+      const streak = calculateStreak();
+      const favoriteDay = getFavoriteDay();
+
+      document.getElementById('totalWorkoutsStat').textContent = totalWorkouts;
+      document.getElementById('totalExercisesStat').textContent = totalExercises;
+      document.getElementById('streakStat').textContent = streak;
+      document.getElementById('favoriteDayStat').textContent = favoriteDay || '-';
+
+      const muscleCounts = {};
+      state.history.forEach(item => {
+        item.focus.forEach(m => {
+          muscleCounts[m] = (muscleCounts[m] || 0) + 1;
+        });
+      });
+      const box = document.getElementById('muscleStats');
+      const entries = Object.entries(muscleCounts).sort((a,b)=>b[1]-a[1]);
+      if (!entries.length) {
+        box.innerHTML = '<div class="empty">הסטטיסטיקה תופיע אחרי שתסיים אימונים</div>';
+        return;
+      }
+      box.innerHTML = entries.map(([muscle,count]) => `
+        <div class="history-item" style="margin-bottom:10px;">
+          <div class="row">
+            <strong>${escapeHtml(muscle)}</strong>
+            <span class="tag">${count} אימונים</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderQuickChips() {
+      const muscles = ['הכל', ...new Set(getAllLibraryExercises().map(x => x.muscle))];
+      const equipment = ['הכל', ...new Set(getAllLibraryExercises().map(x => x.equipment))];
+
+      document.getElementById('quickMuscleChips').innerHTML = muscles.map(m => `
+        <button class="chip ${state.filters.muscle === m ? 'active' : ''}" onclick="setQuickFilter('muscle','${escapeAttr(m)}')">${escapeHtml(m)}</button>
+      `).join('');
+
+      document.getElementById('quickEquipmentChips').innerHTML = equipment.map(eq => `
+        <button class="chip ${state.filters.equipment === eq ? 'active' : ''}" onclick="setQuickFilter('equipment','${escapeAttr(eq)}')">${escapeHtml(eq)}</button>
+      `).join('');
+    }
+
+    function renderLibraryFilters() {
+      const muscles = ['הכל', ...new Set(getAllLibraryExercises().map(x => x.muscle))];
+      const equipment = ['הכל', ...new Set(getAllLibraryExercises().map(x => x.equipment))];
+      const days = state.days;
+
+      const muscleSelect = document.getElementById('libraryMuscleFilter');
+      const equipmentSelect = document.getElementById('libraryEquipmentFilter');
+      const dayTarget = document.getElementById('libraryDayTarget');
+      const search = document.getElementById('librarySearch');
+
+      muscleSelect.innerHTML = muscles.map(m => `<option value="${escapeAttr(m)}">${escapeHtml(m)}</option>`).join('');
+      equipmentSelect.innerHTML = equipment.map(eq => `<option value="${escapeAttr(eq)}">${escapeHtml(eq)}</option>`).join('');
+      dayTarget.innerHTML = days.map(day => `<option value="${day.id}">${escapeHtml(day.name)}</option>`).join('');
+
+      muscleSelect.value = state.filters.muscle;
+      equipmentSelect.value = state.filters.equipment;
+      dayTarget.value = state.selectedDayId || days[0]?.id || '';
+      search.value = state.filters.search;
+    }
+
+    function renderLibrary() {
+      const grid = document.getElementById('libraryGrid');
+      const dayId = document.getElementById('libraryDayTarget').value || state.selectedDayId;
+      let items = getAllLibraryExercises();
+
+      if (state.filters.search.trim()) {
+        const q = state.filters.search.trim().toLowerCase();
+        items = items.filter(x => [x.name, x.muscle, x.equipment, x.notes].join(' ').toLowerCase().includes(q));
+      }
+      if (state.filters.muscle !== 'הכל') items = items.filter(x => x.muscle === state.filters.muscle);
+      if (state.filters.equipment !== 'הכל') items = items.filter(x => x.equipment === state.filters.equipment);
+
+      if (!items.length) {
+        grid.innerHTML = '<div class="empty">לא נמצאו תרגילים בסינון הזה</div>';
+        return;
+      }
+
+      grid.innerHTML = items.map(item => `
+        <div class="library-item">
+          <div class="row">
+            <strong>${escapeHtml(item.name)}</strong>
+            <span class="tag">${escapeHtml(item.muscle)}</span>
+          </div>
+          <div class="taglist">
+            <span class="tag">${escapeHtml(item.equipment)}</span>
+            <span class="tag">${escapeHtml(String(item.sets))} סטים</span>
+            <span class="tag">${escapeHtml(String(item.reps))}</span>
+          </div>
+          <div class="muted">${escapeHtml(item.notes || 'ללא הערות')}</div>
+          <div class="buttons">
+            <button class="primary tiny" onclick="addLibraryExerciseToDay('${item.id}','${dayId}')">הוסף ליום הנבחר</button>
+            <a class="button secondary tiny" href="${item.video || '#'}" target="_blank" rel="noopener">סרטון</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectDay(dayId) {
+      state.selectedDayId = dayId;
+      render();
+    }
+
+    function toggleExerciseDone(dayId, instanceId) {
+      const day = state.days.find(d => d.id === dayId);
+      const ex = day?.exercises.find(e => e.instanceId === instanceId);
+      if (!ex) return;
+      ex.completed = !ex.completed;
+      render();
+    }
+
+    function removeExercise(dayId, instanceId) {
+      const day = state.days.find(d => d.id === dayId);
+      if (!day) return;
+      day.exercises = day.exercises.filter(e => e.instanceId !== instanceId);
+      render();
+    }
+
+    function moveExercise(dayId, instanceId, direction) {
+      const day = state.days.find(d => d.id === dayId);
+      if (!day) return;
+      const idx = day.exercises.findIndex(e => e.instanceId === instanceId);
+      const newIdx = idx + direction;
+      if (idx < 0 || newIdx < 0 || newIdx >= day.exercises.length) return;
+      const [item] = day.exercises.splice(idx, 1);
+      day.exercises.splice(newIdx, 0, item);
+      render();
+    }
+
+    function addLibraryExerciseToDay(libraryId, dayId) {
+      const ex = getAllLibraryExercises().find(x => x.id === libraryId);
+      const day = state.days.find(d => d.id === dayId);
+      if (!ex || !day) return;
+      day.exercises.push({
+        instanceId: uid(),
+        libraryId: ex.id,
+        name: ex.name,
+        muscle: ex.muscle,
+        equipment: ex.equipment,
+        sets: ex.sets,
+        reps: ex.reps,
+        notes: ex.notes,
+        video: ex.video,
+        completed: false
+      });
+      state.selectedDayId = dayId;
+      render();
+    }
+
+    function completeWorkout() {
+      const day = getSelectedDay();
+      if (!day || !day.exercises.length) return alert('אין תרגילים ביום הנבחר');
+      const completedExercises = day.exercises.filter(x => x.completed).length;
+      const totalExercises = day.exercises.length;
+      const focus = [...new Set(day.exercises.map(x => x.muscle))];
+
+      state.history.push({
+        id: uid(),
+        dayId: day.id,
+        dayName: day.name,
+        date: new Date().toISOString(),
+        completedExercises,
+        totalExercises,
+        focus
+      });
+
+      day.exercises.forEach(x => x.completed = false);
+      render();
+      alert('האימון נשמר בהיסטוריה בהצלחה');
+    }
+
+    function calculateStreak() {
+      if (!state.history.length) return 0;
+      const dates = [...new Set(state.history.map(x => x.date.slice(0,10)))].sort().reverse();
+      let streak = 0;
+      let current = new Date();
+      current.setHours(0,0,0,0);
+
+      for (let i = 0; i < 365; i++) {
+        const iso = current.toISOString().slice(0,10);
+        if (dates.includes(iso)) {
+          streak++;
+          current.setDate(current.getDate() - 1);
+        } else {
+          if (streak === 0) current.setDate(current.getDate() - 1);
+          else break;
+        }
+      }
+      return streak;
+    }
+
+    function getFavoriteDay() {
+      if (!state.history.length) return '';
+      const counts = {};
+      state.history.forEach(item => { counts[item.dayName] = (counts[item.dayName] || 0) + 1; });
+      return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0] || '';
+    }
+
+    function openModal(html) {
+      document.getElementById('modalContent').innerHTML = html;
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+    }
+
+    function openDrawer() {
+      document.getElementById('libraryDrawerWrap').classList.add('open');
+      renderLibrary();
+    }
+
+    function closeDrawer() {
+      document.getElementById('libraryDrawerWrap').classList.remove('open');
+    }
+
+    function openDayModal(existingId = null) {
+      const existing = existingId ? state.days.find(d => d.id === existingId) : null;
+      openModal(`
+        <div class="section-head">
+          <div>
+            <h2>${existing ? 'עריכת יום אימון' : 'יצירת יום אימון'}</h2>
+            <div class="sub">אפשר להוסיף יום חדש או לערוך יום קיים</div>
+          </div>
+          <button class="secondary tiny" onclick="closeModal()">סגור</button>
+        </div>
+        <div class="grid-2" style="margin-top:14px;">
+          <label>שם היום
+            <input id="dayNameInput" value="${escapeAttr(existing?.name || '')}" placeholder="למשל: ראשון - גב" />
+          </label>
+          <label>הערות
+            <input id="dayNotesInput" value="${escapeAttr(existing?.notes || '')}" placeholder="דגשים ליום הזה" />
+          </label>
+        </div>
+        <div class="buttons" style="margin-top:14px;">
+          <button class="primary" onclick="saveDayModal('${existing?.id || ''}')">שמור</button>
+          ${existing ? `<button class="danger" onclick="deleteDay('${existing.id}')">מחק יום</button>` : ''}
+        </div>
+      `);
+    }
+
+    function saveDayModal(existingId) {
+      const name = document.getElementById('dayNameInput').value.trim();
+      const notes = document.getElementById('dayNotesInput').value.trim();
+      if (!name) return alert('יש להזין שם ליום האימון');
+      if (existingId) {
+        const day = state.days.find(d => d.id === existingId);
+        if (!day) return;
+        day.name = name;
+        day.notes = notes;
+      } else {
+        const newDay = { id: uid(), name, notes, exercises: [] };
+        state.days.push(newDay);
+        state.selectedDayId = newDay.id;
+      }
+      closeModal();
+      render();
+    }
+
+    function deleteDay(dayId) {
+      if (!confirm('למחוק את יום האימון הזה?')) return;
+      state.days = state.days.filter(d => d.id !== dayId);
+      state.selectedDayId = state.days[0]?.id || null;
+      closeModal();
+      render();
+    }
+
+    function openCreateExerciseModal() {
+      openModal(`
+        <div class="section-head">
+          <div>
+            <h2>יצירת תרגיל חדש</h2>
+            <div class="sub">התרגיל יישמר במאגר האישי שלך</div>
+          </div>
+          <button class="secondary tiny" onclick="closeModal()">סגור</button>
+        </div>
+        <div class="grid-2" style="margin-top:14px;">
+          <label>שם התרגיל<input id="newExName" placeholder="למשל: לחיצת כתפיים בדאמבלים" /></label>
+          <label>שריר<input id="newExMuscle" placeholder="למשל: כתפיים" /></label>
+          <label>אביזר<input id="newExEquipment" placeholder="למשל: משקולות חופשיות" /></label>
+          <label>סטים<input id="newExSets" type="number" min="1" value="3" /></label>
+          <label>חזרות<input id="newExReps" placeholder="למשל: 8-12" /></label>
+          <label>קישור וידאו<input id="newExVideo" placeholder="קישור ליוטיוב / הדגמה" /></label>
+        </div>
+        <label style="margin-top:12px;">הערות<textarea id="newExNotes" placeholder="דגשים לביצוע"></textarea></label>
+        <div class="buttons" style="margin-top:14px;">
+          <button class="primary" onclick="saveNewExercise()">שמור תרגיל</button>
+        </div>
+      `);
+    }
+
+    function saveNewExercise() {
+      const item = {
+        id: uid(),
+        name: document.getElementById('newExName').value.trim(),
+        muscle: document.getElementById('newExMuscle').value.trim(),
+        equipment: document.getElementById('newExEquipment').value.trim(),
+        sets: Number(document.getElementById('newExSets').value || 3),
+        reps: document.getElementById('newExReps').value.trim() || '8-12',
+        video: document.getElementById('newExVideo').value.trim() || 'https://www.youtube.com/',
+        notes: document.getElementById('newExNotes').value.trim()
+      };
+      if (!item.name || !item.muscle || !item.equipment) return alert('יש למלא שם, שריר ואביזר');
+      state.customExercises.push(item);
+      closeModal();
+      render();
+      openDrawer();
+    }
+
+    function openEditExerciseModal(dayId, instanceId) {
+      const day = state.days.find(d => d.id === dayId);
+      const ex = day?.exercises.find(e => e.instanceId === instanceId);
+      if (!ex) return;
+      openModal(`
+        <div class="section-head">
+          <div>
+            <h2>עריכת תרגיל</h2>
+            <div class="sub">עדכון תרגיל בתוך יום האימון</div>
+          </div>
+          <button class="secondary tiny" onclick="closeModal()">סגור</button>
+        </div>
+        <div class="grid-2" style="margin-top:14px;">
+          <label>שם התרגיל<input id="editExName" value="${escapeAttr(ex.name)}" /></label>
+          <label>שריר<input id="editExMuscle" value="${escapeAttr(ex.muscle)}" /></label>
+          <label>אביזר<input id="editExEquipment" value="${escapeAttr(ex.equipment)}" /></label>
+          <label>סטים<input id="editExSets" type="number" min="1" value="${escapeAttr(String(ex.sets))}" /></label>
+          <label>חזרות<input id="editExReps" value="${escapeAttr(String(ex.reps))}" /></label>
+          <label>קישור וידאו<input id="editExVideo" value="${escapeAttr(ex.video || '')}" /></label>
+        </div>
+        <label style="margin-top:12px;">הערות<textarea id="editExNotes">${escapeHtml(ex.notes || '')}</textarea></label>
+        <div class="buttons" style="margin-top:14px;">
+          <button class="primary" onclick="saveEditedExercise('${dayId}','${instanceId}')">שמור שינויים</button>
+        </div>
+      `);
+    }
+
+    function saveEditedExercise(dayId, instanceId) {
+      const day = state.days.find(d => d.id === dayId);
+      const ex = day?.exercises.find(e => e.instanceId === instanceId);
+      if (!ex) return;
+      ex.name = document.getElementById('editExName').value.trim();
+      ex.muscle = document.getElementById('editExMuscle').value.trim();
+      ex.equipment = document.getElementById('editExEquipment').value.trim();
+      ex.sets = Number(document.getElementById('editExSets').value || 3);
+      ex.reps = document.getElementById('editExReps').value.trim();
+      ex.video = document.getElementById('editExVideo').value.trim();
+      ex.notes = document.getElementById('editExNotes').value.trim();
+      closeModal();
+      render();
+    }
+
+    function setQuickFilter(type, value) {
+      state.filters[type] = value;
+      render();
+      openDrawer();
+    }
+
+    function startWorkout() {
+      const day = getSelectedDay();
+      if (!day) return alert('אין יום אימון נבחר');
+      alert('האימון של היום: ' + day.name + '\nסמן תרגילים כבוצעו ואז לחץ "סיימתי אימון" לשמירה בהיסטוריה.');
+    }
+
+    function resetStats() {
+      if (!confirm('לאפס רק את ההיסטוריה והסטטיסטיקה?')) return;
+      state.history = [];
+      render();
+    }
+
+    function resetAll() {
+      if (!confirm('לאפס את כל האפליקציה? כל הנתונים יימחקו.')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      state = createInitialState();
+      render();
+    }
+
+    function seedDefaults() {
+      if (!confirm('להחזיר את ימי ברירת המחדל?')) return;
+      state.days = JSON.parse(JSON.stringify(DEFAULT_DAYS));
+      state.selectedDayId = state.days[0]?.id || null;
+      render();
+    }
+
+    function formatDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function escapeAttr(str) {
+      return escapeHtml(str).replace(/`/g, '&#96;');
+    }
+
+    document.getElementById('startWorkoutBtn').addEventListener('click', startWorkout);
+    document.getElementById('openLibraryBtn').addEventListener('click', openDrawer);
+    document.getElementById('closeDrawerBtn').addEventListener('click', closeDrawer);
+    document.getElementById('addWorkoutDayBtn').addEventListener('click', () => openDayModal());
+    document.getElementById('manageDaysBtn').addEventListener('click', () => openDayModal(getSelectedDay()?.id));
+    document.getElementById('editDayBtn').addEventListener('click', () => openDayModal(getSelectedDay()?.id));
+    document.getElementById('addExerciseToDayBtn').addEventListener('click', openDrawer);
+    document.getElementById('completeWorkoutBtn').addEventListener('click', completeWorkout);
+    document.getElementById('resetStatsBtn').addEventListener('click', resetStats);
+    document.getElementById('resetAllBtn').addEventListener('click', resetAll);
+    document.getElementById('seedDefaultsBtn').addEventListener('click', seedDefaults);
+
+    document.getElementById('librarySearch').addEventListener('input', e => {
+      state.filters.search = e.target.value;
+      renderLibrary();
+      saveState();
+    });
+    document.getElementById('libraryMuscleFilter').addEventListener('change', e => {
+      state.filters.muscle = e.target.value;
+      render();
+    });
+    document.getElementById('libraryEquipmentFilter').addEventListener('change', e => {
+      state.filters.equipment = e.target.value;
+      render();
+    });
+    document.getElementById('libraryDayTarget').addEventListener('change', () => renderLibrary());
+    document.getElementById('clearLibraryFiltersBtn').addEventListener('click', () => {
+      state.filters = { muscle: 'הכל', equipment: 'הכל', search: '' };
+      render();
+    });
+    document.getElementById('openCreateExerciseBtn').addEventListener('click', openCreateExerciseModal);
+
+    document.querySelectorAll('[data-close]').forEach(el => {
+      el.addEventListener('click', () => {
+        closeModal();
+        closeDrawer();
+      });
+    });
+
+    window.selectDay = selectDay;
+    window.toggleExerciseDone = toggleExerciseDone;
+    window.removeExercise = removeExercise;
+    window.moveExercise = moveExercise;
+    window.addLibraryExerciseToDay = addLibraryExerciseToDay;
+    window.openEditExerciseModal = openEditExerciseModal;
+    window.saveEditedExercise = saveEditedExercise;
+    window.setQuickFilter = setQuickFilter;
+    window.closeModal = closeModal;
+    window.saveDayModal = saveDayModal;
+    window.deleteDay = deleteDay;
+    window.saveNewExercise = saveNewExercise;
+
+    render();
+  </script>
 </body>
 </html>
