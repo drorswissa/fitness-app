@@ -7,25 +7,23 @@
 <style>
 body{
   margin:0;
-  background:#04080f;
+  background:#050a14;
+  font-family:-apple-system, BlinkMacSystemFont;
   color:white;
-  font-family:Arial;
   max-width:420px;
   margin:auto;
-  padding:16px;
 }
 
 /* HEADER */
 .header{
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
+  padding:16px;
   font-size:20px;
-  font-weight:bold;
+  font-weight:600;
 }
 
-.btn{
+.back{
   background:#111827;
   padding:8px 12px;
   border-radius:12px;
@@ -34,79 +32,83 @@ body{
 
 /* CARD */
 .card{
-  background:linear-gradient(180deg,#0b1324,#020617);
-  border-radius:24px;
+  margin:12px;
   padding:18px;
-  margin-bottom:16px;
+  border-radius:26px;
+  background:linear-gradient(180deg,#0c1427,#030712);
+  box-shadow:0 0 30px rgba(0,0,0,0.6);
 }
 
 /* CIRCLE */
-.circleWrap{
+.wrap{
   display:flex;
   justify-content:center;
-  margin-bottom:10px;
+  position:relative;
 }
 
 svg{
   transform:rotate(-90deg);
 }
 
-.circleText{
+.text{
   position:absolute;
-  font-size:26px;
-  font-weight:bold;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:28px;
+  font-weight:600;
 }
 
 /* MACROS */
 .macros{
   display:flex;
   gap:10px;
+  margin-top:16px;
 }
 
-.macro{
+.box{
   flex:1;
   padding:14px;
-  border-radius:14px;
+  border-radius:16px;
   text-align:center;
-  font-size:14px;
 }
 
-.pro{background:#3b2f85;}
-.carb{background:#065f46;}
-.fat{background:#92400e;}
+.pro{background:#4338ca;}
+.carb{background:#047857;}
+.fat{background:#b45309;}
 
-/* FOOD */
+/* SEARCH */
+.search{
+  margin:12px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:16px;
+  background:#111827;
+  color:white;
+}
+
+/* RESULTS */
+.result{
+  padding:12px;
+  border-bottom:1px solid #222;
+}
+
+/* FOOD LIST */
 .food{
   display:flex;
-  align-items:center;
   gap:12px;
-  padding:10px 0;
+  padding:12px;
   border-bottom:1px solid #111;
 }
 
 .food img{
   width:50px;
   height:50px;
-  border-radius:10px;
+  border-radius:12px;
   object-fit:cover;
-}
-
-/* SEARCH */
-input{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  border:none;
-  background:#111827;
-  color:white;
-  font-size:14px;
-}
-
-/* RESULT */
-.result{
-  padding:10px;
-  border-bottom:1px solid #222;
-  cursor:pointer;
 }
 
 /* FAB */
@@ -115,15 +117,15 @@ input{
   bottom:25px;
   left:50%;
   transform:translateX(-50%);
-  width:65px;
-  height:65px;
+  width:70px;
+  height:70px;
   border-radius:50%;
   background:linear-gradient(45deg,#7c3aed,#a855f7);
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   font-size:32px;
-  box-shadow:0 0 20px rgba(124,58,237,0.6);
+  box-shadow:0 0 25px rgba(124,58,237,0.8);
 }
 </style>
 </head>
@@ -131,40 +133,40 @@ input{
 <body>
 
 <div class="header">
-  <div class="btn" onclick="location.href='index.html'">← אימונים</div>
+  <div class="back" onclick="location.href='index.html'">← אימונים</div>
   מעקב תזונה
   <div></div>
 </div>
 
 <div class="card">
 
-<div class="circleWrap">
-<svg width="160" height="160">
-  <circle cx="80" cy="80" r="70" stroke="#1f2937" stroke-width="10" fill="none"/>
-  <circle id="progress" cx="80" cy="80" r="70" stroke="#fb923c" stroke-width="10" fill="none"
-    stroke-dasharray="440" stroke-dashoffset="440"/>
+<div class="wrap">
+<svg width="170" height="170">
+<circle cx="85" cy="85" r="75" stroke="#1f2937" stroke-width="12" fill="none"/>
+<circle id="progress" cx="85" cy="85" r="75" stroke="#fb923c" stroke-width="12"
+fill="none" stroke-dasharray="470" stroke-dashoffset="470"/>
 </svg>
-<div class="circleText" id="cal">0</div>
+<div class="text" id="cal">0</div>
 </div>
 
-<div style="text-align:center;color:#aaa;font-size:13px">
- יעד יומי: <span id="goal"></span> קלוריות (גרעון 500)
+<div style="text-align:center;color:#aaa;margin-top:10px">
+ יעד: <span id="goal"></span> קלוריות
 </div>
 
 <div class="macros">
-<div class="macro pro">חלבון<br><b id="pro">0</b></div>
-<div class="macro carb">פחמימות<br><b id="carb">0</b></div>
-<div class="macro fat">שומן<br><b id="fat">0</b></div>
+<div class="box pro">חלבון<br><b id="pro">0</b></div>
+<div class="box carb">פחמימות<br><b id="carb">0</b></div>
+<div class="box fat">שומן<br><b id="fat">0</b></div>
 </div>
 
 </div>
 
-<div class="card">
-<input id="search" placeholder="חפש מזון (עוף, אורז, ביצה...)" />
+<div class="search">
+<input id="search" placeholder="חפש מזון (עוף, אורז...)" />
 <div id="results"></div>
 </div>
 
-<div class="card" id="log"></div>
+<div id="log"></div>
 
 <div class="fab" onclick="addFood()">+</div>
 
@@ -176,27 +178,26 @@ goal.innerText=goalCalories;
 
 let data=JSON.parse(localStorage.getItem("food"))||[];
 
-const dict={
- "אורז":"rice","עוף":"chicken","ביצה":"egg",
- "טונה":"tuna","גבינה":"cheese","לחם":"bread",
- "בננה":"banana","חלב":"milk"
+const map={
+ "עוף":"chicken","אורז":"rice","ביצה":"egg","טונה":"tuna",
+ "גבינה":"cheese","לחם":"bread","בננה":"banana"
 };
 
 let selected;
 
-async function searchFood(q){
+search.oninput=async(e)=>{
+ let q=e.target.value;
  if(!q)return;
 
- let query=dict[q]||q;
+ let query=map[q]||q;
 
- const res=await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${query}&search_simple=1&action=process&json=1&page_size=8`);
- const d=await res.json();
+ let res=await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${query}&search_simple=1&action=process&json=1&page_size=6`);
+ let d=await res.json();
 
  results.innerHTML=d.products.map(p=>`
-   <div class="result" onclick='selectFood(${JSON.stringify(p)})'>
-     ${p.product_name||"מוצר"}
-   </div>
- `).join("");
+ <div class="result" onclick='selectFood(${JSON.stringify(p)})'>
+ ${p.product_name||"מוצר"}
+ </div>`).join("");
 }
 
 function selectFood(p){selected=p;}
@@ -204,7 +205,7 @@ function selectFood(p){selected=p;}
 function addFood(){
  if(!selected)return;
 
- const item={
+ let item={
   name:selected.product_name,
   cal:selected.nutriments.energy_kcal_100g||0,
   pro:selected.nutriments.proteins_100g||0,
@@ -222,30 +223,23 @@ function render(){
  let c=0,p=0,car=0,f=0;
 
  log.innerHTML=data.map(x=>{
-  c+=x.cal;p+=x.pro;car+=x.carb;f+=x.fat;
+ c+=x.cal;p+=x.pro;car+=x.carb;f+=x.fat;
 
-  return `
-  <div class="food">
-    <img src="${x.img}">
-    <div>
-      ${x.name}<br>
-      <small>${Math.round(x.cal)} קלוריות</small>
-    </div>
-  </div>`;
+ return `
+ <div class="food">
+ <img src="${x.img}">
+ <div>${x.name}<br><small>${Math.round(x.cal)} קלוריות</small></div>
+ </div>`;
  }).join("");
 
  cal.innerText=Math.round(c);
-
  pro.innerText=Math.round(p);
  carb.innerText=Math.round(car);
  fat.innerText=Math.round(f);
 
  let percent=c/goalCalories;
- let offset=440-(440*percent);
- progress.style.strokeDashoffset=offset;
+ progress.style.strokeDashoffset=470-(470*percent);
 }
-
-search.oninput=e=>searchFood(e.target.value);
 
 render();
 
