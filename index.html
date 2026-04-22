@@ -1,398 +1,526 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
+<!DOCTYPE html><html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout App Pro V2</title>
+  <title>Workout App Clean V2</title>
   <style>
     :root {
-      --bg: #0b0f17;
-      --panel: #121824;
-      --panel-2: #171f2d;
-      --panel-3: #0f141f;
-      --text: #f4f7fb;
-      --muted: #9ea9bb;
-      --line: rgba(255,255,255,0.08);
+      --bg: #0b0f16;
+      --panel: #121821;
+      --panel-soft: #171e29;
+      --panel-deep: #0f141c;
+      --text: #f5f7fb;
+      --muted: #9da7b8;
+      --line: rgba(255,255,255,0.06);
       --accent: #20c997;
-      --accent-2: #1ab183;
-      --danger: #ff7b7b;
-      --chip: #212a3b;
-      --radius: 22px;
-      --shadow: 0 10px 30px rgba(0,0,0,.28);
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, #0a0f17, #0d131d 60%, #0b1018);
-      color: var(--text);
-    }
-    .app {
-      max-width: 430px;
-      margin: 0 auto;
-      min-height: 100vh;
-      padding: 12px 12px 28px;
-    }
-    .phone { display: grid; gap: 12px; }
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 14px;
-    }
-    .hero {
-      display: grid;
-      gap: 12px;
-      background: linear-gradient(180deg, #141b28, #101722);
-    }
-    .title { font-size: 24px; font-weight: 800; text-align: center; }
-    .sub { color: var(--muted); font-size: 13px; text-align: center; }
-    .day-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .day-tab, button, input, select { font: inherit; }
-    .day-tab {
-      background: var(--panel-2);
-      color: var(--text);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 12px 10px;
-      cursor: pointer;
-      text-align: center;
-      font-weight: 700;
-    }
-    .day-tab small {
-      display: block;
-      color: var(--muted);
-      font-weight: 400;
-      margin-top: 4px;
-      font-size: 12px;
-    }
-    .day-tab.active {
-      outline: 2px solid rgba(32,201,151,.4);
-      background: rgba(32,201,151,.12);
-    }
-    .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-    button {
-      border: none;
-      border-radius: 16px;
-      padding: 12px 14px;
-      cursor: pointer;
-    }
-    .primary {
-      background: linear-gradient(180deg, var(--accent), var(--accent-2));
-      color: #072117;
-      font-weight: 800;
-    }
-    .secondary {
-      background: var(--panel-2);
-      color: var(--text);
-      border: 1px solid var(--line);
-    }
-    .danger {
-      background: rgba(255,123,123,.15);
-      color: #ffd3d3;
-      border: 1px solid rgba(255,123,123,.22);
-    }
-    .tiny {
-      padding: 8px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-    }
-    .exercise-list { display: grid; gap: 12px; }
-    .exercise {
-      background: var(--panel-3);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 10px;
-      display: grid;
-      gap: 10px;
-    }
-    .exercise-main {
-      display: grid;
-      grid-template-columns: 72px 1fr auto;
-      gap: 10px;
-      align-items: center;
-    }
-    .exercise-img {
-      width: 72px;
-      height: 72px;
-      border-radius: 14px;
-      object-fit: cover;
-      background: #fff;
-      border: 1px solid var(--line);
-    }
-    .exercise-name {
-      font-size: 17px;
-      font-weight: 800;
-      line-height: 1.2;
-    }
-    .muted { color: var(--muted); font-size: 12px; }
-    .sets-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-    .set-box {
-      background: #0b1018;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 9px 8px;
-      text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .set-box strong {
-      display: block;
-      color: var(--text);
-      margin-top: 4px;
-      font-size: 14px;
-    }
-    .chiprow { display: flex; gap: 6px; flex-wrap: wrap; }
-    .chip {
-      background: var(--chip);
-      color: var(--muted);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 12px;
-    }
-    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .stat {
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 12px;
-      text-align: center;
-    }
-    .stat b { display: block; font-size: 22px; margin-top: 5px; }
-    .bottom-nav {
-      position: sticky;
-      bottom: 8px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      padding-top: 2px;
-    }
-    .section.hidden { display: none; }
-    .history-item {
-      background: var(--panel-3);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 10px;
-      margin-bottom: 8px;
-    }
-    .empty {
-      color: var(--muted);
-      text-align: center;
-      padding: 16px 8px;
-      border: 1px dashed var(--line);
-      border-radius: 16px;
-    }
-    .sheet-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.5);
-      display: none;
-      z-index: 19;
-    }
-    .sheet-backdrop.open { display: block; }
-    .sheet {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #111826;
-      border-top: 1px solid var(--line);
-      border-radius: 24px 24px 0 0;
-      padding: 14px;
-      max-width: 430px;
-      margin: 0 auto;
-      max-height: 78vh;
-      overflow: auto;
-      display: none;
-      z-index: 20;
-    }
-    .sheet.open { display: block; }
-    input, select {
-      width: 100%;
-      background: var(--panel-2);
-      color: var(--text);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 10px;
-    }
-    .library-item {
-      background: var(--panel-3);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 10px;
-      display: grid;
-      grid-template-columns: 58px 1fr auto;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    .library-item img {
-      width: 58px;
-      height: 58px;
-      object-fit: cover;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: #fff;
-    }
-    .edit-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-    }
-    iframe {
-      width: 100%;
-      height: 152px;
-      border: none;
-      border-radius: 16px;
-    }
-    a.linkbtn {
-      text-decoration: none;
-      display: inline-block;
-      text-align: center;
-    }
+      --accent-dark: #18ad82;
+      --danger: #ff7a7a;
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --shadow: 0 12px 32px rgba(0,0,0,.22);
+    }* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: linear-gradient(180deg, #0a0f15 0%, #0b1017 100%);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.app {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 12px 12px 26px;
+}
+
+.stack { display: grid; gap: 12px; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  padding: 14px;
+}
+
+.hero {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.hero-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.hero-sub {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.timer-card {
+  background: var(--panel-deep);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.timer-row, .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.timer-title {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.timer-value {
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.button-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button, input, select, a.linkbtn {
+  font: inherit;
+}
+
+button, a.linkbtn {
+  border: none;
+  border-radius: 16px;
+  padding: 11px 13px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primary {
+  background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+  color: #082217;
+  font-weight: 800;
+}
+
+.secondary {
+  background: var(--panel-soft);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+.danger {
+  background: rgba(255,122,122,.14);
+  color: #ffd5d5;
+  border: 1px solid rgba(255,122,122,.18);
+}
+
+.tiny {
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.full { width: 100%; }
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.day-tab {
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 11px 10px;
+  cursor: pointer;
+  text-align: center;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.day-tab small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.day-tab.active {
+  outline: 2px solid rgba(32,201,151,.35);
+  background: rgba(32,201,151,.10);
+}
+
+.section.hidden { display: none; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.section-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.exercise-list {
+  display: grid;
+  gap: 10px;
+}
+
+.exercise-card {
+  background: var(--panel-deep);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.exercise-top {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.exercise-img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.exercise-name {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.mini-chip-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.sets-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.set-box {
+  background: #0b1017;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 8px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.set-box strong {
+  display: block;
+  color: var(--text);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+input, select {
+  width: 100%;
+  background: var(--panel-soft);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 10px 11px;
+  outline: none;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.stat-box {
+  background: var(--panel-deep);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 12px;
+  text-align: center;
+}
+
+.stat-box span {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.stat-box strong {
+  display: block;
+  font-size: 22px;
+  margin-top: 4px;
+}
+
+.history-item {
+  background: var(--panel-deep);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 11px;
+  margin-bottom: 8px;
+}
+
+.bottom-nav {
+  position: sticky;
+  bottom: 8px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  display: none;
+  z-index: 19;
+}
+
+.sheet-backdrop.open { display: block; }
+
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 430px;
+  margin: 0 auto;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+  border-radius: 24px 24px 0 0;
+  padding: 14px;
+  max-height: 78vh;
+  overflow: auto;
+  display: none;
+  z-index: 20;
+}
+
+.sheet.open { display: block; }
+
+.library-item {
+  background: var(--panel-deep);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 54px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.library-item img {
+  width: 54px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 18px 10px;
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+}
+
+iframe {
+  width: 100%;
+  height: 152px;
+  border: none;
+  border-radius: 16px;
+}
+
   </style>
 </head>
 <body>
   <div class="app">
-    <div class="phone">
+    <div class="stack">
       <div class="card hero">
-        <div class="title">My Workout Plan</div>
-        <div class="sub">עיצוב V2 עם טיימר אימון, טיימר מנוחה, ועריכת חזרות ומשקלים בתוך כל תרגיל</div>
-
-        <div class="card" style="background:#0f141f;padding:12px;border-radius:18px;border:1px solid var(--line);box-shadow:none;">
-          <div class="row" style="margin-bottom:8px;">
-            <strong>Workout timer</strong>
-            <span class="chip" id="workoutTimerDisplay">00:00</span>
-          </div>
-          <div class="buttons" style="margin-bottom:8px;">
-            <button class="primary tiny" id="startWorkoutTimerBtn">התחל</button>
-            <button class="secondary tiny" id="pauseWorkoutTimerBtn">עצור</button>
-            <button class="danger tiny" id="resetWorkoutTimerBtn">אפס</button>
-          </div>
-          <div class="row" style="margin-bottom:8px;">
-            <strong>Rest timer</strong>
-            <span class="chip" id="restTimerDisplay">01:00</span>
-          </div>
-          <div class="buttons">
-            <button class="primary tiny" id="startRestTimerBtn">הפעל מנוחה</button>
-            <button class="secondary tiny" id="pauseRestTimerBtn">עצור מנוחה</button>
-            <button class="danger tiny" id="resetRestTimerBtn">אפס מנוחה</button>
-          </div>
-        </div>
-
-        <div class="buttons">
-          <button class="primary" id="finishWorkoutBtn" style="flex:1;">סיימתי אימון</button>
-          <button class="secondary" id="openLibraryBtn">+ תרגיל</button>
-        </div>
+        <div class="hero-title">My Workout Plan</div>
+        <div class="hero-sub">עיצוב נקי יותר, קרוב יותר לרפרנס ששלחת, בלי עומס מיותר ועם כל הפונקציות שנשמרות</div><div class="timer-card">
+      <div class="timer-row">
+        <span class="timer-title">Workout time</span>
+        <span class="timer-value" id="workoutTimerDisplay">00:00</span>
       </div>
-
-      <div class="card section" id="workoutSection">
-        <div class="day-tabs" id="dayTabs"></div>
-        <div style="height:12px"></div>
-        <div class="row">
-          <div>
-            <div id="workoutTitle" style="font-size:22px;font-weight:800;"></div>
-            <div id="workoutNote" class="muted"></div>
-          </div>
-          <button class="secondary tiny" id="toggleStatsBtn">סטט׳</button>
-        </div>
-        <div style="height:12px"></div>
-        <div class="exercise-list" id="exerciseList"></div>
+      <div class="button-row">
+        <button class="primary tiny" id="startWorkoutTimerBtn">התחל</button>
+        <button class="secondary tiny" id="pauseWorkoutTimerBtn">עצור</button>
+        <button class="danger tiny" id="resetWorkoutTimerBtn">אפס</button>
       </div>
-
-      <div class="card section" id="statsSection">
-        <div class="row" style="margin-bottom:10px;">
-          <strong>סטטיסטיקה</strong>
-          <button class="secondary tiny" id="resetHistoryBtn">איפוס</button>
-        </div>
-        <div class="stats">
-          <div class="stat">אימונים<b id="totalWorkouts">0</b></div>
-          <div class="stat">תרגילים<b id="totalExercises">0</b></div>
-          <div class="stat">רצף<b id="streak">0</b></div>
-        </div>
+      <div class="timer-row">
+        <span class="timer-title">Rest time</span>
+        <span class="timer-value" id="restTimerDisplay">01:00</span>
       </div>
-
-      <div class="card section hidden" id="historySection">
-        <strong>היסטוריית אימונים</strong>
-        <div style="height:10px"></div>
-        <div id="historyList"></div>
+      <div class="button-row">
+        <button class="primary tiny" id="startRestTimerBtn">הפעל מנוחה</button>
+        <button class="secondary tiny" id="pauseRestTimerBtn">עצור</button>
+        <button class="danger tiny" id="resetRestTimerBtn">אפס</button>
       </div>
+    </div>
 
-      <div class="card section hidden" id="musicSection">
-        <div class="row" style="margin-bottom:10px;">
-          <strong>מוזיקה לאימון</strong>
-          <span class="chip">Spotify</span>
-        </div>
-        <iframe id="spotifyEmbed" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
-        <div style="height:10px"></div>
-        <input id="spotifyInput" placeholder="הדבק קישור Spotify שלך" />
-        <button class="secondary" id="saveSpotifyBtn">שמור פלייליסט</button>
-      </div>
-
-      <div class="bottom-nav">
-        <button class="secondary" id="navWorkout">אימון</button>
-        <button class="secondary" id="navHistory">היסטוריה</button>
-        <button class="secondary" id="navMusic">מוזיקה</button>
-      </div>
+    <div class="button-row">
+      <button class="primary full" id="finishWorkoutBtn">סיימתי אימון</button>
+      <button class="secondary" id="openLibraryBtn">+ הוסף תרגיל</button>
     </div>
   </div>
 
-  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+  <div class="card section" id="workoutSection">
+    <div class="days" id="dayTabs"></div>
+    <div style="height:12px"></div>
+    <div class="section-header">
+      <div>
+        <div class="section-title" id="workoutTitle"></div>
+        <div class="section-sub" id="workoutNote"></div>
+      </div>
+    </div>
+    <div class="exercise-list" id="exerciseList"></div>
+  </div>
+
+  <div class="card section" id="statsSection">
+    <div class="section-header">
+      <div class="section-title" style="font-size:18px;">סטטיסטיקה</div>
+      <button class="secondary tiny" id="resetHistoryBtn">איפוס</button>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box"><span>אימונים</span><strong id="totalWorkouts">0</strong></div>
+      <div class="stat-box"><span>תרגילים</span><strong id="totalExercises">0</strong></div>
+      <div class="stat-box"><span>רצף</span><strong id="streak">0</strong></div>
+    </div>
+  </div>
+
+  <div class="card section hidden" id="historySection">
+    <div class="section-title" style="font-size:18px;margin-bottom:10px;">היסטוריית אימונים</div>
+    <div id="historyList"></div>
+  </div>
+
+  <div class="card section hidden" id="musicSection">
+    <div class="section-title" style="font-size:18px;margin-bottom:10px;">מוזיקה לאימון</div>
+    <iframe id="spotifyEmbed" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+    <div style="height:10px"></div>
+    <input id="spotifyInput" placeholder="הדבק קישור Spotify שלך" />
+    <button class="secondary full" id="saveSpotifyBtn">שמור פלייליסט</button>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="secondary" id="navWorkout">אימון</button>
+    <button class="secondary" id="navHistory">היסטוריה</button>
+    <button class="secondary" id="navMusic">מוזיקה</button>
+  </div>
+</div>
+
+  </div>  <div class="sheet-backdrop" id="sheetBackdrop"></div>
   <div class="sheet" id="librarySheet">
-    <div class="row" style="margin-bottom:10px;">
-      <strong>מאגר תרגילים</strong>
+    <div class="section-header">
+      <div class="section-title" style="font-size:18px;">מאגר תרגילים</div>
       <button class="secondary tiny" id="closeSheetBtn">סגור</button>
     </div>
     <input id="searchInput" placeholder="חפש תרגיל" />
     <select id="muscleFilter"></select>
     <select id="equipmentFilter"></select>
     <div id="libraryList"></div>
-  </div>
-
-  <script>
-    const STORAGE_KEY = 'workout_app_mobile_v3';
+  </div>  <script>
+    const STORAGE_KEY = 'workout_app_clean_v4';
     let workoutTimerInterval = null;
     let restTimerInterval = null;
 
     const LIBRARY = [
-      { id:'ex1', name:'דחיקת חזה בסמית', muscle:'חזה', equipment:'סמית', sets:3, reps:'8-10', kg:'20-30', image:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=smith+machine+bench+press' },
-      { id:'ex2', name:'לחיצת חזה במכונה', muscle:'חזה', equipment:'מכונה', sets:3, reps:'8-12', kg:'20-35', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=machine+chest+press' },
-      { id:'ex3', name:'פרפר חזה', muscle:'חזה', equipment:'מכונה', sets:3, reps:'10-15', kg:'15-25', image:'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=pec+deck+fly' },
-      { id:'ex4', name:'כבל קרוס', muscle:'חזה', equipment:'כבלים', sets:3, reps:'10-15', kg:'10-20', image:'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=cable+crossover' },
-      { id:'ex5', name:'פולי עליון רחב', muscle:'גב', equipment:'מכונה', sets:3, reps:'8-12', kg:'25-40', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=lat+pulldown' },
-      { id:'ex6', name:'חתירה בישיבה', muscle:'גב', equipment:'כבלים', sets:3, reps:'8-12', kg:'20-35', image:'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=seated+cable+row' },
-      { id:'ex7', name:'חתירה יד אחת עם דאמבל', muscle:'גב', equipment:'משקולות', sets:3, reps:'8-12', kg:'10-20', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=one+arm+dumbbell+row' },
-      { id:'ex8', name:'פולאובר בכבל', muscle:'גב', equipment:'כבלים', sets:3, reps:'10-15', kg:'10-20', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=straight+arm+pulldown' },
-      { id:'ex9', name:'משיכת מתח בסיוע', muscle:'גב', equipment:'מכונה', sets:3, reps:'8-12', kg:'סיוע משתנה', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=assisted+pull+up' },
-      { id:'ex10', name:'טי-בר רואו', muscle:'גב', equipment:'מוט / מכונה', sets:3, reps:'8-12', kg:'20-40', image:'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=t+bar+row' },
-      { id:'ex11', name:'פשיטת מרפקים בחבל', muscle:'יד אחורית', equipment:'כבלים', sets:3, reps:'10-15', kg:'10-20', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=rope+triceps+pushdown' },
-      { id:'ex12', name:'פשיטת מרפקים מעל הראש', muscle:'יד אחורית', equipment:'כבלים', sets:3, reps:'10-12', kg:'10-18', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=overhead+cable+triceps+extension' },
-      { id:'ex13', name:'מקבילים בסיוע', muscle:'יד אחורית', equipment:'מכונה', sets:3, reps:'8-12', kg:'סיוע משתנה', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=assisted+dips' },
-      { id:'ex14', name:'לחיצה צרפתית עם דאמבל', muscle:'יד אחורית', equipment:'משקולות', sets:3, reps:'10-12', kg:'8-16', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=dumbbell+triceps+extension' },
-      { id:'ex15', name:'פשיטת מרפקים במוט ישר', muscle:'יד אחורית', equipment:'כבלים', sets:3, reps:'10-15', kg:'12-22', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=bar+triceps+pushdown' },
-      { id:'ex16', name:'כפיפת מרפקים עם דאמבלים', muscle:'יד קדמית', equipment:'משקולות', sets:3, reps:'10-12', kg:'8-14', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=dumbbell+biceps+curl' },
-      { id:'ex17', name:'כפיפת פטיש', muscle:'יד קדמית', equipment:'משקולות', sets:3, reps:'10-12', kg:'8-14', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=hammer+curl' },
-      { id:'ex18', name:'כפיפת מרפקים בכבל', muscle:'יד קדמית', equipment:'כבלים', sets:3, reps:'10-12', kg:'10-18', image:'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=cable+biceps+curl' },
-      { id:'ex19', name:'לחיצת כתפיים', muscle:'כתפיים', equipment:'מכונה', sets:3, reps:'8-12', kg:'15-25', image:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=machine+shoulder+press' },
-      { id:'ex20', name:'הרחקת כתפיים לצדדים', muscle:'כתפיים', equipment:'משקולות', sets:3, reps:'12-15', kg:'4-10', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=lateral+raise' },
-      { id:'ex21', name:'פייס פול', muscle:'כתפיים', equipment:'כבלים', sets:3, reps:'12-15', kg:'10-18', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=face+pull' },
-      { id:'ex22', name:'לחיצת רגליים', muscle:'רגליים', equipment:'מכונה', sets:3, reps:'10-15', kg:'40-90', image:'https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=leg+press' },
-      { id:'ex23', name:'כפיפת ברכיים', muscle:'רגליים', equipment:'מכונה', sets:3, reps:'12-15', kg:'20-35', image:'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=leg+curl' },
-      { id:'ex24', name:'סקוואט גביע', muscle:'רגליים', equipment:'משקולות', sets:3, reps:'10-12', kg:'12-20', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=goblet+squat' },
-      { id:'ex25', name:'דדליפט רומני', muscle:'רגליים', equipment:'משקולות', sets:3, reps:'8-12', kg:'10-20', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell' },
-      { id:'ex26', name:'פלאנק', muscle:'בטן', equipment:'משקל גוף', sets:3, reps:'30-60 שניות', kg:'משקל גוף', image:'https://images.unsplash.com/photo-1549476464-37392f717541?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=plank+exercise' },
-      { id:'ex27', name:'כפיפות בטן בכבל', muscle:'בטן', equipment:'כבלים', sets:3, reps:'12-20', kg:'10-20', image:'https://images.unsplash.com/photo-1549476464-37392f717541?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=cable+crunch' }
+      { id:'ex1', name:'דחיקת חזה בסמית', muscle:'חזה', equipment:'סמית', reps:'8-10', kg:'20-30', image:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=smith+machine+bench+press' },
+      { id:'ex2', name:'לחיצת חזה במכונה', muscle:'חזה', equipment:'מכונה', reps:'8-12', kg:'20-35', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=machine+chest+press' },
+      { id:'ex3', name:'פרפר חזה', muscle:'חזה', equipment:'מכונה', reps:'10-15', kg:'15-25', image:'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=pec+deck+fly' },
+      { id:'ex4', name:'כבל קרוס', muscle:'חזה', equipment:'כבלים', reps:'10-15', kg:'10-20', image:'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=cable+crossover' },
+      { id:'ex5', name:'פולי עליון רחב', muscle:'גב', equipment:'מכונה', reps:'8-12', kg:'25-40', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=lat+pulldown' },
+      { id:'ex6', name:'חתירה בישיבה', muscle:'גב', equipment:'כבלים', reps:'8-12', kg:'20-35', image:'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=seated+cable+row' },
+      { id:'ex7', name:'חתירה יד אחת עם דאמבל', muscle:'גב', equipment:'משקולות', reps:'8-12', kg:'10-20', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=one+arm+dumbbell+row' },
+      { id:'ex8', name:'פולאובר בכבל', muscle:'גב', equipment:'כבלים', reps:'10-15', kg:'10-20', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=straight+arm+pulldown' },
+      { id:'ex9', name:'משיכת מתח בסיוע', muscle:'גב', equipment:'מכונה', reps:'8-12', kg:'סיוע משתנה', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=assisted+pull+up' },
+      { id:'ex10', name:'טי-בר רואו', muscle:'גב', equipment:'מוט / מכונה', reps:'8-12', kg:'20-40', image:'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=t+bar+row' },
+      { id:'ex11', name:'פשיטת מרפקים בחבל', muscle:'יד אחורית', equipment:'כבלים', reps:'10-15', kg:'10-20', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=rope+triceps+pushdown' },
+      { id:'ex12', name:'פשיטת מרפקים מעל הראש', muscle:'יד אחורית', equipment:'כבלים', reps:'10-12', kg:'10-18', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=overhead+cable+triceps+extension' },
+      { id:'ex13', name:'מקבילים בסיוע', muscle:'יד אחורית', equipment:'מכונה', reps:'8-12', kg:'סיוע משתנה', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=assisted+dips' },
+      { id:'ex14', name:'לחיצה צרפתית עם דאמבל', muscle:'יד אחורית', equipment:'משקולות', reps:'10-12', kg:'8-16', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=dumbbell+triceps+extension' },
+      { id:'ex15', name:'פשיטת מרפקים במוט ישר', muscle:'יד אחורית', equipment:'כבלים', reps:'10-15', kg:'12-22', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=bar+triceps+pushdown' },
+      { id:'ex16', name:'כפיפת מרפקים עם דאמבלים', muscle:'יד קדמית', equipment:'משקולות', reps:'10-12', kg:'8-14', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=dumbbell+biceps+curl' },
+      { id:'ex17', name:'כפיפת פטיש', muscle:'יד קדמית', equipment:'משקולות', reps:'10-12', kg:'8-14', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=hammer+curl' },
+      { id:'ex18', name:'כפיפת מרפקים בכבל', muscle:'יד קדמית', equipment:'כבלים', reps:'10-12', kg:'10-18', image:'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=cable+biceps+curl' },
+      { id:'ex19', name:'לחיצת כתפיים', muscle:'כתפיים', equipment:'מכונה', reps:'8-12', kg:'15-25', image:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=machine+shoulder+press' },
+      { id:'ex20', name:'הרחקת כתפיים לצדדים', muscle:'כתפיים', equipment:'משקולות', reps:'12-15', kg:'4-10', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=lateral+raise' },
+      { id:'ex21', name:'פייס פול', muscle:'כתפיים', equipment:'כבלים', reps:'12-15', kg:'10-18', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=face+pull' },
+      { id:'ex22', name:'לחיצת רגליים', muscle:'רגליים', equipment:'מכונה', reps:'10-15', kg:'40-90', image:'https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=leg+press' },
+      { id:'ex23', name:'כפיפת ברכיים', muscle:'רגליים', equipment:'מכונה', reps:'12-15', kg:'20-35', image:'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=leg+curl' },
+      { id:'ex24', name:'סקוואט גביע', muscle:'רגליים', equipment:'משקולות', reps:'10-12', kg:'12-20', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=goblet+squat' },
+      { id:'ex25', name:'דדליפט רומני', muscle:'רגליים', equipment:'משקולות', reps:'8-12', kg:'10-20', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell' },
+      { id:'ex26', name:'פלאנק', muscle:'בטן', equipment:'משקל גוף', reps:'30-60 שניות', kg:'משקל גוף', image:'https://images.unsplash.com/photo-1549476464-37392f717541?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=plank+exercise' },
+      { id:'ex27', name:'כפיפות בטן בכבל', muscle:'בטן', equipment:'כבלים', reps:'12-20', kg:'10-20', image:'https://images.unsplash.com/photo-1549476464-37392f717541?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=cable+crunch' }
     ];
 
     function uid(){ return 'id-' + Math.random().toString(36).slice(2,10); }
+
     function cloneExercise(id){
       const ex = LIBRARY.find(x => x.id === id);
       return {
@@ -481,8 +609,8 @@
         return;
       }
       list.innerHTML = day.exercises.map(ex => `
-        <div class="exercise">
-          <div class="exercise-main">
+        <div class="exercise-card">
+          <div class="exercise-top">
             <img class="exercise-img" src="${ex.image}" alt="${escapeHtml(ex.name)}" />
             <div>
               <div class="exercise-name">${escapeHtml(ex.name)}</div>
@@ -491,12 +619,12 @@
             </div>
             <button class="secondary tiny" onclick="toggleDone('${day.id}','${ex.instanceId}')">${ex.done ? '✓' : '◻'}</button>
           </div>
-          <div class="sets-row">
+          <div class="sets-grid">
             <div class="set-box">1 Set<strong>${escapeHtml(ex.reps)}</strong></div>
             <div class="set-box">2 Set<strong>${escapeHtml(ex.reps)}</strong></div>
             <div class="set-box">3 Set<strong>${escapeHtml(ex.reps)}</strong></div>
           </div>
-          <div class="chiprow">
+          <div class="mini-chip-row">
             <span class="chip">${escapeHtml(ex.equipment)}</span>
             <span class="chip">${escapeHtml(ex.kg)}</span>
             <span class="chip">3 סטים</span>
@@ -506,7 +634,7 @@
             <input value="${escapeHtml(ex.kg)}" onchange="updateExerciseField('${day.id}','${ex.instanceId}','kg', this.value)" placeholder="משקל" />
             <input value="${ex.restSeconds || 60}" type="number" min="15" step="15" onchange="updateExerciseField('${day.id}','${ex.instanceId}','restSeconds', this.value)" placeholder="מנוחה" />
           </div>
-          <div class="buttons">
+          <div class="button-row">
             <a class="linkbtn secondary tiny" href="${ex.video}" target="_blank" rel="noopener">יוטיוב</a>
             <button class="secondary tiny" onclick="syncRestFromExercise('${day.id}','${ex.instanceId}')">טען מנוחה</button>
             <button class="danger tiny" onclick="removeExercise('${day.id}','${ex.instanceId}')">מחק</button>
@@ -691,7 +819,7 @@
             <div style="font-weight:700;">${escapeHtml(item.name)}</div>
             <div class="muted">${escapeHtml(item.muscle)} • ${escapeHtml(item.equipment)}</div>
           </div>
-          <div class="buttons" style="flex-direction:column;">
+          <div class="button-row" style="flex-direction:column;">
             <button class="primary tiny" onclick="addExercise('${item.id}')">הוסף</button>
             <a class="linkbtn secondary tiny" href="${item.video}" target="_blank" rel="noopener">וידאו</a>
           </div>
@@ -709,6 +837,7 @@
       document.getElementById('sheetBackdrop').classList.add('open');
       document.getElementById('librarySheet').classList.add('open');
     }
+
     function closeSheet(){
       document.getElementById('sheetBackdrop').classList.remove('open');
       document.getElementById('librarySheet').classList.remove('open');
@@ -732,7 +861,7 @@
         .replace(/&/g,'&amp;')
         .replace(/</g,'&lt;')
         .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
+        .replace(/\"/g,'&quot;')
         .replace(/'/g,'&#39;');
     }
 
@@ -744,7 +873,6 @@
     document.getElementById('navWorkout').addEventListener('click', ()=>showSection('workout'));
     document.getElementById('navHistory').addEventListener('click', ()=>showSection('history'));
     document.getElementById('navMusic').addEventListener('click', ()=>showSection('music'));
-    document.getElementById('toggleStatsBtn').addEventListener('click', ()=>showSection('workout'));
     document.getElementById('resetHistoryBtn').addEventListener('click', resetHistory);
     document.getElementById('searchInput').addEventListener('input', e=>{ state.filters.search=e.target.value; renderLibrary(); save(); });
     document.getElementById('muscleFilter').addEventListener('change', e=>{ state.filters.muscle=e.target.value; renderLibrary(); save(); });
@@ -767,6 +895,5 @@
     render();
     if (state.liveTimers?.workoutRunning) startWorkoutTimer();
     if (state.liveTimers?.restRunning) startRestTimer();
-  </script>
-</body>
+  </script></body>
 </html>
