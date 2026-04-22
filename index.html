@@ -431,11 +431,25 @@
           </div>
           <div class="spotify-box">
             <div class="row">
-              <strong>🎵 פלייליסט לאימון</strong>
+              <strong>🎵 הפלייליסט שלך לאימון</strong>
               <span class="tag">Spotify</span>
             </div>
-            <div class="muted">הקישור המובנה חזר לגרסה הזאת</div>
-            <a class="button primary spotify-link" id="spotifyLink" href="https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP" target="_blank" rel="noopener">פתח פלייליסט בספוטיפיי</a>
+            <div class="muted">אפשר לנגן ישירות מתוך האפליקציה וגם לעדכן קישור לפלייליסט שלך</div>
+            <iframe id="spotifyEmbed"
+              style="border-radius:16px;width:100%;height:152px;border:none;"
+              src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"></iframe>
+            <div class="grid-2">
+              <label>
+                קישור לפלייליסט / אלבום / טראק
+                <input id="spotifyInput" placeholder="הדבק כאן קישור Spotify" />
+              </label>
+              <div class="buttons" style="align-items:end;">
+                <button class="primary" id="saveSpotifyBtn">שמור נגן</button>
+                <a class="button secondary spotify-link" id="spotifyLink" href="https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP" target="_blank" rel="noopener">פתח בספוטיפיי</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -577,30 +591,46 @@
     const STORAGE_KEY = 'workoutPlannerPro_v3';
 
     const EXERCISE_LIBRARY = [
-      { id: 'ex1', name: 'לחיצת חזה במכונה', muscle: 'חזה', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'שליטה מלאה בירידה', video: 'https://www.youtube.com/results?search_query=machine+chest+press' },
-      { id: 'ex2', name: 'פרפר חזה במכונה', muscle: 'חזה', equipment: 'מכונה', sets: 3, reps: '10-15', notes: 'כיווץ חזק בסוף התנועה', video: 'https://www.youtube.com/results?search_query=pec+deck+fly' },
-      { id: 'ex3', name: 'כבל קרוס עליון', muscle: 'חזה', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'טווח תנועה מלא', video: 'https://www.youtube.com/results?search_query=cable+crossover' },
-      { id: 'ex4', name: 'כפיפת מרפקים עם משקולות', muscle: 'יד קדמית', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12', notes: 'לא לנענע גוף', video: 'https://www.youtube.com/results?search_query=dumbbell+biceps+curl' },
-      { id: 'ex5', name: 'כפיפת מרפקים בכבל', muscle: 'יד קדמית', equipment: 'כבלים', sets: 3, reps: '10-12', notes: 'שליטה בקצב', video: 'https://www.youtube.com/results?search_query=cable+biceps+curl' },
-      { id: 'ex6', name: 'פולי עליון רחב', muscle: 'גב', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'למשוך למעלה החזה', video: 'https://www.youtube.com/results?search_query=lat+pulldown' },
-      { id: 'ex7', name: 'חתירה בישיבה', muscle: 'גב', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'שכמות לאחור', video: 'https://www.youtube.com/results?search_query=seated+cable+row' },
-      { id: 'ex8', name: 'פולאובר בכבל', muscle: 'גב', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'מתיחה וכיווץ', video: 'https://www.youtube.com/results?search_query=straight+arm+pulldown' },
-      { id: 'ex9', name: 'פשיטת מרפקים בחבל', muscle: 'יד אחורית', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'מרפקים צמודים', video: 'https://www.youtube.com/results?search_query=rope+triceps+pushdown' },
-      { id: 'ex10', name: 'פשיטת מרפקים מעל הראש', muscle: 'יד אחורית', equipment: 'כבלים', sets: 3, reps: '10-12', notes: 'טווח מלא', video: 'https://www.youtube.com/results?search_query=overhead+cable+triceps+extension' },
-      { id: 'ex11', name: 'לחיצת כתפיים במכונה', muscle: 'כתפיים', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'ללא קשת מוגזמת בגב', video: 'https://www.youtube.com/results?search_query=machine+shoulder+press' },
-      { id: 'ex12', name: 'הרחקת כתפיים לצדדים', muscle: 'כתפיים', equipment: 'משקולות חופשיות', sets: 3, reps: '12-15', notes: 'מרפק מעט כפוף', video: 'https://www.youtube.com/results?search_query=lateral+raise' },
-      { id: 'ex13', name: 'פייס פול', muscle: 'כתפיים', equipment: 'כבלים', sets: 3, reps: '12-15', notes: 'מרפקים גבוהים', video: 'https://www.youtube.com/results?search_query=face+pull' },
-      { id: 'ex14', name: 'לחיצת רגליים', muscle: 'רגליים', equipment: 'מכונה', sets: 4, reps: '10-15', notes: 'לא לנעול ברכיים', video: 'https://www.youtube.com/results?search_query=leg+press' },
-      { id: 'ex15', name: 'פשיטת ברכיים', muscle: 'רגליים', equipment: 'מכונה', sets: 3, reps: '12-15', notes: 'שליטה מלאה', video: 'https://www.youtube.com/results?search_query=leg+extension' },
-      { id: 'ex16', name: 'כפיפת ברכיים', muscle: 'רגליים', equipment: 'מכונה', sets: 3, reps: '12-15', notes: 'עצירה קצרה בסוף', video: 'https://www.youtube.com/results?search_query=leg+curl' },
-      { id: 'ex17', name: 'סקוואט גביע', muscle: 'רגליים', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12', notes: 'ירידה מבוקרת', video: 'https://www.youtube.com/results?search_query=goblet+squat' },
-      { id: 'ex18', name: 'כפיפות בטן בכבל', muscle: 'בטן', equipment: 'כבלים', sets: 3, reps: '12-20', notes: 'לא למשוך צוואר', video: 'https://www.youtube.com/results?search_query=cable+crunch' },
-      { id: 'ex19', name: 'פלאנק', muscle: 'ליבה', equipment: 'משקל גוף', sets: 3, reps: '30-60 שניות', notes: 'בטן אסופה', video: 'https://www.youtube.com/results?search_query=plank+exercise' },
-      { id: 'ex20', name: 'דחיקת חזה בסמית', muscle: 'חזה', equipment: 'סמית', sets: 3, reps: '8-10', notes: 'מתאים גם כתרגיל ראשון', video: 'https://www.youtube.com/results?search_query=smith+machine+bench+press' },
-      { id: 'ex21', name: 'משיכת מתח בסיוע', muscle: 'גב', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'ירידה מלאה', video: 'https://www.youtube.com/results?search_query=assisted+pull+up' },
-      { id: 'ex22', name: 'הליכת מכרעיים', muscle: 'רגליים', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12 לכל רגל', notes: 'צעד נשלט', video: 'https://www.youtube.com/results?search_query=walking+lunges' },
-      { id: 'ex23', name: 'דדליפט רומני', muscle: 'רגליים', equipment: 'משקולות חופשיות', sets: 3, reps: '8-12', notes: 'גב ניטרלי', video: 'https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell' },
-      { id: 'ex24', name: 'הרמת שוקיים בעמידה', muscle: 'רגליים', equipment: 'מכונה', sets: 4, reps: '12-20', notes: 'עצירה למעלה', video: 'https://www.youtube.com/results?search_query=standing+calf+raise' }
+      { id: 'ex1', name: 'לחיצת חזה במכונה', muscle: 'חזה', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'שליטה מלאה בירידה', video: 'https://www.youtube.com/results?search_query=machine+chest+press', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex2', name: 'פרפר חזה במכונה', muscle: 'חזה', equipment: 'מכונה', sets: 3, reps: '10-15', notes: 'כיווץ חזק בסוף התנועה', video: 'https://www.youtube.com/results?search_query=pec+deck+fly', image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex3', name: 'כבל קרוס עליון', muscle: 'חזה', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'טווח תנועה מלא', video: 'https://www.youtube.com/results?search_query=cable+crossover', image: 'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex4', name: 'כפיפת מרפקים עם משקולות', muscle: 'יד קדמית', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12', notes: 'לא לנענע גוף', video: 'https://www.youtube.com/results?search_query=dumbbell+biceps+curl', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex5', name: 'כפיפת מרפקים בכבל', muscle: 'יד קדמית', equipment: 'כבלים', sets: 3, reps: '10-12', notes: 'שליטה בקצב', video: 'https://www.youtube.com/results?search_query=cable+biceps+curl', image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex6', name: 'פולי עליון רחב', muscle: 'גב', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'למשוך למעלה החזה', video: 'https://www.youtube.com/results?search_query=lat+pulldown', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex7', name: 'חתירה בישיבה', muscle: 'גב', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'שכמות לאחור', video: 'https://www.youtube.com/results?search_query=seated+cable+row', image: 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex8', name: 'פולאובר בכבל', muscle: 'גב', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'מתיחה וכיווץ', video: 'https://www.youtube.com/results?search_query=straight+arm+pulldown', image: 'https://images.unsplash.com/photo-1518611012118-fb2f2f2b08df?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex9', name: 'פשיטת מרפקים בחבל', muscle: 'יד אחורית', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'מרפקים צמודים', video: 'https://www.youtube.com/results?search_query=rope+triceps+pushdown', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex10', name: 'פשיטת מרפקים מעל הראש', muscle: 'יד אחורית', equipment: 'כבלים', sets: 3, reps: '10-12', notes: 'טווח מלא', video: 'https://www.youtube.com/results?search_query=overhead+cable+triceps+extension', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex11', name: 'לחיצת כתפיים במכונה', muscle: 'כתפיים', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'ללא קשת מוגזמת בגב', video: 'https://www.youtube.com/results?search_query=machine+shoulder+press', image: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex12', name: 'הרחקת כתפיים לצדדים', muscle: 'כתפיים', equipment: 'משקולות חופשיות', sets: 3, reps: '12-15', notes: 'מרפק מעט כפוף', video: 'https://www.youtube.com/results?search_query=lateral+raise', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex13', name: 'פייס פול', muscle: 'כתפיים', equipment: 'כבלים', sets: 3, reps: '12-15', notes: 'מרפקים גבוהים', video: 'https://www.youtube.com/results?search_query=face+pull', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex14', name: 'לחיצת רגליים', muscle: 'רגליים', equipment: 'מכונה', sets: 4, reps: '10-15', notes: 'לא לנעול ברכיים', video: 'https://www.youtube.com/results?search_query=leg+press', image: 'https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex15', name: 'פשיטת ברכיים', muscle: 'רגליים', equipment: 'מכונה', sets: 3, reps: '12-15', notes: 'שליטה מלאה', video: 'https://www.youtube.com/results?search_query=leg+extension', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex16', name: 'כפיפת ברכיים', muscle: 'רגליים', equipment: 'מכונה', sets: 3, reps: '12-15', notes: 'עצירה קצרה בסוף', video: 'https://www.youtube.com/results?search_query=leg+curl', image: 'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex17', name: 'סקוואט גביע', muscle: 'רגליים', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12', notes: 'ירידה מבוקרת', video: 'https://www.youtube.com/results?search_query=goblet+squat', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex18', name: 'כפיפות בטן בכבל', muscle: 'בטן', equipment: 'כבלים', sets: 3, reps: '12-20', notes: 'לא למשוך צוואר', video: 'https://www.youtube.com/results?search_query=cable+crunch', image: 'https://images.unsplash.com/photo-1549476464-37392f717541?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex19', name: 'פלאנק', muscle: 'ליבה', equipment: 'משקל גוף', sets: 3, reps: '30-60 שניות', notes: 'בטן אסופה', video: 'https://www.youtube.com/results?search_query=plank+exercise', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex20', name: 'דחיקת חזה בסמית', muscle: 'חזה', equipment: 'סמית', sets: 3, reps: '8-10', notes: 'מתאים גם כתרגיל ראשון', video: 'https://www.youtube.com/results?search_query=smith+machine+bench+press', image: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex21', name: 'משיכת מתח בסיוע', muscle: 'גב', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'ירידה מלאה', video: 'https://www.youtube.com/results?search_query=assisted+pull+up', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex22', name: 'הליכת מכרעיים', muscle: 'רגליים', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12 לכל רגל', notes: 'צעד נשלט', video: 'https://www.youtube.com/results?search_query=walking+lunges', image: 'https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex23', name: 'דדליפט רומני', muscle: 'רגליים', equipment: 'משקולות חופשיות', sets: 3, reps: '8-12', notes: 'גב ניטרלי', video: 'https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex24', name: 'הרמת שוקיים בעמידה', muscle: 'רגליים', equipment: 'מכונה', sets: 4, reps: '12-20', notes: 'עצירה למעלה', video: 'https://www.youtube.com/results?search_query=standing+calf+raise', image: 'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex25', name: 'חתירה יד אחת עם דאמבל', muscle: 'גב', equipment: 'משקולות חופשיות', sets: 3, reps: '8-12', notes: 'להוביל עם המרפק', video: 'https://www.youtube.com/results?search_query=one+arm+dumbbell+row', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex26', name: 'פול דאון אחיזה צרה', muscle: 'גב', equipment: 'כבלים', sets: 3, reps: '10-12', notes: 'משיכה לקו החזה', video: 'https://www.youtube.com/results?search_query=close+grip+lat+pulldown', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex27', name: 'טי-בר רואו', muscle: 'גב', equipment: 'מוט / מכונה', sets: 3, reps: '8-12', notes: 'שמור גב יציב', video: 'https://www.youtube.com/results?search_query=t+bar+row', image: 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex28', name: 'לחיצה צרפתית עם דאמבל', muscle: 'יד אחורית', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12', notes: 'שליטה במרפקים', video: 'https://www.youtube.com/results?search_query=dumbbell+triceps+extension', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex29', name: 'מקבילים בסיוע', muscle: 'יד אחורית', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'ירידה נשלטת', video: 'https://www.youtube.com/results?search_query=assisted+dips', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex30', name: 'פשיטת מרפקים במוט ישר', muscle: 'יד אחורית', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'ללא תנועת כתפיים', video: 'https://www.youtube.com/results?search_query=bar+triceps+pushdown', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex31', name: 'לחיצת חזה בשיפוע חיובי', muscle: 'חזה', equipment: 'משקולות חופשיות', sets: 3, reps: '8-12', notes: 'דגש על חזה עליון', video: 'https://www.youtube.com/results?search_query=incline+dumbbell+press', image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex32', name: 'פליי בדאמבלים', muscle: 'חזה', equipment: 'משקולות חופשיות', sets: 3, reps: '10-15', notes: 'קשת קלה במרפקים', video: 'https://www.youtube.com/results?search_query=dumbbell+fly', image: 'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex33', name: 'סקוואט בסמית', muscle: 'רגליים', equipment: 'סמית', sets: 4, reps: '8-12', notes: 'עמידה יציבה', video: 'https://www.youtube.com/results?search_query=smith+machine+squat', image: 'https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex34', name: 'היפ תראסט', muscle: 'רגליים', equipment: 'מוט / משקולות', sets: 4, reps: '8-12', notes: 'עצירה למעלה', video: 'https://www.youtube.com/results?search_query=hip+thrust', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex35', name: 'כפיפת פטיש', muscle: 'יד קדמית', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12', notes: 'מרפקים צמודים', video: 'https://www.youtube.com/results?search_query=hammer+curl', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex36', name: 'שולדר פרס בדאמבלים', muscle: 'כתפיים', equipment: 'משקולות חופשיות', sets: 3, reps: '8-12', notes: 'ללא קימור גב', video: 'https://www.youtube.com/results?search_query=dumbbell+shoulder+press', image: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex37', name: 'הרחקה אחורית לכתף', muscle: 'כתפיים', equipment: 'משקולות חופשיות', sets: 3, reps: '12-15', notes: 'דגש על כתף אחורית', video: 'https://www.youtube.com/results?search_query=rear+delt+raise', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex38', name: 'אופניים לבטן', muscle: 'בטן', equipment: 'משקל גוף', sets: 3, reps: '20 חזרות', notes: 'קצב רציף', video: 'https://www.youtube.com/results?search_query=bicycle+crunch', image: 'https://images.unsplash.com/photo-1549476464-37392f717541?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex39', name: 'עליות ברכיים במתח', muscle: 'בטן', equipment: 'משקל גוף', sets: 3, reps: '10-15', notes: 'ללא תנופה', video: 'https://www.youtube.com/results?search_query=hanging+knee+raises', image: 'https://images.unsplash.com/photo-1549476464-37392f717541?auto=format&fit=crop&w=900&q=80' },
+      { id: 'ex40', name: 'בורפי', muscle: 'אירובי', equipment: 'משקל גוף', sets: 3, reps: '10-15', notes: 'מתאים לסיום', video: 'https://www.youtube.com/results?search_query=burpee', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' }
     ];
 
     const DEFAULT_DAYS = [
@@ -712,6 +742,10 @@
       document.getElementById('nextWorkoutName').textContent = nextWorkout ? nextWorkout.name : 'אין יום אימון';
       document.getElementById('nextWorkoutHint').textContent = nextWorkout ? `${nextWorkout.exercises.length} תרגילים בתוכנית הנבחרת` : 'הוסף יום אימון חדש';
       document.getElementById('spotifyLink').href = state.spotifyUrl || 'https://open.spotify.com/';
+      const input = document.getElementById('spotifyInput');
+      if (input) input.value = state.spotifyUrl || '';
+      const embed = document.getElementById('spotifyEmbed');
+      if (embed) embed.src = buildSpotifyEmbedUrl(state.spotifyUrl);
     }
 
     function renderDays() {
@@ -900,6 +934,7 @@
 
       grid.innerHTML = items.map(item => `
         <div class="library-item">
+          <img src="${item.image || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80'}" alt="${escapeAttr(item.name)}" style="width:100%;height:160px;object-fit:cover;border-radius:16px;border:1px solid var(--line);" />
           <div class="row">
             <strong>${escapeHtml(item.name)}</strong>
             <span class="tag">${escapeHtml(item.muscle)}</span>
@@ -912,7 +947,7 @@
           <div class="muted">${escapeHtml(item.notes || 'ללא הערות')}</div>
           <div class="buttons">
             <button class="primary tiny" onclick="addLibraryExerciseToDay('${item.id}','${dayId}')">הוסף ליום הנבחר</button>
-            <a class="button secondary tiny" href="${item.video || '#'}" target="_blank" rel="noopener">סרטון</a>
+            <a class="button secondary tiny" href="${item.video || '#'}" target="_blank" rel="noopener">סרטון יוטיוב</a>
           </div>
         </div>
       `).join('');
@@ -1016,6 +1051,27 @@
       const counts = {};
       state.history.forEach(item => { counts[item.dayName] = (counts[item.dayName] || 0) + 1; });
       return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0] || '';
+    }
+
+    function buildSpotifyEmbedUrl(url) {
+      const fallback = 'https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator';
+      if (!url) return fallback;
+      try {
+        if (url.includes('/embed/')) return url;
+        const match = url.match(/open\.spotify\.com\/(playlist|album|track|artist)\/([A-Za-z0-9]+)/);
+        if (!match) return fallback;
+        return `https://open.spotify.com/embed/${match[1]}/${match[2]}?utm_source=generator`;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function saveSpotifyUrl() {
+      const value = document.getElementById('spotifyInput')?.value.trim();
+      if (!value || !value.includes('spotify.com')) return alert('הדבק קישור תקין של Spotify');
+      state.spotifyUrl = value;
+      render();
+      alert('הנגן עודכן בהצלחה');
     }
 
     function openModal(html) {
@@ -1252,6 +1308,7 @@
       render();
     });
     document.getElementById('openCreateExerciseBtn').addEventListener('click', openCreateExerciseModal);
+    document.getElementById('saveSpotifyBtn').addEventListener('click', saveSpotifyUrl);
 
     document.querySelectorAll('[data-close]').forEach(el => {
       el.addEventListener('click', () => {
