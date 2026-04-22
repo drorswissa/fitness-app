@@ -8,9 +8,8 @@
     :root{
       --bg:#050914;
       --panel:#0b1324;
-      --panel-2:#101a31;
-      --panel-3:#0f1830;
-      --line:rgba(255,255,255,.07);
+      --panel2:#101a31;
+      --line:rgba(255,255,255,.08);
       --text:#f7f9fd;
       --muted:#97a3bc;
       --orange:#ff9f43;
@@ -18,68 +17,60 @@
       --green:#17b67a;
       --yellow:#d88417;
       --shadow:0 18px 40px rgba(0,0,0,.34);
-      --radius:26px;
     }
     *{box-sizing:border-box}
     html,body{margin:0;background:radial-gradient(circle at top,#091325 0%,#050914 48%,#04070f 100%);color:var(--text);font-family:Inter,Arial,Helvetica,sans-serif}
-    body{max-width:430px;margin:0 auto;min-height:100vh;padding:14px 12px 110px}
+    body{max-width:430px;margin:0 auto;min-height:100vh;padding:14px 12px 100px}
     .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
-    .topbar h1{font-size:18px;margin:0;font-weight:800;letter-spacing:.2px}
-    .back-btn{border:none;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);padding:13px 18px;border-radius:18px;font-weight:800;cursor:pointer}
-    .card{background:linear-gradient(180deg,rgba(11,19,36,.98),rgba(7,12,24,.98));border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px;backdrop-filter:blur(8px)}
-    .summary-card{padding:20px 18px 18px}
+    .topbar h1{font-size:18px;margin:0;font-weight:900}
+    .back-btn{border:none;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);padding:13px 18px;border-radius:18px;font-weight:900;cursor:pointer}
+    .card{background:linear-gradient(180deg,rgba(11,19,36,.98),rgba(7,12,24,.98));border:1px solid var(--line);border-radius:26px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
     .ring-wrap{display:flex;justify-content:center;position:relative;margin-bottom:12px}
     .ring-wrap svg{transform:rotate(-90deg)}
     .ring-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-    .ring-text .main{font-size:28px;font-weight:900;line-height:1}
+    .ring-text .main{font-size:30px;font-weight:900}
     .ring-text .sub{font-size:13px;color:var(--muted);margin-top:8px}
     .goal-row{text-align:center;color:var(--muted);font-size:13px;margin-bottom:16px}
     .macro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
     .macro{border-radius:20px;padding:14px 12px;text-align:center}
-    .macro .label{font-size:13px;opacity:.95}
+    .macro .label{font-size:13px}
     .macro .value{font-size:16px;font-weight:900;margin-top:8px}
-    .macro.protein{background:linear-gradient(180deg,rgba(111,89,255,.95),rgba(75,59,189,.95))}
-    .macro.carbs{background:linear-gradient(180deg,rgba(23,182,122,.95),rgba(12,124,83,.95))}
-    .macro.fat{background:linear-gradient(180deg,rgba(216,132,23,.95),rgba(143,77,10,.95))}
-    .search-card{padding:14px;position:sticky;top:10px;z-index:5}
+    .protein{background:linear-gradient(180deg,rgba(111,89,255,.96),rgba(72,56,190,.96))}
+    .carbs{background:linear-gradient(180deg,rgba(23,182,122,.96),rgba(11,122,82,.96))}
+    .fat{background:linear-gradient(180deg,rgba(216,132,23,.96),rgba(143,77,10,.96))}
+    .search-card{position:sticky;top:10px;z-index:4;padding:14px}
     .search-shell{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03));border:1px solid var(--line);border-radius:24px;padding:12px 16px;box-shadow:0 10px 24px rgba(0,0,0,.18)}
-    .search-shell input{width:100%;border:none;outline:none;background:transparent;color:var(--text);font-size:18px;padding:10px 0;font-weight:700}
+    .search-shell input{width:100%;border:none;outline:none;background:transparent;color:var(--text);font-size:18px;padding:10px 0;font-weight:800}
     .search-shell input::placeholder{color:#7f8aa2}
     .quick-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
     .chip{border:none;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:999px;font-size:13px;cursor:pointer}
-    .results-card{padding:8px 0 0;background:transparent;border:none;box-shadow:none;margin-bottom:10px}
-    .section-title{font-size:17px;font-weight:900;margin:0 0 10px 6px}
-    .result-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 16px;background:linear-gradient(180deg,rgba(12,18,34,.98),rgba(8,13,24,.98));border:1px solid var(--line);border-radius:22px;margin-bottom:10px;cursor:pointer;transition:.18s transform,.18s border-color,.18s background}.result-item:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16)}.result-item.active{border-color:rgba(111,89,255,.55);background:linear-gradient(180deg,rgba(34,28,70,.98),rgba(16,18,33,.98))}
-    .result-item:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16)}
-    .result-item.active{border-color:rgba(111,89,255,.55);background:linear-gradient(180deg,rgba(34,28,70,.96),rgba(16,18,33,.96))}
-    .result-title{font-size:16px;font-weight:800;line-height:1.25}
+    .section-title{font-size:18px;font-weight:900;margin:0 0 12px 6px}
+    .results-card{background:transparent;border:none;box-shadow:none;padding:0;margin-bottom:14px}
+    .result-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;background:linear-gradient(180deg,rgba(12,18,34,.98),rgba(8,13,24,.98));border:1px solid var(--line);border-radius:22px;margin-bottom:10px;cursor:pointer;transition:.16s transform,.16s border-color}
+    .result-item.active{border-color:rgba(111,89,255,.55)}
+    .result-item:hover{transform:translateY(-1px)}
+    .result-title{font-size:16px;font-weight:900;line-height:1.25}
     .result-sub{font-size:12px;color:var(--muted);margin-top:5px}
     .add-mini{border:none;background:linear-gradient(180deg,#8c5cff,#6f59ff);color:white;width:42px;height:42px;border-radius:14px;font-size:22px;cursor:pointer;flex:0 0 auto}
-    .selected-card{padding:16px}
     .selected-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
     .field{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:12px}
     .field label{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}
-    .field input,.field select{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-size:18px;font-weight:800}
+    .field input,.field select{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-size:18px;font-weight:900}
     .preview-box{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
     .preview-metric{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;padding:10px;text-align:center}
     .preview-metric .n{font-size:16px;font-weight:900}
     .preview-metric .t{font-size:11px;color:var(--muted);margin-top:4px}
     .primary-btn{width:100%;margin-top:14px;border:none;border-radius:20px;padding:15px 16px;font-size:18px;font-weight:900;background:linear-gradient(180deg,#7d56ff,#6a49ff);color:#fff;cursor:pointer;box-shadow:0 10px 24px rgba(106,73,255,.28)}
-    .meal-card{padding:16px 16px 10px}
-    .meal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:10px}
+    .meal-card{padding:18px 16px 10px}
+    .meal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:12px}
     .meal-name{font-size:18px;font-weight:900}
     .meal-kcal{font-size:14px;color:var(--muted)}
     .meal-row{display:grid;grid-template-columns:1fr auto;gap:10px;padding:12px 0;border-top:1px solid rgba(255,255,255,.05)}
-    .meal-row:first-of-type{border-top:none}
-    .meal-food{font-size:15px;font-weight:700}
+    .meal-food{font-size:15px;font-weight:800}
     .meal-sub{font-size:12px;color:var(--muted);margin-top:4px}
     .remove-btn{border:none;background:rgba(255,255,255,.05);border:1px solid var(--line);color:#dbe2f0;border-radius:12px;padding:8px 10px;cursor:pointer;height:max-content}
     .empty{padding:16px;text-align:center;color:var(--muted);font-size:14px;border:1px dashed rgba(255,255,255,.09);border-radius:18px;background:rgba(255,255,255,.02)}
-    .bottom-spacer{height:10px}
-    @media (max-width:390px){
-      .macro-grid,.preview-box{grid-template-columns:1fr}
-      .selected-grid{grid-template-columns:1fr}
-    }
+    @media (max-width:390px){.macro-grid,.preview-box,.selected-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -89,7 +80,7 @@
     <div style="width:88px"></div>
   </div>
 
-  <div class="card summary-card">
+  <div class="card">
     <div class="ring-wrap">
       <svg width="190" height="190" viewBox="0 0 190 190">
         <circle cx="95" cy="95" r="78" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="14"></circle>
@@ -102,18 +93,9 @@
     </div>
     <div class="goal-row">יעד מותאם: גרעון יומי של 500 קלוריות לפי 178 ס״מ ו־94.1 ק״ג</div>
     <div class="macro-grid">
-      <div class="macro fat">
-        <div class="label">שומן</div>
-        <div class="value"><span id="fatValue">0</span> גרם</div>
-      </div>
-      <div class="macro carbs">
-        <div class="label">פחמימות</div>
-        <div class="value"><span id="carbsValue">0</span> גרם</div>
-      </div>
-      <div class="macro protein">
-        <div class="label">חלבון</div>
-        <div class="value"><span id="proteinValue">0</span> גרם</div>
-      </div>
+      <div class="macro fat"><div class="label">שומן</div><div class="value"><span id="fatValue">0</span> גרם</div></div>
+      <div class="macro carbs"><div class="label">פחמימות</div><div class="value"><span id="carbsValue">0</span> גרם</div></div>
+      <div class="macro protein"><div class="label">חלבון</div><div class="value"><span id="proteinValue">0</span> גרם</div></div>
     </div>
   </div>
 
@@ -126,7 +108,7 @@
       <button class="chip" onclick="quickSearch('אורז')">אורז</button>
       <button class="chip" onclick="quickSearch('ביצה')">ביצה</button>
       <button class="chip" onclick="quickSearch('קוטג׳')">קוטג׳</button>
-      <button class="chip" onclick="quickSearch('טונה')">טונה</button>
+      <button class="chip" onclick="quickSearch('אבוקדו')">אבוקדו</button>
     </div>
   </div>
 
@@ -135,33 +117,14 @@
     <div id="resultsList"></div>
   </div>
 
-  <div class="card selected-card">
+  <div class="card">
     <div class="section-title" style="margin:0">פרטי מנה</div>
     <div id="selectedName" style="font-size:18px;font-weight:900;margin-top:10px">לא נבחר מזון</div>
-    <div id="selectedBase" class="result-sub" style="margin-top:6px">בחר מזון כדי להוסיף אותו ליומן</div>
+    <div id="selectedBase" class="result-sub" style="margin-top:6px">כתוב מזון בעברית והמערכת תציע התאמה</div>
     <div class="selected-grid">
-      <div class="field">
-        <label>כמות</label>
-        <input id="amountInput" type="number" min="0" step="0.5" value="100" />
-      </div>
-      <div class="field">
-        <label>יחידה</label>
-        <select id="unitSelect">
-          <option value="gram">גרם</option>
-          <option value="piece">יחידה</option>
-          <option value="tbsp">כף</option>
-          <option value="cup">גביע</option>
-        </select>
-      </div>
-      <div class="field" style="grid-column:1/-1">
-        <label>ארוחה</label>
-        <select id="mealSelect">
-          <option value="breakfast">ארוחת בוקר</option>
-          <option value="lunch">ארוחת צהריים</option>
-          <option value="dinner">ארוחת ערב</option>
-          <option value="snack">ביניים</option>
-        </select>
-      </div>
+      <div class="field"><label>כמות</label><input id="amountInput" type="number" min="0" step="0.5" value="100" /></div>
+      <div class="field"><label>יחידה</label><select id="unitSelect"><option value="gram">גרם</option><option value="piece">יחידה</option><option value="tbsp">כף</option><option value="cup">גביע</option></select></div>
+      <div class="field" style="grid-column:1/-1"><label>ארוחה</label><select id="mealSelect"><option value="breakfast">ארוחת בוקר</option><option value="lunch">ארוחת צהריים</option><option value="dinner">ארוחת ערב</option><option value="snack">ביניים</option></select></div>
     </div>
     <div class="preview-box">
       <div class="preview-metric"><div class="n" id="previewCalories">0</div><div class="t">קלוריות</div></div>
@@ -172,71 +135,49 @@
     <button class="primary-btn" id="addBtn">הוסף ליומן</button>
   </div>
 
-  <div class="card meal-card">
-    <div class="meal-head"><div class="meal-name">ארוחת בוקר</div><div class="meal-kcal" id="breakfastTotal">0 קלוריות</div></div>
-    <div id="breakfastList"></div>
-  </div>
-
-  <div class="card meal-card">
-    <div class="meal-head"><div class="meal-name">ארוחת צהריים</div><div class="meal-kcal" id="lunchTotal">0 קלוריות</div></div>
-    <div id="lunchList"></div>
-  </div>
-
-  <div class="card meal-card">
-    <div class="meal-head"><div class="meal-name">ארוחת ערב</div><div class="meal-kcal" id="dinnerTotal">0 קלוריות</div></div>
-    <div id="dinnerList"></div>
-  </div>
-
-  <div class="card meal-card">
-    <div class="meal-head"><div class="meal-name">ביניים</div><div class="meal-kcal" id="snackTotal">0 קלוריות</div></div>
-    <div id="snackList"></div>
-  </div>
-
-  <div class="bottom-spacer"></div>
+  <div class="card meal-card"><div class="meal-head"><div class="meal-name">ארוחת בוקר</div><div class="meal-kcal" id="breakfastTotal">0 קלוריות</div></div><div id="breakfastList"></div></div>
+  <div class="card meal-card"><div class="meal-head"><div class="meal-name">ארוחת צהריים</div><div class="meal-kcal" id="lunchTotal">0 קלוריות</div></div><div id="lunchList"></div></div>
+  <div class="card meal-card"><div class="meal-head"><div class="meal-name">ארוחת ערב</div><div class="meal-kcal" id="dinnerTotal">0 קלוריות</div></div><div id="dinnerList"></div></div>
+  <div class="card meal-card"><div class="meal-head"><div class="meal-name">ביניים</div><div class="meal-kcal" id="snackTotal">0 קלוריות</div></div><div id="snackList"></div></div>
 
   <script>
-    const STORAGE_KEY = 'nutrition_pro_he_v3';
+    const STORAGE_KEY = 'nutrition_pro_he_v4';
     const GOAL = { calories: 1758, protein: 169, carbs: 132, fat: 63 };
-
     const FOODS = [
       { id:'chicken_breast', he:'חזה עוף', aliases:['עוף','חזה עוף','chicken','chicken breast'], per100:{ calories:165, protein:31, carbs:0, fat:3.6 }, units:{ gram:1, piece:120, tbsp:15, cup:140 } },
-      { id:'chicken_thigh', he:'פרגית', aliases:['פרגית','ירך עוף','chicken thigh'], per100:{ calories:209, protein:26, carbs:0, fat:10.9 }, units:{ gram:1, piece:130 } },
-      { id:'ground_beef', he:'בשר בקר טחון', aliases:['בקר','בשר טחון','בשר בקר','ground beef'], per100:{ calories:250, protein:26, carbs:0, fat:17 }, units:{ gram:1, tbsp:20 } },
-      { id:'salmon', he:'סלמון', aliases:['סלמון','דג סלמון','salmon'], per100:{ calories:208, protein:20, carbs:0, fat:13 }, units:{ gram:1, piece:150 } },
-      { id:'tuna', he:'טונה במים', aliases:['טונה','tuna'], per100:{ calories:116, protein:26, carbs:0, fat:1 }, units:{ gram:1, tbsp:15, cup:100 } },
-      { id:'egg', he:'ביצה', aliases:['ביצה','ביצים','egg'], per100:{ calories:155, protein:13, carbs:1.1, fat:11 }, units:{ gram:1, piece:50 } },
-      { id:'egg_white', he:'חלבון ביצה', aliases:['חלבון ביצה','לבן ביצה','egg white'], per100:{ calories:52, protein:11, carbs:0.7, fat:0.2 }, units:{ gram:1, piece:33 } },
-      { id:'rice_cooked', he:'אורז מבושל', aliases:['אורז','אורז מבושל','rice'], per100:{ calories:130, protein:2.7, carbs:28, fat:0.3 }, units:{ gram:1, tbsp:20, cup:150 } },
-      { id:'pasta_cooked', he:'פסטה מבושלת', aliases:['פסטה','פסטה מבושלת','pasta'], per100:{ calories:157, protein:5.8, carbs:30.9, fat:0.9 }, units:{ gram:1, tbsp:18, cup:140 } },
-      { id:'sweet_potato', he:'בטטה אפויה', aliases:['בטטה','בטטה אפויה','sweet potato'], per100:{ calories:90, protein:2, carbs:21, fat:0.1 }, units:{ gram:1, piece:130 } },
-      { id:'potato', he:'תפוח אדמה', aliases:['תפוח אדמה','תפוא','potato'], per100:{ calories:77, protein:2, carbs:17, fat:0.1 }, units:{ gram:1, piece:150 } },
-      { id:'oats', he:'שיבולת שועל', aliases:['שיבולת שועל','שיבולת','קוואקר','oats'], per100:{ calories:389, protein:16.9, carbs:66.3, fat:6.9 }, units:{ gram:1, tbsp:10, cup:80 } },
-      { id:'bread', he:'לחם פרוס', aliases:['לחם','לחם פרוס','bread'], per100:{ calories:265, protein:9, carbs:49, fat:3.2 }, units:{ gram:1, piece:30 } },
-      { id:'whole_wheat_bread', he:'לחם מלא', aliases:['לחם מלא','לחם חיטה מלאה','whole wheat bread'], per100:{ calories:247, protein:13, carbs:41, fat:4.2 }, units:{ gram:1, piece:32 } },
-      { id:'cottage', he:'קוטג׳', aliases:['קוטג','קוטג׳','גבינה קוטג','cottage'], per100:{ calories:98, protein:11, carbs:3.4, fat:4.3 }, units:{ gram:1, tbsp:15, cup:250 } },
-      { id:'white_cheese', he:'גבינה לבנה', aliases:['גבינה לבנה','גבינה','white cheese'], per100:{ calories:95, protein:10, carbs:4, fat:5 }, units:{ gram:1, tbsp:15, cup:250 } },
-      { id:'yellow_cheese', he:'גבינה צהובה', aliases:['גבינה צהובה','קשקבל','yellow cheese'], per100:{ calories:356, protein:25, carbs:2.2, fat:27 }, units:{ gram:1, slice:28 } },
-      { id:'greek_yogurt', he:'יוגורט יווני', aliases:['יוגורט יווני','יוגורט','greek yogurt'], per100:{ calories:97, protein:9, carbs:3.9, fat:5 }, units:{ gram:1, cup:200 } },
-      { id:'yogurt_pro', he:'יוגורט חלבון', aliases:['יוגורט חלבון','protein yogurt'], per100:{ calories:73, protein:10, carbs:4, fat:1.7 }, units:{ gram:1, cup:200 } },
-      { id:'milk_3', he:'חלב 3%', aliases:['חלב','milk'], per100:{ calories:61, protein:3.3, carbs:4.8, fat:3.2 }, units:{ gram:1, cup:240 } },
-      { id:'banana', he:'בננה', aliases:['בננה','banana'], per100:{ calories:89, protein:1.1, carbs:23, fat:0.3 }, units:{ gram:1, piece:120 } },
-      { id:'apple', he:'תפוח', aliases:['תפוח','apple'], per100:{ calories:52, protein:0.3, carbs:14, fat:0.2 }, units:{ gram:1, piece:150 } },
-      { id:'avocado', he:'אבוקדו', aliases:['אבוקדו','avocado'], per100:{ calories:160, protein:2, carbs:8.5, fat:14.7 }, units:{ gram:1, piece:170, tbsp:15 } },
-      { id:'almonds', he:'שקדים', aliases:['שקדים','almonds'], per100:{ calories:579, protein:21, carbs:22, fat:50 }, units:{ gram:1, tbsp:10 } },
-      { id:'peanut_butter', he:'חמאת בוטנים', aliases:['חמאת בוטנים','peanut butter'], per100:{ calories:588, protein:25, carbs:20, fat:50 }, units:{ gram:1, tbsp:16 } },
-      { id:'tahini', he:'טחינה', aliases:['טחינה','טחינה גולמית','tahini'], per100:{ calories:595, protein:17, carbs:21, fat:53 }, units:{ gram:1, tbsp:15 } },
-      { id:'olive_oil', he:'שמן זית', aliases:['שמן זית','olive oil'], per100:{ calories:884, protein:0, carbs:0, fat:100 }, units:{ gram:1, tbsp:13, tsp:5 } },
-      { id:'hummus', he:'חומוס', aliases:['חומוס','hummus'], per100:{ calories:166, protein:8, carbs:14, fat:9.6 }, units:{ gram:1, tbsp:15 } },
-      { id:'cucumber', he:'מלפפון', aliases:['מלפפון','cucumber'], per100:{ calories:15, protein:0.7, carbs:3.6, fat:0.1 }, units:{ gram:1, piece:120 } },
-      { id:'tomato', he:'עגבנייה', aliases:['עגבניה','עגבנייה','tomato'], per100:{ calories:18, protein:0.9, carbs:3.9, fat:0.2 }, units:{ gram:1, piece:120 } },
-      { id:'protein_bar', he:'חטיף חלבון', aliases:['חטיף חלבון','חטיף','protein bar'], per100:{ calories:370, protein:30, carbs:35, fat:12 }, units:{ gram:1, piece:60 } }
+      { id:'chicken_thigh', he:'פרגית', aliases:['פרגית','ירך עוף'], per100:{ calories:209, protein:26, carbs:0, fat:10.9 }, units:{ gram:1, piece:130 } },
+      { id:'ground_beef', he:'בשר בקר טחון', aliases:['בקר','בשר טחון','בשר בקר'], per100:{ calories:250, protein:26, carbs:0, fat:17 }, units:{ gram:1, tbsp:20 } },
+      { id:'salmon', he:'סלמון', aliases:['סלמון','דג סלמון'], per100:{ calories:208, protein:20, carbs:0, fat:13 }, units:{ gram:1, piece:150 } },
+      { id:'tuna', he:'טונה במים', aliases:['טונה'], per100:{ calories:116, protein:26, carbs:0, fat:1 }, units:{ gram:1, tbsp:15, cup:100 } },
+      { id:'egg', he:'ביצה', aliases:['ביצה','ביצים'], per100:{ calories:155, protein:13, carbs:1.1, fat:11 }, units:{ gram:1, piece:50 } },
+      { id:'egg_white', he:'חלבון ביצה', aliases:['חלבון ביצה','לבן ביצה'], per100:{ calories:52, protein:11, carbs:0.7, fat:0.2 }, units:{ gram:1, piece:33 } },
+      { id:'rice_cooked', he:'אורז מבושל', aliases:['אורז','אורז מבושל'], per100:{ calories:130, protein:2.7, carbs:28, fat:0.3 }, units:{ gram:1, tbsp:20, cup:150 } },
+      { id:'pasta_cooked', he:'פסטה מבושלת', aliases:['פסטה','פסטה מבושלת'], per100:{ calories:157, protein:5.8, carbs:30.9, fat:0.9 }, units:{ gram:1, tbsp:18, cup:140 } },
+      { id:'sweet_potato', he:'בטטה אפויה', aliases:['בטטה'], per100:{ calories:90, protein:2, carbs:21, fat:0.1 }, units:{ gram:1, piece:130 } },
+      { id:'potato', he:'תפוח אדמה', aliases:['תפוח אדמה','תפוא'], per100:{ calories:77, protein:2, carbs:17, fat:0.1 }, units:{ gram:1, piece:150 } },
+      { id:'oats', he:'שיבולת שועל', aliases:['שיבולת שועל','שיבולת','קוואקר'], per100:{ calories:389, protein:16.9, carbs:66.3, fat:6.9 }, units:{ gram:1, tbsp:10, cup:80 } },
+      { id:'bread', he:'לחם פרוס', aliases:['לחם','לחם פרוס'], per100:{ calories:265, protein:9, carbs:49, fat:3.2 }, units:{ gram:1, piece:30 } },
+      { id:'whole_wheat_bread', he:'לחם מלא', aliases:['לחם מלא','לחם חיטה מלאה'], per100:{ calories:247, protein:13, carbs:41, fat:4.2 }, units:{ gram:1, piece:32 } },
+      { id:'cottage', he:'קוטג׳', aliases:['קוטג','קוטג׳','גבינה קוטג'], per100:{ calories:98, protein:11, carbs:3.4, fat:4.3 }, units:{ gram:1, tbsp:15, cup:250 } },
+      { id:'white_cheese', he:'גבינה לבנה', aliases:['גבינה לבנה','גבינה'], per100:{ calories:95, protein:10, carbs:4, fat:5 }, units:{ gram:1, tbsp:15, cup:250 } },
+      { id:'yellow_cheese', he:'גבינה צהובה', aliases:['גבינה צהובה','קשקבל'], per100:{ calories:356, protein:25, carbs:2.2, fat:27 }, units:{ gram:1, slice:28 } },
+      { id:'greek_yogurt', he:'יוגורט יווני', aliases:['יוגורט יווני','יוגורט'], per100:{ calories:97, protein:9, carbs:3.9, fat:5 }, units:{ gram:1, cup:200 } },
+      { id:'yogurt_pro', he:'יוגורט חלבון', aliases:['יוגורט חלבון'], per100:{ calories:73, protein:10, carbs:4, fat:1.7 }, units:{ gram:1, cup:200 } },
+      { id:'milk_3', he:'חלב 3%', aliases:['חלב'], per100:{ calories:61, protein:3.3, carbs:4.8, fat:3.2 }, units:{ gram:1, cup:240 } },
+      { id:'banana', he:'בננה', aliases:['בננה'], per100:{ calories:89, protein:1.1, carbs:23, fat:0.3 }, units:{ gram:1, piece:120 } },
+      { id:'apple', he:'תפוח', aliases:['תפוח'], per100:{ calories:52, protein:0.3, carbs:14, fat:0.2 }, units:{ gram:1, piece:150 } },
+      { id:'avocado', he:'אבוקדו', aliases:['אבוקדו'], per100:{ calories:160, protein:2, carbs:8.5, fat:14.7 }, units:{ gram:1, piece:170, tbsp:15 } },
+      { id:'almonds', he:'שקדים', aliases:['שקדים'], per100:{ calories:579, protein:21, carbs:22, fat:50 }, units:{ gram:1, tbsp:10 } },
+      { id:'peanut_butter', he:'חמאת בוטנים', aliases:['חמאת בוטנים'], per100:{ calories:588, protein:25, carbs:20, fat:50 }, units:{ gram:1, tbsp:16 } },
+      { id:'tahini', he:'טחינה', aliases:['טחינה','טחינה גולמית'], per100:{ calories:595, protein:17, carbs:21, fat:53 }, units:{ gram:1, tbsp:15 } },
+      { id:'olive_oil', he:'שמן זית', aliases:['שמן זית'], per100:{ calories:884, protein:0, carbs:0, fat:100 }, units:{ gram:1, tbsp:13, tsp:5 } },
+      { id:'hummus', he:'חומוס', aliases:['חומוס'], per100:{ calories:166, protein:8, carbs:14, fat:9.6 }, units:{ gram:1, tbsp:15 } },
+      { id:'cucumber', he:'מלפפון', aliases:['מלפפון'], per100:{ calories:15, protein:0.7, carbs:3.6, fat:0.1 }, units:{ gram:1, piece:120 } },
+      { id:'tomato', he:'עגבנייה', aliases:['עגבניה','עגבנייה'], per100:{ calories:18, protein:0.9, carbs:3.9, fat:0.2 }, units:{ gram:1, piece:120 } },
+      { id:'protein_bar', he:'חטיף חלבון', aliases:['חטיף חלבון','חטיף'], per100:{ calories:370, protein:30, carbs:35, fat:12 }, units:{ gram:1, piece:60 } }
     ];
 
-    const state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
-      items: [],
-      selectedFoodId: null
-    };
-
+    const state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { items: [], selectedFoodId: null, lastQuery: '' };
     const searchInput = document.getElementById('searchInput');
     const resultsList = document.getElementById('resultsList');
     const selectedName = document.getElementById('selectedName');
@@ -246,77 +187,49 @@
     const mealSelect = document.getElementById('mealSelect');
     const addBtn = document.getElementById('addBtn');
 
-    function save(){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function unitLabel(unit){
-      return { gram:'גרם', piece:'יחידה', tbsp:'כף', cup:'גביע', slice:'פרוסה', tsp:'כפית' }[unit] || unit;
-    }[unit] || unit;
-    }
-
-    function findFood(id){
-      return FOODS.find(f => f.id === id);
-    }
+    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function unitLabel(unit){ return { gram:'גרם', piece:'יחידה', tbsp:'כף', cup:'גביע', slice:'פרוסה', tsp:'כפית' }[unit] || unit; }
+    function findFood(id){ return FOODS.find(f => f.id === id); }
+    function normalizeQuery(q){ return String(q || '').trim().toLowerCase(); }
 
     function filterFoods(q){
-      const query = q.trim().toLowerCase();
+      const query = normalizeQuery(q);
       if(!query) return FOODS.slice(0,8);
       const scored = FOODS.map(food => {
-        const names = [food.he, ...food.aliases].map(v => String(v).toLowerCase());
+        const names = [food.he].concat(food.aliases).map(v => String(v).toLowerCase());
         let score = 0;
         names.forEach(name => {
           if(name === query) score = Math.max(score, 100);
-          else if(name.startsWith(query)) score = Math.max(score, 80);
-          else if(name.includes(query)) score = Math.max(score, 55);
-          else {
-            const compact = query.replace(/\s+/g,'');
-            if(name.replace(/\s+/g,'').includes(compact)) score = Math.max(score, 45);
-          }
+          else if(name.indexOf(query) === 0) score = Math.max(score, 80);
+          else if(name.indexOf(query) > -1) score = Math.max(score, 55);
         });
         return { food, score };
       }).filter(x => x.score > 0).sort((a,b) => b.score - a.score);
       return scored.slice(0,8).map(x => x.food);
     }
 
-    function gramsFor(food, amount, unit){
-      return amount * (food.units[unit] || 1);
-    }
-
+    function gramsFor(food, amount, unit){ return amount * (food.units[unit] || 1); }
     function calc(food, amount, unit){
       const grams = gramsFor(food, amount, unit);
       const factor = grams / 100;
-      return {
-        grams,
-        calories: food.per100.calories * factor,
-        protein: food.per100.protein * factor,
-        carbs: food.per100.carbs * factor,
-        fat: food.per100.fat * factor
-      };
+      return { grams: grams, calories: food.per100.calories * factor, protein: food.per100.protein * factor, carbs: food.per100.carbs * factor, fat: food.per100.fat * factor };
     }
 
-    function setSelected(foodId){
-      state.selectedFoodId = foodId;
-      save();
-      renderSelected();
-      renderResults(searchInput.value);
-    }
+    function setSelected(foodId){ state.selectedFoodId = foodId; save(); renderSelected(); renderResults(searchInput.value); }
+    function getSelectedFood(){ return state.selectedFoodId ? findFood(state.selectedFoodId) : null; }
 
-    function renderResults(q=''){
+    function renderResults(q){
       const foods = filterFoods(q);
-      resultsList.innerHTML = foods.map(food => `
-        <div class="result-item ${state.selectedFoodId===food.id?'active':''}" onclick="setSelected('${food.id}')">
-          <div>
-            <div class="result-title">${food.he}</div>
-            <div class="result-sub">ל־100 גרם: ${food.per100.calories} קלוריות • חלבון ${food.per100.protein} • פחמימות ${food.per100.carbs} • שומן ${food.per100.fat}</div>
-          </div>
-          <button class="add-mini" onclick="event.stopPropagation(); setSelected('${food.id}')">+</button>
-        </div>
-      `).join('') || '<div class="empty">לא נמצאו תוצאות. נסה למשל: חזה עוף, אורז, ביצה, קוטג׳, גבינה לבנה, בטטה, אבוקדו</div>';
+      resultsList.innerHTML = foods.map(function(food, index){
+        return '<div class="result-item ' + (state.selectedFoodId===food.id?'active':'') + '" onclick="setSelected(\'' + food.id + '\')">'
+          + '<div><div class="result-title">' + food.he + '</div><div class="result-sub">ל־100 גרם: ' + food.per100.calories + ' קלוריות • חלבון ' + food.per100.protein + ' • פחמימות ' + food.per100.carbs + ' • שומן ' + food.per100.fat + '</div></div>'
+          + '<button class="add-mini" onclick="event.stopPropagation(); setSelected(\'' + food.id + '\')">' + (index===0?'✓':'+') + '</button>'
+          + '</div>';
+      }).join('') || '<div class="empty">לא נמצאו תוצאות. כתוב שם מזון פשוט בעברית, למשל: אורז, חזה עוף, גבינה לבנה, טחינה, אבוקדו</div>';
     }
 
     function renderSelected(){
-      const food = findFood(state.selectedFoodId);
+      const food = getSelectedFood();
       if(!food){
         selectedName.textContent = 'לא נבחר מזון';
         selectedBase.textContent = 'בחר מזון מתוך הרשימה למעלה';
@@ -328,13 +241,13 @@
         return;
       }
       selectedName.textContent = food.he;
-      selectedBase.textContent = `בסיס נתונים פנימי מלא בעברית • ל־100 גרם: ${food.per100.calories} קלוריות`;
-      unitSelect.innerHTML = Object.keys(food.units).map(u => `<option value="${u}">${unitLabel(u)}</option>`).join('');
+      selectedBase.textContent = 'מאגר פנימי בעברית • ל־100 גרם: ' + food.per100.calories + ' קלוריות';
+      unitSelect.innerHTML = Object.keys(food.units).map(function(u){ return '<option value="' + u + '">' + unitLabel(u) + '</option>'; }).join('');
       updatePreview();
     }
 
     function updatePreview(){
-      const food = findFood(state.selectedFoodId);
+      const food = getSelectedFood();
       if(!food) return;
       const amount = Number(amountInput.value || 0);
       const unit = unitSelect.value;
@@ -346,41 +259,20 @@
     }
 
     function addItem(){
-      const food = findFood(state.selectedFoodId);
+      const food = getSelectedFood();
       const amount = Number(amountInput.value || 0);
       const unit = unitSelect.value;
       const meal = mealSelect.value;
       if(!food) return alert('בחר מזון');
       if(!amount || amount <= 0) return alert('הזן כמות תקינה');
       const values = calc(food, amount, unit);
-      state.items.push({
-        id: Date.now().toString(36),
-        foodId: food.id,
-        he: food.he,
-        meal,
-        amount,
-        unit,
-        ...values
-      });
+      state.items.push({ id: Date.now().toString(36), foodId: food.id, he: food.he, meal: meal, amount: amount, unit: unit, calories: values.calories, protein: values.protein, carbs: values.carbs, fat: values.fat });
       save();
       renderAll();
     }
 
-    function removeItem(id){
-      state.items = state.items.filter(item => item.id !== id);
-      save();
-      renderAll();
-    }
-
-    function totals(items){
-      return items.reduce((acc,item)=>{
-        acc.calories += item.calories;
-        acc.protein += item.protein;
-        acc.carbs += item.carbs;
-        acc.fat += item.fat;
-        return acc;
-      },{calories:0,protein:0,carbs:0,fat:0});
-    }
+    function removeItem(id){ state.items = state.items.filter(function(item){ return item.id !== id; }); save(); renderAll(); }
+    function totals(items){ return items.reduce(function(acc,item){ acc.calories += item.calories; acc.protein += item.protein; acc.carbs += item.carbs; acc.fat += item.fat; return acc; },{calories:0,protein:0,carbs:0,fat:0}); }
 
     function renderSummary(){
       const sum = totals(state.items);
@@ -395,29 +287,14 @@
     }
 
     function renderMeal(mealKey, listId, totalId){
-      const nameMap = {
-        breakfast:'ארוחת בוקר',
-        lunch:'ארוחת צהריים',
-        dinner:'ארוחת ערב',
-        snack:'ביניים'
-      };
-      const items = state.items.filter(item => item.meal === mealKey);
+      const items = state.items.filter(function(item){ return item.meal === mealKey; });
       const total = totals(items);
-      document.getElementById(totalId).textContent = `${Math.round(total.calories)} קלוריות`;
+      document.getElementById(totalId).textContent = Math.round(total.calories) + ' קלוריות';
       const list = document.getElementById(listId);
-      if(!items.length){
-        list.innerHTML = '<div class="empty">אין פריטים בארוחה זו</div>';
-        return;
-      }
-      list.innerHTML = items.map(item => `
-        <div class="meal-row">
-          <div>
-            <div class="meal-food">${item.he}</div>
-            <div class="meal-sub">${item.amount} ${unitLabel(item.unit)} • ${Math.round(item.calories)} קלוריות • חלבון ${Math.round(item.protein)} • פחמימות ${Math.round(item.carbs)} • שומן ${Math.round(item.fat)}</div>
-          </div>
-          <button class="remove-btn" onclick="removeItem('${item.id}')">מחק</button>
-        </div>
-      `).join('');
+      if(!items.length){ list.innerHTML = '<div class="empty">אין פריטים בארוחה זו</div>'; return; }
+      list.innerHTML = items.map(function(item){
+        return '<div class="meal-row"><div><div class="meal-food">' + item.he + '</div><div class="meal-sub">' + item.amount + ' ' + unitLabel(item.unit) + ' • ' + Math.round(item.calories) + ' קלוריות • חלבון ' + Math.round(item.protein) + ' • פחמימות ' + Math.round(item.carbs) + ' • שומן ' + Math.round(item.fat) + '</div></div><button class="remove-btn" onclick="removeItem(\'' + item.id + '\')">מחק</button></div>';
+      }).join('');
     }
 
     function renderAll(){
@@ -430,33 +307,19 @@
       renderMeal('snack','snackList','snackTotal');
     }
 
-    searchInput.addEventListener('input', e => {
-      renderResults(e.target.value);
-      const best = filterFoods(e.target.value)[0];
-      if(best){
-        state.selectedFoodId = best.id;
-        save();
-        renderSelected();
-      }
+    searchInput.addEventListener('input', function(e){
+      const q = e.target.value;
+      const best = filterFoods(q)[0];
+      if(best){ state.selectedFoodId = best.id; save(); }
+      renderAll();
     });
-    searchInput.addEventListener('keydown', e => {
-      if(e.key === 'Enter'){
-        e.preventDefault();
-        const best = filterFoods(searchInput.value)[0];
-        if(best){
-          setSelected(best.id);
-          amountInput.focus();
-          amountInput.select();
-        }
-      }
-    });
+    searchInput.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); amountInput.focus(); amountInput.select(); } });
     amountInput.addEventListener('input', updatePreview);
     unitSelect.addEventListener('change', updatePreview);
     addBtn.addEventListener('click', addItem);
-
     window.setSelected = setSelected;
     window.removeItem = removeItem;
-    window.quickSearch = function(v){ searchInput.value = v; renderResults(v); };
+    window.quickSearch = function(v){ searchInput.value = v; const best = filterFoods(v)[0]; if(best){ setSelected(best.id); } else { renderResults(v); } };
 
     renderAll();
   </script>
