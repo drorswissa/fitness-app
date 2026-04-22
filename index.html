@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout App V2</title>
+  <title>Workout App Fixed V2</title>
   <style>
     :root {
       --bg: #0b0f16;
@@ -15,11 +15,9 @@
       --line: rgba(255,255,255,0.06);
       --accent: #22c58b;
       --accent-2: #18a875;
-      --warn: #a89a16;
       --danger: #ff6f6f;
       --shadow: 0 10px 26px rgba(0,0,0,.24);
     }
-
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -27,16 +25,13 @@
       background: linear-gradient(180deg, #090d14 0%, #0b1017 100%);
       color: var(--text);
     }
-
     .app {
       max-width: 430px;
       margin: 0 auto;
       min-height: 100vh;
       padding: 12px 12px 110px;
     }
-
     .stack { display: grid; gap: 12px; }
-
     .card {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -44,18 +39,16 @@
       box-shadow: var(--shadow);
       padding: 14px;
     }
-
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      margin-bottom: 4px;
+      margin-bottom: 10px;
     }
-
-    .back-btn {
-      width: 34px;
-      height: 34px;
+    .mini-btn {
+      min-width: 38px;
+      height: 38px;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
@@ -63,49 +56,49 @@
       border: 1px solid var(--line);
       background: var(--panel-2);
       color: var(--text);
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
     }
-
     .screen-timer {
       font-size: 28px;
       font-weight: 800;
       text-align: center;
       flex: 1;
     }
-
-    .days-track {
+    .days-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 8px;
-      margin-top: 8px;
+      margin-bottom: 12px;
     }
-
-    .day-pill {
+    .day-card {
       background: var(--panel-2);
       border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 10px 8px;
+      border-radius: 16px;
+      padding: 12px 10px;
       text-align: center;
-      font-weight: 700;
-      font-size: 13px;
       cursor: pointer;
       color: var(--text);
+      font-weight: 700;
     }
-
-    .day-pill.active {
-      background: rgba(34,197,139,.18);
+    .day-card small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-weight: 400;
+      font-size: 11px;
+    }
+    .day-card.active {
       outline: 2px solid rgba(34,197,139,.35);
+      background: rgba(34,197,139,.10);
     }
-
     .progress-track {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       gap: 8px;
-      margin-top: 14px;
+      margin-bottom: 14px;
       align-items: center;
     }
-
     .progress-step {
       width: 100%;
       aspect-ratio: 1;
@@ -119,44 +112,73 @@
       font-weight: 700;
       font-size: 14px;
       opacity: .88;
+      cursor: pointer;
     }
-
     .progress-step.active {
       background: var(--accent);
       color: #062117;
       opacity: 1;
     }
-
     .hero-image {
       width: 100%;
-      height: 168px;
+      height: 176px;
       object-fit: cover;
       border-radius: 16px;
       background: #fff;
       border: 1px solid var(--line);
-      margin-top: 14px;
     }
-
     .exercise-title {
       font-size: 18px;
       font-weight: 800;
       margin-top: 14px;
       line-height: 1.2;
     }
-
     .exercise-sub {
       color: var(--muted);
       font-size: 13px;
       line-height: 1.4;
       margin-top: 6px;
     }
-
+    .action-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    button, input, select, a.linkbtn {
+      font: inherit;
+    }
+    button, a.linkbtn {
+      border: none;
+      border-radius: 16px;
+      padding: 11px 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .primary {
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      color: #082217;
+      font-weight: 800;
+    }
+    .secondary {
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+    .danger {
+      background: rgba(255,111,111,.14);
+      color: #ffd5d5;
+      border: 1px solid rgba(255,111,111,.18);
+    }
+    .full { width: 100%; }
     .sets-card {
       margin-top: 14px;
       display: grid;
       gap: 10px;
     }
-
     .set-row {
       background: var(--panel-2);
       border: 1px solid var(--line);
@@ -167,12 +189,10 @@
       gap: 10px;
       align-items: center;
     }
-
     .set-row.active {
-      box-shadow: inset 0 0 0 2px rgba(168,154,22,.8);
-      background: rgba(168,154,22,.08);
+      box-shadow: inset 0 0 0 2px rgba(34,197,139,.35);
+      background: rgba(34,197,139,.08);
     }
-
     .set-index {
       width: 32px;
       height: 32px;
@@ -184,19 +204,12 @@
       font-weight: 700;
       color: var(--text);
     }
-
-    .input-block {
-      display: grid;
-      gap: 4px;
-    }
-
     .input-wrap {
       display: grid;
-      grid-template-columns: 48px auto;
+      grid-template-columns: 54px auto;
       gap: 8px;
       align-items: center;
     }
-
     .tiny-input {
       width: 100%;
       background: #020406;
@@ -208,18 +221,10 @@
       font-size: 15px;
       font-weight: 700;
     }
-
     .unit {
       color: var(--muted);
       font-size: 13px;
     }
-
-    .set-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
     .icon-btn {
       min-width: 42px;
       height: 42px;
@@ -234,13 +239,11 @@
       border: 1px solid var(--line);
       font-size: 16px;
     }
-
     .icon-btn.done {
       background: rgba(34,197,139,.16);
       color: #8ff3cb;
       border-color: rgba(34,197,139,.26);
     }
-
     .timer-footer {
       position: sticky;
       bottom: 92px;
@@ -256,22 +259,9 @@
       margin-top: 14px;
       z-index: 4;
     }
-
-    .footer-block {
-      text-align: center;
-    }
-
-    .footer-label {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-
-    .footer-time {
-      font-size: 20px;
-      font-weight: 800;
-    }
-
+    .footer-block { text-align: center; }
+    .footer-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .footer-time { font-size: 20px; font-weight: 800; }
     .footer-btn {
       border: none;
       border-radius: 16px;
@@ -279,32 +269,15 @@
       font-weight: 700;
       cursor: pointer;
     }
-
-    .footer-btn.done {
-      background: linear-gradient(180deg, var(--accent), var(--accent-2));
-      color: #062117;
-    }
-
-    .footer-btn.rest {
-      background: #05080d;
-      color: #d7dfef;
-      border: 1px solid var(--line);
-    }
-
+    .footer-btn.done { background: linear-gradient(180deg, var(--accent), var(--accent-2)); color: #062117; }
+    .footer-btn.rest { background: #05080d; color: #d7dfef; border: 1px solid var(--line); }
     .section.hidden { display: none; }
-
-    .section-title {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-
+    .section-title { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
     }
-
     .stat-box {
       background: var(--panel-3);
       border: 1px solid var(--line);
@@ -312,19 +285,8 @@
       padding: 12px;
       text-align: center;
     }
-
-    .stat-box span {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .stat-box strong {
-      display: block;
-      font-size: 22px;
-      margin-top: 4px;
-    }
-
+    .stat-box span { display: block; font-size: 12px; color: var(--muted); }
+    .stat-box strong { display: block; font-size: 22px; margin-top: 4px; }
     .history-item {
       background: var(--panel-3);
       border: 1px solid var(--line);
@@ -332,7 +294,6 @@
       padding: 11px;
       margin-bottom: 8px;
     }
-
     .empty {
       color: var(--muted);
       text-align: center;
@@ -340,7 +301,6 @@
       border: 1px dashed var(--line);
       border-radius: 16px;
     }
-
     .sheet-backdrop {
       position: fixed;
       inset: 0;
@@ -348,9 +308,7 @@
       display: none;
       z-index: 19;
     }
-
     .sheet-backdrop.open { display: block; }
-
     .sheet {
       position: fixed;
       left: 0;
@@ -368,9 +326,7 @@
       z-index: 20;
       box-shadow: var(--shadow);
     }
-
     .sheet.open { display: block; }
-
     input, select {
       width: 100%;
       background: var(--panel-2);
@@ -380,7 +336,6 @@
       padding: 10px 11px;
       outline: none;
     }
-
     .library-item {
       background: var(--panel-3);
       border: 1px solid var(--line);
@@ -392,7 +347,6 @@
       align-items: center;
       margin-bottom: 8px;
     }
-
     .library-item img {
       width: 54px;
       height: 54px;
@@ -401,7 +355,6 @@
       border: 1px solid var(--line);
       background: #fff;
     }
-
     .fixed-spotify {
       position: fixed;
       left: 50%;
@@ -414,14 +367,12 @@
       z-index: 30;
       backdrop-filter: blur(10px);
     }
-
     .spotify-mini-label {
       color: var(--muted);
       font-size: 11px;
       margin-bottom: 6px;
       text-align: center;
     }
-
     iframe.spotify-bar {
       width: 100%;
       height: 80px;
@@ -435,19 +386,22 @@
     <div class="stack">
       <div class="card">
         <div class="topbar">
-          <button class="back-btn" id="openLibraryBtn">＋</button>
+          <button class="mini-btn" id="openLibraryBtn">＋</button>
           <div class="screen-timer" id="workoutTimerDisplay">00:00</div>
-          <button class="back-btn" id="finishWorkoutTopBtn">✓</button>
+          <button class="mini-btn" id="finishWorkoutTopBtn">✓</button>
         </div>
 
-        <div class="days" id="dayTabs"></div>
-
+        <div class="days-grid" id="dayTabs"></div>
         <div class="progress-track" id="exerciseProgress"></div>
 
         <img id="activeExerciseImage" class="hero-image" alt="exercise" />
-
         <div class="exercise-title" id="activeExerciseName"></div>
         <div class="exercise-sub" id="activeExerciseDesc"></div>
+
+        <div class="action-row">
+          <a class="linkbtn secondary" id="youtubeLink" href="#" target="_blank" rel="noopener">יוטיוב</a>
+          <button class="secondary" id="loadRestBtn">טען מנוחה</button>
+        </div>
 
         <div class="sets-card" id="setsList"></div>
 
@@ -478,13 +432,13 @@
       <div class="card section hidden" id="musicSection">
         <div class="section-title">הפלייליסט שלי</div>
         <input id="spotifyInput" placeholder="הדבק קישור Spotify שלך" />
-        <button class="footer-btn done" id="saveSpotifyBtn" style="width:100%;margin-top:10px;">שמור פלייליסט</button>
+        <button class="primary full" id="saveSpotifyBtn" style="margin-top:10px;">שמור פלייליסט</button>
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-        <button class="back-btn" style="width:100%;height:44px;border-radius:16px;" id="navWorkout">אימון</button>
-        <button class="back-btn" style="width:100%;height:44px;border-radius:16px;" id="navHistory">היסטוריה</button>
-        <button class="back-btn" style="width:100%;height:44px;border-radius:16px;" id="navMusic">מוזיקה</button>
+        <button class="secondary" id="navWorkout">אימון</button>
+        <button class="secondary" id="navHistory">היסטוריה</button>
+        <button class="secondary" id="navMusic">מוזיקה</button>
       </div>
     </div>
   </div>
@@ -504,7 +458,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'workout_app_v2_like';
+    const STORAGE_KEY = 'workout_app_v2_fixed_days';
     let workoutTimerInterval = null;
     let restTimerInterval = null;
 
@@ -512,23 +466,25 @@
       { id:'ex1', name:'Dumbbell Bench Press', muscle:'חזה', equipment:'משקולות', reps:'8', kg:'20', image:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=dumbbell+bench+press' },
       { id:'ex2', name:'Machine Chest Press', muscle:'חזה', equipment:'מכונה', reps:'10', kg:'25', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=machine+chest+press' },
       { id:'ex3', name:'Cable Fly', muscle:'חזה', equipment:'כבלים', reps:'12', kg:'15', image:'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=cable+fly' },
-      { id:'ex4', name:'Lat Pulldown', muscle:'גב', equipment:'מכונה', reps:'8', kg:'30', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=lat+pulldown' },
-      { id:'ex5', name:'Seated Cable Row', muscle:'גב', equipment:'כבלים', reps:'8', kg:'25', image:'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=seated+cable+row' },
-      { id:'ex6', name:'One Arm Dumbbell Row', muscle:'גב', equipment:'משקולות', reps:'10', kg:'18', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=one+arm+dumbbell+row' },
-      { id:'ex7', name:'Rope Pushdown', muscle:'יד אחורית', equipment:'כבלים', reps:'12', kg:'12', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=rope+triceps+pushdown' },
-      { id:'ex8', name:'Overhead Extension', muscle:'יד אחורית', equipment:'כבלים', reps:'10', kg:'10', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=overhead+triceps+extension' },
-      { id:'ex9', name:'Assisted Dips', muscle:'יד אחורית', equipment:'מכונה', reps:'10', kg:'סיוע', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=assisted+dips' },
-      { id:'ex10', name:'Lateral Raise', muscle:'כתפיים', equipment:'משקולות', reps:'12', kg:'8', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=lateral+raise' },
-      { id:'ex11', name:'Leg Press', muscle:'רגליים', equipment:'מכונה', reps:'12', kg:'80', image:'https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=leg+press' },
-      { id:'ex12', name:'Hammer Curl', muscle:'יד קדמית', equipment:'משקולות', reps:'12', kg:'10', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=hammer+curl' }
+      { id:'ex4', name:'Dumbbell Curl', muscle:'יד קדמית', equipment:'משקולות', reps:'12', kg:'10', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=dumbbell+biceps+curl' },
+      { id:'ex5', name:'Hammer Curl', muscle:'יד קדמית', equipment:'משקולות', reps:'12', kg:'10', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=hammer+curl' },
+      { id:'ex6', name:'Lat Pulldown', muscle:'גב', equipment:'מכונה', reps:'8', kg:'30', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=lat+pulldown' },
+      { id:'ex7', name:'Seated Cable Row', muscle:'גב', equipment:'כבלים', reps:'8', kg:'25', image:'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=seated+cable+row' },
+      { id:'ex8', name:'One Arm Dumbbell Row', muscle:'גב', equipment:'משקולות', reps:'10', kg:'18', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=one+arm+dumbbell+row' },
+      { id:'ex9', name:'Straight Arm Pulldown', muscle:'גב', equipment:'כבלים', reps:'12', kg:'15', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=straight+arm+pulldown' },
+      { id:'ex10', name:'Rope Pushdown', muscle:'יד אחורית', equipment:'כבלים', reps:'12', kg:'12', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=rope+triceps+pushdown' },
+      { id:'ex11', name:'Overhead Extension', muscle:'יד אחורית', equipment:'כבלים', reps:'10', kg:'10', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=overhead+triceps+extension' },
+      { id:'ex12', name:'Assisted Dips', muscle:'יד אחורית', equipment:'מכונה', reps:'10', kg:'סיוע', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=assisted+dips' },
+      { id:'ex13', name:'Shoulder Press', muscle:'כתפיים', equipment:'מכונה', reps:'10', kg:'20', image:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=shoulder+press+machine' },
+      { id:'ex14', name:'Lateral Raise', muscle:'כתפיים', equipment:'משקולות', reps:'12', kg:'8', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=lateral+raise' },
+      { id:'ex15', name:'Face Pull', muscle:'כתפיים', equipment:'כבלים', reps:'12', kg:'12', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=face+pull' },
+      { id:'ex16', name:'Leg Press', muscle:'רגליים', equipment:'מכונה', reps:'12', kg:'80', image:'https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=leg+press' },
+      { id:'ex17', name:'Leg Curl', muscle:'רגליים', equipment:'מכונה', reps:'12', kg:'30', image:'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=leg+curl' },
+      { id:'ex18', name:'Goblet Squat', muscle:'רגליים', equipment:'משקולות', reps:'10', kg:'18', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=goblet+squat' }
     ];
 
     function uid(){ return 'id-' + Math.random().toString(36).slice(2,10); }
-
-    function makeSet(ex, i){
-      return { id: uid(), index: i+1, reps: ex.reps, kg: ex.kg, done: false };
-    }
-
+    function makeSet(ex, i){ return { id: uid(), index: i+1, reps: ex.reps, kg: ex.kg, done: false }; }
     function cloneExercise(id){
       const ex = LIBRARY.find(x => x.id === id);
       return {
@@ -545,16 +501,24 @@
       };
     }
 
-    function defaultState(){
+    function createDefaultDays(){
       const wedId = uid();
       return {
         days: [
-          { id: uid(), name: 'שני', label: 'חזה + יד קדמית', exercises: [cloneExercise('ex1'), cloneExercise('ex2'), cloneExercise('ex3'), cloneExercise('ex12'), cloneExercise('ex1'), cloneExercise('ex12')] },
-          { id: wedId, name: 'רביעי', label: 'גב + יד אחורית', exercises: [cloneExercise('ex4'), cloneExercise('ex5'), cloneExercise('ex6'), cloneExercise('ex7'), cloneExercise('ex8'), cloneExercise('ex9')] },
-          { id: uid(), name: 'שישי', label: 'כתפיים + רגליים', exercises: [cloneExercise('ex10'), cloneExercise('ex11'), cloneExercise('ex10'), cloneExercise('ex11'), cloneExercise('ex10'), cloneExercise('ex11')] },
-          { id: uid(), name: 'שבת', label: 'משולב', exercises: [cloneExercise('ex1'), cloneExercise('ex4'), cloneExercise('ex10'), cloneExercise('ex11'), cloneExercise('ex12'), cloneExercise('ex7')] }
+          { id: uid(), name: 'שני', label: 'חזה + יד קדמית', exercises: [cloneExercise('ex1'), cloneExercise('ex2'), cloneExercise('ex3'), cloneExercise('ex4'), cloneExercise('ex5'), cloneExercise('ex1')] },
+          { id: wedId, name: 'רביעי', label: 'גב + יד אחורית', exercises: [cloneExercise('ex6'), cloneExercise('ex7'), cloneExercise('ex8'), cloneExercise('ex9'), cloneExercise('ex10'), cloneExercise('ex11'), cloneExercise('ex12')] },
+          { id: uid(), name: 'שישי', label: 'כתפיים + רגליים', exercises: [cloneExercise('ex13'), cloneExercise('ex14'), cloneExercise('ex15'), cloneExercise('ex16'), cloneExercise('ex17'), cloneExercise('ex18')] },
+          { id: uid(), name: 'שבת', label: 'אימון משולב', exercises: [cloneExercise('ex1'), cloneExercise('ex6'), cloneExercise('ex13'), cloneExercise('ex16'), cloneExercise('ex4'), cloneExercise('ex10')] }
         ],
-        selectedDayId: wedId,
+        selectedDayId: wedId
+      };
+    }
+
+    function defaultState(){
+      const d = createDefaultDays();
+      return {
+        days: d.days,
+        selectedDayId: d.selectedDayId,
         activeExerciseIndex: 0,
         history: [],
         spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP',
@@ -563,13 +527,38 @@
       };
     }
 
+    function ensureFourFixedDays(stateObj){
+      const defaults = createDefaultDays();
+      const required = [
+        ['שני','חזה + יד קדמית'],
+        ['רביעי','גב + יד אחורית'],
+        ['שישי','כתפיים + רגליים'],
+        ['שבת','אימון משולב']
+      ];
+      required.forEach((pair, idx) => {
+        const [name,label] = pair;
+        const existing = stateObj.days.find(d => d.name === name);
+        if (existing) {
+          existing.label = label;
+        } else {
+          stateObj.days.push(defaults.days[idx]);
+        }
+      });
+      stateObj.days = stateObj.days.filter(d => required.some(([n]) => d.name === n));
+      if (!stateObj.days.find(d => d.id === stateObj.selectedDayId)) {
+        stateObj.selectedDayId = stateObj.days.find(d => d.name === 'רביעי')?.id || stateObj.days[0]?.id;
+      }
+      return stateObj;
+    }
+
     function load(){
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : null;
-        if (!parsed) return defaultState();
-        if (!parsed.timers) parsed.timers = { workoutSeconds: 0, workoutRunning: false, restSecondsLeft: 60, restRunning: false };
-        parsed.days?.forEach(day => day.exercises?.forEach(ex => {
+        let result = parsed || defaultState();
+        result = ensureFourFixedDays(result);
+        if (!result.timers) result.timers = { workoutSeconds: 0, workoutRunning: false, restSecondsLeft: 60, restRunning: false };
+        result.days?.forEach(day => day.exercises?.forEach(ex => {
           if (!Array.isArray(ex.sets) || !ex.sets.length) {
             const reps = ex.reps || '8';
             const kg = ex.kg || '20';
@@ -577,15 +566,14 @@
           }
           if (typeof ex.restSeconds !== 'number') ex.restSeconds = 60;
         }));
-        if (typeof parsed.activeExerciseIndex !== 'number') parsed.activeExerciseIndex = 0;
-        return parsed;
+        if (typeof result.activeExerciseIndex !== 'number') result.activeExerciseIndex = 0;
+        return result;
       } catch {
         return defaultState();
       }
     }
 
     let state = load();
-
     function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
     function selectedDay(){ return state.days.find(d => d.id === state.selectedDayId) || state.days[0]; }
     function activeExercise(){ return selectedDay().exercises[state.activeExerciseIndex] || selectedDay().exercises[0]; }
@@ -605,7 +593,7 @@
 
     function renderDays(){
       const day = selectedDay();
-      document.getElementById('dayTabs').innerHTML = state.days.map(d => `<button class="day-pill ${d.id===state.selectedDayId?'active':''}" onclick="selectDay('${d.id}')">${d.name}<br><small>${d.label}</small></button>`).join('');
+      document.getElementById('dayTabs').innerHTML = state.days.map(d => `<button class="day-card ${d.id===state.selectedDayId?'active':''}" onclick="selectDay('${d.id}')">${d.name}<small>${d.label}</small></button>`).join('');
       if (state.activeExerciseIndex >= day.exercises.length) state.activeExerciseIndex = Math.max(0, day.exercises.length - 1);
     }
 
@@ -621,29 +609,25 @@
         document.getElementById('activeExerciseName').textContent = 'אין תרגילים';
         document.getElementById('activeExerciseDesc').textContent = 'הוסף תרגיל מהמאגר';
         document.getElementById('setsList').innerHTML = '<div class="empty">אין תרגילים ביום הנבחר</div>';
+        document.getElementById('youtubeLink').href = '#';
         return;
       }
       document.getElementById('activeExerciseImage').src = ex.image;
       document.getElementById('activeExerciseName').textContent = ex.name;
-      document.getElementById('activeExerciseDesc').textContent = `${ex.muscle} • מנוחה ${formatTime(ex.restSeconds)} • סמן סט, והאפליקציה תעבור למנוחה`;
+      document.getElementById('activeExerciseDesc').textContent = `${ex.muscle} • מנוחה ${formatTime(ex.restSeconds)} • 3 סטים`;
+      document.getElementById('youtubeLink').href = ex.video;
       document.getElementById('setsList').innerHTML = ex.sets.map((set, idx)=>`
         <div class="set-row ${!set.done && idx===ex.sets.findIndex(s=>!s.done)?'active':''}">
           <div class="set-index">${set.index}</div>
-          <div class="input-block">
-            <div class="input-wrap">
-              <input class="tiny-input" value="${escapeHtml(set.reps)}" onchange="updateSetField('${ex.instanceId}','${set.id}','reps',this.value)" />
-              <span class="unit">Reps</span>
-            </div>
+          <div class="input-wrap">
+            <input class="tiny-input" value="${escapeHtml(set.reps)}" onchange="updateSetField('${ex.instanceId}','${set.id}','reps',this.value)" />
+            <span class="unit">Reps</span>
           </div>
-          <div class="input-block">
-            <div class="input-wrap">
-              <input class="tiny-input" value="${escapeHtml(set.kg)}" onchange="updateSetField('${ex.instanceId}','${set.id}','kg',this.value)" />
-              <span class="unit">Kg</span>
-            </div>
+          <div class="input-wrap">
+            <input class="tiny-input" value="${escapeHtml(set.kg)}" onchange="updateSetField('${ex.instanceId}','${set.id}','kg',this.value)" />
+            <span class="unit">Kg</span>
           </div>
-          <div class="set-actions">
-            <button class="icon-btn ${set.done?'done':''}" onclick="toggleSetDone('${ex.instanceId}','${set.id}')">${set.done?'✓':'○'}</button>
-          </div>
+          <button class="icon-btn ${set.done?'done':''}" onclick="toggleSetDone('${ex.instanceId}','${set.id}')">${set.done?'✓':'○'}</button>
         </div>
       `).join('');
     }
@@ -698,7 +682,7 @@
             <div style="font-weight:700;">${escapeHtml(item.name)}</div>
             <div style="font-size:12px;color:var(--muted);">${escapeHtml(item.muscle)} • ${escapeHtml(item.equipment)}</div>
           </div>
-          <button class="footer-btn done" style="padding:10px 12px;" onclick="addExercise('${item.id}')">הוסף</button>
+          <button class="primary" style="padding:10px 12px;" onclick="addExercise('${item.id}')">הוסף</button>
         </div>
       `).join('') || '<div class="empty">לא נמצאו תרגילים</div>';
     }
@@ -728,6 +712,14 @@
         state.activeExerciseIndex += 1;
       }
       render();
+    }
+
+    function loadRestFromActive(){
+      const ex = activeExercise();
+      if (!ex) return;
+      state.timers.restSecondsLeft = ex.restSeconds || 60;
+      render();
+      save();
     }
 
     function addExercise(id){
@@ -836,7 +828,7 @@
     document.getElementById('toggleRestBtn').addEventListener('click', ()=>toggleRestTimer(false));
     document.getElementById('finishWorkoutTopBtn').addEventListener('click', finishWorkout);
     document.getElementById('saveSpotifyBtn').addEventListener('click', saveSpotify);
-    document.getElementById('finishWorkoutBtn').addEventListener('click', finishWorkout);
+    document.getElementById('loadRestBtn').addEventListener('click', loadRestFromActive);
     document.getElementById('navWorkout').addEventListener('click', ()=>showSection('workout'));
     document.getElementById('navHistory').addEventListener('click', ()=>showSection('history'));
     document.getElementById('navMusic').addEventListener('click', ()=>showSection('music'));
