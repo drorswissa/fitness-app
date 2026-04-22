@@ -26,7 +26,7 @@
     .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
     .topbar h1{font-size:18px;margin:0;font-weight:800;letter-spacing:.2px}
     .back-btn{border:none;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);padding:13px 18px;border-radius:18px;font-weight:800;cursor:pointer}
-    .card{background:linear-gradient(180deg,rgba(11,19,36,.96),rgba(7,12,24,.96));border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+    .card{background:linear-gradient(180deg,rgba(11,19,36,.98),rgba(7,12,24,.98));border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px;backdrop-filter:blur(8px)}
     .summary-card{padding:20px 18px 18px}
     .ring-wrap{display:flex;justify-content:center;position:relative;margin-bottom:12px}
     .ring-wrap svg{transform:rotate(-90deg)}
@@ -49,7 +49,7 @@
     .chip{border:none;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:999px;font-size:13px;cursor:pointer}
     .results-card{padding:8px 0 0;background:transparent;border:none;box-shadow:none;margin-bottom:10px}
     .section-title{font-size:17px;font-weight:900;margin:0 0 10px 6px}
-    .result-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:linear-gradient(180deg,rgba(12,18,34,.96),rgba(8,13,24,.96));border:1px solid var(--line);border-radius:22px;margin-bottom:10px;cursor:pointer;transition:.18s transform,.18s border-color,.18s background}
+    .result-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 16px;background:linear-gradient(180deg,rgba(12,18,34,.98),rgba(8,13,24,.98));border:1px solid var(--line);border-radius:22px;margin-bottom:10px;cursor:pointer;transition:.18s transform,.18s border-color,.18s background}.result-item:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16)}.result-item.active{border-color:rgba(111,89,255,.55);background:linear-gradient(180deg,rgba(34,28,70,.98),rgba(16,18,33,.98))}
     .result-item:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16)}
     .result-item.active{border-color:rgba(111,89,255,.55);background:linear-gradient(180deg,rgba(34,28,70,.96),rgba(16,18,33,.96))}
     .result-title{font-size:16px;font-weight:800;line-height:1.25}
@@ -200,19 +200,36 @@
 
     const FOODS = [
       { id:'chicken_breast', he:'חזה עוף', aliases:['עוף','חזה עוף','chicken','chicken breast'], per100:{ calories:165, protein:31, carbs:0, fat:3.6 }, units:{ gram:1, piece:120, tbsp:15, cup:140 } },
-      { id:'rice_cooked', he:'אורז מבושל', aliases:['אורז','אורז מבושל','rice'], per100:{ calories:130, protein:2.7, carbs:28, fat:0.3 }, units:{ gram:1, tbsp:20, cup:150 } },
-      { id:'egg', he:'ביצה', aliases:['ביצה','ביצים','egg'], per100:{ calories:155, protein:13, carbs:1.1, fat:11 }, units:{ gram:1, piece:50 } },
-      { id:'cottage', he:'קוטג׳', aliases:['קוטג','קוטג׳','גבינה קוטג','cottage'], per100:{ calories:98, protein:11, carbs:3.4, fat:4.3 }, units:{ gram:1, tbsp:15, cup:250 } },
+      { id:'chicken_thigh', he:'פרגית', aliases:['פרגית','ירך עוף','chicken thigh'], per100:{ calories:209, protein:26, carbs:0, fat:10.9 }, units:{ gram:1, piece:130 } },
+      { id:'ground_beef', he:'בשר בקר טחון', aliases:['בקר','בשר טחון','בשר בקר','ground beef'], per100:{ calories:250, protein:26, carbs:0, fat:17 }, units:{ gram:1, tbsp:20 } },
+      { id:'salmon', he:'סלמון', aliases:['סלמון','דג סלמון','salmon'], per100:{ calories:208, protein:20, carbs:0, fat:13 }, units:{ gram:1, piece:150 } },
       { id:'tuna', he:'טונה במים', aliases:['טונה','tuna'], per100:{ calories:116, protein:26, carbs:0, fat:1 }, units:{ gram:1, tbsp:15, cup:100 } },
-      { id:'banana', he:'בננה', aliases:['בננה','banana'], per100:{ calories:89, protein:1.1, carbs:23, fat:0.3 }, units:{ gram:1, piece:120 } },
-      { id:'bread', he:'לחם פרוס', aliases:['לחם','לחם פרוס','bread'], per100:{ calories:265, protein:9, carbs:49, fat:3.2 }, units:{ gram:1, piece:30 } },
-      { id:'oats', he:'שיבולת שועל', aliases:['שיבולת שועל','שיבולת','oats'], per100:{ calories:389, protein:16.9, carbs:66.3, fat:6.9 }, units:{ gram:1, tbsp:10, cup:80 } },
-      { id:'yogurt_pro', he:'יוגורט חלבון', aliases:['יוגורט','יוגורט חלבון','yogurt'], per100:{ calories:73, protein:10, carbs:4, fat:1.7 }, units:{ gram:1, cup:200 } },
+      { id:'egg', he:'ביצה', aliases:['ביצה','ביצים','egg'], per100:{ calories:155, protein:13, carbs:1.1, fat:11 }, units:{ gram:1, piece:50 } },
+      { id:'egg_white', he:'חלבון ביצה', aliases:['חלבון ביצה','לבן ביצה','egg white'], per100:{ calories:52, protein:11, carbs:0.7, fat:0.2 }, units:{ gram:1, piece:33 } },
+      { id:'rice_cooked', he:'אורז מבושל', aliases:['אורז','אורז מבושל','rice'], per100:{ calories:130, protein:2.7, carbs:28, fat:0.3 }, units:{ gram:1, tbsp:20, cup:150 } },
+      { id:'pasta_cooked', he:'פסטה מבושלת', aliases:['פסטה','פסטה מבושלת','pasta'], per100:{ calories:157, protein:5.8, carbs:30.9, fat:0.9 }, units:{ gram:1, tbsp:18, cup:140 } },
       { id:'sweet_potato', he:'בטטה אפויה', aliases:['בטטה','בטטה אפויה','sweet potato'], per100:{ calories:90, protein:2, carbs:21, fat:0.1 }, units:{ gram:1, piece:130 } },
+      { id:'potato', he:'תפוח אדמה', aliases:['תפוח אדמה','תפוא','potato'], per100:{ calories:77, protein:2, carbs:17, fat:0.1 }, units:{ gram:1, piece:150 } },
+      { id:'oats', he:'שיבולת שועל', aliases:['שיבולת שועל','שיבולת','קוואקר','oats'], per100:{ calories:389, protein:16.9, carbs:66.3, fat:6.9 }, units:{ gram:1, tbsp:10, cup:80 } },
+      { id:'bread', he:'לחם פרוס', aliases:['לחם','לחם פרוס','bread'], per100:{ calories:265, protein:9, carbs:49, fat:3.2 }, units:{ gram:1, piece:30 } },
+      { id:'whole_wheat_bread', he:'לחם מלא', aliases:['לחם מלא','לחם חיטה מלאה','whole wheat bread'], per100:{ calories:247, protein:13, carbs:41, fat:4.2 }, units:{ gram:1, piece:32 } },
+      { id:'cottage', he:'קוטג׳', aliases:['קוטג','קוטג׳','גבינה קוטג','cottage'], per100:{ calories:98, protein:11, carbs:3.4, fat:4.3 }, units:{ gram:1, tbsp:15, cup:250 } },
+      { id:'white_cheese', he:'גבינה לבנה', aliases:['גבינה לבנה','גבינה','white cheese'], per100:{ calories:95, protein:10, carbs:4, fat:5 }, units:{ gram:1, tbsp:15, cup:250 } },
+      { id:'yellow_cheese', he:'גבינה צהובה', aliases:['גבינה צהובה','קשקבל','yellow cheese'], per100:{ calories:356, protein:25, carbs:2.2, fat:27 }, units:{ gram:1, slice:28 } },
+      { id:'greek_yogurt', he:'יוגורט יווני', aliases:['יוגורט יווני','יוגורט','greek yogurt'], per100:{ calories:97, protein:9, carbs:3.9, fat:5 }, units:{ gram:1, cup:200 } },
+      { id:'yogurt_pro', he:'יוגורט חלבון', aliases:['יוגורט חלבון','protein yogurt'], per100:{ calories:73, protein:10, carbs:4, fat:1.7 }, units:{ gram:1, cup:200 } },
+      { id:'milk_3', he:'חלב 3%', aliases:['חלב','milk'], per100:{ calories:61, protein:3.3, carbs:4.8, fat:3.2 }, units:{ gram:1, cup:240 } },
+      { id:'banana', he:'בננה', aliases:['בננה','banana'], per100:{ calories:89, protein:1.1, carbs:23, fat:0.3 }, units:{ gram:1, piece:120 } },
       { id:'apple', he:'תפוח', aliases:['תפוח','apple'], per100:{ calories:52, protein:0.3, carbs:14, fat:0.2 }, units:{ gram:1, piece:150 } },
+      { id:'avocado', he:'אבוקדו', aliases:['אבוקדו','avocado'], per100:{ calories:160, protein:2, carbs:8.5, fat:14.7 }, units:{ gram:1, piece:170, tbsp:15 } },
       { id:'almonds', he:'שקדים', aliases:['שקדים','almonds'], per100:{ calories:579, protein:21, carbs:22, fat:50 }, units:{ gram:1, tbsp:10 } },
-      { id:'cheese_white', he:'גבינה לבנה', aliases:['גבינה לבנה','גבינה','white cheese'], per100:{ calories:95, protein:10, carbs:4, fat:5 }, units:{ gram:1, tbsp:15, cup:250 } },
-      { id:'milk_3', he:'חלב 3%', aliases:['חלב','milk'], per100:{ calories:61, protein:3.3, carbs:4.8, fat:3.2 }, units:{ gram:1, cup:240 } }
+      { id:'peanut_butter', he:'חמאת בוטנים', aliases:['חמאת בוטנים','peanut butter'], per100:{ calories:588, protein:25, carbs:20, fat:50 }, units:{ gram:1, tbsp:16 } },
+      { id:'tahini', he:'טחינה', aliases:['טחינה','טחינה גולמית','tahini'], per100:{ calories:595, protein:17, carbs:21, fat:53 }, units:{ gram:1, tbsp:15 } },
+      { id:'olive_oil', he:'שמן זית', aliases:['שמן זית','olive oil'], per100:{ calories:884, protein:0, carbs:0, fat:100 }, units:{ gram:1, tbsp:13, tsp:5 } },
+      { id:'hummus', he:'חומוס', aliases:['חומוס','hummus'], per100:{ calories:166, protein:8, carbs:14, fat:9.6 }, units:{ gram:1, tbsp:15 } },
+      { id:'cucumber', he:'מלפפון', aliases:['מלפפון','cucumber'], per100:{ calories:15, protein:0.7, carbs:3.6, fat:0.1 }, units:{ gram:1, piece:120 } },
+      { id:'tomato', he:'עגבנייה', aliases:['עגבניה','עגבנייה','tomato'], per100:{ calories:18, protein:0.9, carbs:3.9, fat:0.2 }, units:{ gram:1, piece:120 } },
+      { id:'protein_bar', he:'חטיף חלבון', aliases:['חטיף חלבון','חטיף','protein bar'], per100:{ calories:370, protein:30, carbs:35, fat:12 }, units:{ gram:1, piece:60 } }
     ];
 
     const state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
@@ -234,7 +251,8 @@
     }
 
     function unitLabel(unit){
-      return { gram:'גרם', piece:'יחידה', tbsp:'כף', cup:'גביע' }[unit] || unit;
+      return { gram:'גרם', piece:'יחידה', tbsp:'כף', cup:'גביע', slice:'פרוסה', tsp:'כפית' }[unit] || unit;
+    }[unit] || unit;
     }
 
     function findFood(id){
@@ -280,7 +298,7 @@
           </div>
           <button class="add-mini" onclick="event.stopPropagation(); setSelected('${food.id}')">+</button>
         </div>
-      `).join('') || '<div class="empty">לא נמצאו תוצאות. נסה למשל: חזה עוף, אורז, ביצה, קוטג׳</div>';
+      `).join('') || '<div class="empty">לא נמצאו תוצאות. נסה למשל: חזה עוף, אורז, ביצה, קוטג׳, גבינה לבנה, בטטה, אבוקדו</div>';
     }
 
     function renderSelected(){
