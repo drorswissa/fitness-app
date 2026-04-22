@@ -7,12 +7,12 @@
 <style>
 body{
   margin:0;
-  background:#050a12;
+  background:#04080f;
   color:white;
   font-family:Arial;
-  max-width:430px;
+  max-width:420px;
   margin:auto;
-  padding:14px;
+  padding:16px;
 }
 
 /* HEADER */
@@ -21,21 +21,23 @@ body{
   justify-content:space-between;
   align-items:center;
   margin-bottom:10px;
+  font-size:20px;
+  font-weight:bold;
 }
 
-.back{
+.btn{
   background:#111827;
-  padding:8px 14px;
+  padding:8px 12px;
   border-radius:12px;
   cursor:pointer;
 }
 
 /* CARD */
 .card{
-  background:linear-gradient(180deg,#0f172a,#020617);
+  background:linear-gradient(180deg,#0b1324,#020617);
   border-radius:24px;
-  padding:16px;
-  margin-bottom:14px;
+  padding:18px;
+  margin-bottom:16px;
 }
 
 /* CIRCLE */
@@ -45,14 +47,12 @@ body{
   margin-bottom:10px;
 }
 
-.circle{
-  width:150px;
-  height:150px;
-  border-radius:50%;
-  border:12px solid #fb923c;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+svg{
+  transform:rotate(-90deg);
+}
+
+.circleText{
+  position:absolute;
   font-size:26px;
   font-weight:bold;
 }
@@ -65,20 +65,21 @@ body{
 
 .macro{
   flex:1;
-  padding:12px;
+  padding:14px;
   border-radius:14px;
   text-align:center;
+  font-size:14px;
 }
 
-.pro{background:#312e81}
-.carb{background:#064e3b}
-.fat{background:#78350f}
+.pro{background:#3b2f85;}
+.carb{background:#065f46;}
+.fat{background:#92400e;}
 
 /* FOOD */
 .food{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:12px;
   padding:10px 0;
   border-bottom:1px solid #111;
 }
@@ -90,30 +91,39 @@ body{
   object-fit:cover;
 }
 
-/* INPUT */
+/* SEARCH */
 input{
   width:100%;
-  padding:12px;
-  border-radius:12px;
+  padding:14px;
+  border-radius:14px;
   border:none;
   background:#111827;
   color:white;
+  font-size:14px;
+}
+
+/* RESULT */
+.result{
+  padding:10px;
+  border-bottom:1px solid #222;
+  cursor:pointer;
 }
 
 /* FAB */
 .fab{
   position:fixed;
-  bottom:20px;
+  bottom:25px;
   left:50%;
   transform:translateX(-50%);
-  background:#7c3aed;
-  width:60px;
-  height:60px;
+  width:65px;
+  height:65px;
   border-radius:50%;
+  background:linear-gradient(45deg,#7c3aed,#a855f7);
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:30px;
+  font-size:32px;
+  box-shadow:0 0 20px rgba(124,58,237,0.6);
 }
 </style>
 </head>
@@ -121,30 +131,37 @@ input{
 <body>
 
 <div class="header">
-  <div class="back" onclick="location.href='index.html'">← אימונים</div>
-  <div>מעקב תזונה</div>
+  <div class="btn" onclick="location.href='index.html'">← אימונים</div>
+  מעקב תזונה
   <div></div>
 </div>
 
 <div class="card">
-  <div class="circleWrap">
-    <div class="circle" id="cal">0</div>
-  </div>
 
-  <div style="text-align:center;color:#aaa;font-size:13px">
-    יעד: <span id="goal"></span> קלוריות (גרעון 500)
-  </div>
+<div class="circleWrap">
+<svg width="160" height="160">
+  <circle cx="80" cy="80" r="70" stroke="#1f2937" stroke-width="10" fill="none"/>
+  <circle id="progress" cx="80" cy="80" r="70" stroke="#fb923c" stroke-width="10" fill="none"
+    stroke-dasharray="440" stroke-dashoffset="440"/>
+</svg>
+<div class="circleText" id="cal">0</div>
+</div>
 
-  <div class="macros">
-    <div class="macro pro">חלבון<br><b id="pro">0</b></div>
-    <div class="macro carb">פחמימות<br><b id="carb">0</b></div>
-    <div class="macro fat">שומן<br><b id="fat">0</b></div>
-  </div>
+<div style="text-align:center;color:#aaa;font-size:13px">
+ יעד יומי: <span id="goal"></span> קלוריות (גרעון 500)
+</div>
+
+<div class="macros">
+<div class="macro pro">חלבון<br><b id="pro">0</b></div>
+<div class="macro carb">פחמימות<br><b id="carb">0</b></div>
+<div class="macro fat">שומן<br><b id="fat">0</b></div>
+</div>
+
 </div>
 
 <div class="card">
-  <input id="search" placeholder="חפש מזון (עוף, אורז, ביצה...)" />
-  <div id="results"></div>
+<input id="search" placeholder="חפש מזון (עוף, אורז, ביצה...)" />
+<div id="results"></div>
 </div>
 
 <div class="card" id="log"></div>
@@ -153,80 +170,82 @@ input{
 
 <script>
 
-const weight = 94.1;
-const goalCalories = Math.round(weight*24 - 500);
-goal.innerText = goalCalories;
+const weight=94.1;
+const goalCalories=Math.round(weight*24-500);
+goal.innerText=goalCalories;
 
-let data = JSON.parse(localStorage.getItem("food")) || [];
+let data=JSON.parse(localStorage.getItem("food"))||[];
 
-const dict = {
-  "אורז":"rice","עוף":"chicken","ביצה":"egg","טונה":"tuna",
-  "גבינה":"cheese","לחם":"bread","בננה":"banana","חלב":"milk"
+const dict={
+ "אורז":"rice","עוף":"chicken","ביצה":"egg",
+ "טונה":"tuna","גבינה":"cheese","לחם":"bread",
+ "בננה":"banana","חלב":"milk"
 };
 
 let selected;
 
 async function searchFood(q){
-  if(!q)return;
+ if(!q)return;
 
-  let query = dict[q] || q;
+ let query=dict[q]||q;
 
-  const res = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${query}&search_simple=1&action=process&json=1&page_size=10`);
-  const d = await res.json();
+ const res=await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${query}&search_simple=1&action=process&json=1&page_size=8`);
+ const d=await res.json();
 
-  results.innerHTML = d.products.map(p=>`
-    <div onclick='selectFood(${JSON.stringify(p)})' style="padding:10px;border-bottom:1px solid #222">
-      ${p.product_name || "מוצר"}
-    </div>
-  `).join("");
+ results.innerHTML=d.products.map(p=>`
+   <div class="result" onclick='selectFood(${JSON.stringify(p)})'>
+     ${p.product_name||"מוצר"}
+   </div>
+ `).join("");
 }
 
-function selectFood(p){
-  selected = p;
-}
+function selectFood(p){selected=p;}
 
 function addFood(){
-  if(!selected)return;
+ if(!selected)return;
 
-  const item={
-    name:selected.product_name,
-    cal:selected.nutriments.energy_kcal_100g||0,
-    pro:selected.nutriments.proteins_100g||0,
-    carb:selected.nutriments.carbohydrates_100g||0,
-    fat:selected.nutriments.fat_100g||0,
-    img:selected.image_front_thumb_url || ""
-  };
+ const item={
+  name:selected.product_name,
+  cal:selected.nutriments.energy_kcal_100g||0,
+  pro:selected.nutriments.proteins_100g||0,
+  carb:selected.nutriments.carbohydrates_100g||0,
+  fat:selected.nutriments.fat_100g||0,
+  img:selected.image_front_thumb_url||""
+ };
 
-  data.push(item);
-  localStorage.setItem("food",JSON.stringify(data));
-
-  render();
+ data.push(item);
+ localStorage.setItem("food",JSON.stringify(data));
+ render();
 }
 
 function render(){
-  let c=0,p=0,car=0,f=0;
+ let c=0,p=0,car=0,f=0;
 
-  log.innerHTML = data.map(x=>{
-    c+=x.cal;p+=x.pro;car+=x.carb;f+=x.fat;
+ log.innerHTML=data.map(x=>{
+  c+=x.cal;p+=x.pro;car+=x.carb;f+=x.fat;
 
-    return `
-      <div class="food">
-        <img src="${x.img}">
-        <div>
-          ${x.name}<br>
-          <small>${Math.round(x.cal)} קלוריות</small>
-        </div>
-      </div>
-    `;
-  }).join("");
+  return `
+  <div class="food">
+    <img src="${x.img}">
+    <div>
+      ${x.name}<br>
+      <small>${Math.round(x.cal)} קלוריות</small>
+    </div>
+  </div>`;
+ }).join("");
 
-  cal.innerText = Math.round(c);
-  pro.innerText = Math.round(p);
-  carb.innerText = Math.round(car);
-  fat.innerText = Math.round(f);
+ cal.innerText=Math.round(c);
+
+ pro.innerText=Math.round(p);
+ carb.innerText=Math.round(car);
+ fat.innerText=Math.round(f);
+
+ let percent=c/goalCalories;
+ let offset=440-(440*percent);
+ progress.style.strokeDashoffset=offset;
 }
 
-search.oninput = e=>searchFood(e.target.value);
+search.oninput=e=>searchFood(e.target.value);
 
 render();
 
