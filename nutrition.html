@@ -1,373 +1,246 @@
-<!DOCTYPE html><html lang="he" dir="rtl">
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nutrition PRO</title>
+
 <style>
-  :root {
-    --bg:#070b12;
-    --panel:#0f172a;
-    --panel2:#111c31;
-    --line:rgba(255,255,255,.08);
-    --text:#f8fafc;
-    --muted:#94a3b8;
-    --green:#22c55e;
-    --purple:#8b5cf6;
-    --yellow:#facc15;
-    --orange:#fb923c;
-    --blue:#38bdf8;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#070b12 0%,#0a1020 100%);color:var(--text)}
-  .app{max-width:430px;margin:0 auto;min-height:100vh;padding:12px}
-  .card{background:linear-gradient(180deg,#0f172a,#0b1220);border:1px solid var(--line);border-radius:22px;padding:14px;margin-bottom:12px;box-shadow:0 12px 28px rgba(0,0,0,.25)}
-  .title{text-align:center;font-weight:800;font-size:22px}
-  .subtitle{color:var(--muted);font-size:12px;text-align:center;margin-top:4px}
-  .row{display:flex;gap:10px;align-items:center}
-  .row-between{display:flex;justify-content:space-between;align-items:center;gap:10px}
-  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  .metric{background:#111c31;border:1px solid var(--line);border-radius:18px;padding:10px;text-align:center}
-  .metric .label{font-size:12px;color:var(--muted)}
-  .metric .value{font-size:22px;font-weight:800;margin-top:5px}
-  .goalBox{background:#111c31;border:1px solid var(--line);border-radius:18px;padding:12px;margin-top:10px}
-  .goalLine{display:flex;justify-content:space-between;gap:10px;margin-top:6px;font-size:14px}
-  .progress{height:8px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin-top:7px}
-  .progress>span{display:block;height:100%;border-radius:999px}
-  .p1{background:var(--orange)} .p2{background:var(--purple)} .p3{background:var(--green)} .p4{background:var(--yellow)}
-  input,select,button{font:inherit}
-  input,select{width:100%;padding:12px;border-radius:14px;border:1px solid var(--line);background:#172338;color:var(--text);margin-top:8px}
-  button{width:100%;padding:13px;border:none;border-radius:14px;background:var(--green);font-weight:700;margin-top:10px;cursor:pointer}
-  .secondary{background:#172338;color:var(--text);border:1px solid var(--line)}
-  .result{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
-  .result:last-child{border-bottom:none}
-  .small{font-size:12px;color:var(--muted)}
-  .sectionTitle{font-size:18px;font-weight:800;margin-bottom:10px}
-  .sheetRow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .pill{display:inline-flex;padding:6px 10px;border-radius:999px;background:#172338;border:1px solid var(--line);font-size:12px;color:var(--muted)}
-  .weekChart{width:100%;height:180px;display:block}
-  .searchItem{background:#111c31;border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:8px;cursor:pointer}
-  .muted{color:var(--muted)}
+body {
+  margin:0;
+  font-family:Arial;
+  background:#070b12;
+  color:white;
+  max-width:430px;
+  margin:auto;
+  padding:12px;
+}
+
+/* HEADER */
+.title {
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+/* CIRCLE */
+.circle {
+  width:140px;
+  height:140px;
+  border-radius:50%;
+  border:10px solid #fb923c;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:auto;
+  font-size:26px;
+  font-weight:bold;
+}
+
+/* CARDS */
+.card {
+  background:#111827;
+  border-radius:20px;
+  padding:14px;
+  margin-bottom:10px;
+}
+
+/* MACROS */
+.macro {
+  display:flex;
+  justify-content:space-between;
+  margin-top:8px;
+}
+
+.bar {
+  height:6px;
+  background:#222;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.bar span {
+  display:block;
+  height:100%;
+}
+
+/* INPUT */
+input, select {
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border-radius:10px;
+  border:none;
+  background:#1f2937;
+  color:white;
+}
+
+/* BUTTON */
+button {
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:#22c55e;
+  margin-top:10px;
+  font-weight:bold;
+}
+
+/* SEARCH RESULTS */
+.item {
+  padding:10px;
+  border-bottom:1px solid #222;
+  cursor:pointer;
+}
+
+.small {font-size:12px;color:#aaa}
 </style>
 </head>
+
 <body>
-<div class="app">
-  <div class="card">
-    <div class="title">תזונה PRO</div>
-    <div class="subtitle">חיפוש חכם, תרגום לעברית, יעדים חכמים וגרפים שבועיים</div>
-  </div>  <div class="card">
-    <div class="sectionTitle">יעד חכם</div>
-    <div class="row-between">
-      <span class="pill">גובה 178 ס״מ</span>
-      <span class="pill">משקל 94.1 ק״ג</span>
-    </div>
-    <div class="goalBox">
-      <div class="goalLine"><span>יעד קלוריות</span><strong id="goalCalories">0</strong></div>
-      <div class="goalLine"><span>חלבון</span><strong id="goalProtein">0g</strong></div>
-      <div class="goalLine"><span>פחמימות</span><strong id="goalCarbs">0g</strong></div>
-      <div class="goalLine"><span>שומן</span><strong id="goalFat">0g</strong></div>
-      <div class="small" style="margin-top:8px">היעד מחושב אוטומטית בגישת ירידה מתונה במשקל, ואפשר לשנות אותו בקוד בהמשך.</div>
-    </div>
-  </div>  <div class="card">
-    <div class="sectionTitle">סיכום יומי</div>
-    <div class="grid4">
-      <div class="metric"><div class="label">קלוריות</div><div class="value" id="cal">0</div></div>
-      <div class="metric"><div class="label">חלבון</div><div class="value" id="pro">0</div></div>
-      <div class="metric"><div class="label">פחמימות</div><div class="value" id="carb">0</div></div>
-      <div class="metric"><div class="label">שומן</div><div class="value" id="fat">0</div></div>
-    </div>
-    <div class="goalBox">
-      <div class="goalLine"><span>קלוריות</span><span id="calLine">0 / 0</span></div>
-      <div class="progress"><span class="p1" id="calProg" style="width:0%"></span></div>
-      <div class="goalLine"><span>חלבון</span><span id="proLine">0 / 0</span></div>
-      <div class="progress"><span class="p2" id="proProg" style="width:0%"></span></div>
-      <div class="goalLine"><span>פחמימות</span><span id="carbLine">0 / 0</span></div>
-      <div class="progress"><span class="p3" id="carbProg" style="width:0%"></span></div>
-      <div class="goalLine"><span>שומן</span><span id="fatLine">0 / 0</span></div>
-      <div class="progress"><span class="p4" id="fatProg" style="width:0%"></span></div>
-    </div>
-  </div>  <div class="card">
-    <div class="sectionTitle">חיפוש מזון</div>
-    <input id="search" placeholder="חפש מזון, לדוגמה: rice, chicken, yogurt" />
-    <div id="results"></div>
-  </div>  <div class="card">
-    <div class="sectionTitle">הוספת מנה</div>
-    <div class="sheetRow">
-      <select id="meal">
-        <option value="ארוחת בוקר">ארוחת בוקר</option>
-        <option value="ארוחת צהריים">ארוחת צהריים</option>
-        <option value="ארוחת ערב">ארוחת ערב</option>
-        <option value="ביניים">ביניים</option>
-      </select>
-      <select id="unit">
-        <option value="gram">גרם</option>
-        <option value="piece">יחידה</option>
-        <option value="tbsp">כף</option>
-        <option value="cup">גביע</option>
-      </select>
-    </div>
-    <input id="amount" placeholder="כמות" type="number" min="0" step="0.1" />
-    <button onclick="addFood()">הוסף</button>
-  </div>  <div class="card">
-    <div class="sectionTitle">יומן יומי</div>
-    <div id="log"></div>
-  </div>  <div class="card">
-    <div class="row-between">
-      <div class="sectionTitle" style="margin:0">גרפים שבועיים</div>
-      <button class="secondary" style="width:auto;margin:0;padding:10px 14px" onclick="clearWeek()">נקה שבוע</button>
-    </div>
-    <div class="small" style="margin-bottom:8px">גרף קלוריות יומי בשבעת הימים האחרונים</div>
-    <svg class="weekChart" id="calorieChart" viewBox="0 0 360 180"></svg>
-    <div class="small" style="margin:8px 0">גרף משקל שבועי</div>
-    <svg class="weekChart" id="weightChart" viewBox="0 0 360 180"></svg>
-    <input id="weightInput" placeholder="עדכן משקל יומי (ק״ג)" type="number" min="0" step="0.1" />
-    <button onclick="saveWeight()">שמור משקל</button>
+
+<div class="title">מעקב תזונה</div>
+
+<div class="card">
+  <div class="circle" id="cal">0</div>
+  <div class="small" style="text-align:center;margin-top:5px">
+    יעד יומי: <span id="goalCal"></span>
   </div>
-</div><script>
-const PROFILE = { heightCm: 178, weightKg: 94.1 };
-const GOAL = calculateSmartGoal(PROFILE.weightKg, PROFILE.heightCm);
-let selected = null;
-let foodSnapshots = JSON.parse(localStorage.getItem('nutritionProLogV2')) || [];
-let weeklyWeights = JSON.parse(localStorage.getItem('nutritionProWeightsV2')) || [];
-const HE_MAP = {
-  rice:'אורז', chicken:'עוף', breast:'חזה', yogurt:'יוגורט', protein:'חלבון', bar:'חטיף',
-  milk:'חלב', cheese:'גבינה', cottage:'קוטג׳', tuna:'טונה', oats:'שיבולת שועל',
-  banana:'בננה', apple:'תפוח', bread:'לחם', egg:'ביצה', eggs:'ביצים', almonds:'שקדים',
-  peanut:'בוטנים', butter:'חמאה', tahini:'טחינה', pasta:'פסטה', beef:'בקר', turkey:'הודו',
-  potato:'תפוח אדמה', sweet:'בטטה', salmon:'סלמון', tofu:'טופו'
+</div>
+
+<div class="card">
+
+  <div class="macro">
+    חלבון <span id="pro">0</span>
+  </div>
+  <div class="bar"><span id="proBar" style="background:#8b5cf6;width:0%"></span></div>
+
+  <div class="macro">
+    פחמימות <span id="carb">0</span>
+  </div>
+  <div class="bar"><span id="carbBar" style="background:#22c55e;width:0%"></span></div>
+
+  <div class="macro">
+    שומן <span id="fat">0</span>
+  </div>
+  <div class="bar"><span id="fatBar" style="background:#facc15;width:0%"></span></div>
+
+</div>
+
+<div class="card">
+  <input id="search" placeholder="חפש מזון בעברית (אורז, עוף...)" />
+  <div id="results"></div>
+</div>
+
+<div class="card">
+  <select id="unit">
+    <option value="gram">גרם</option>
+    <option value="tbsp">כף</option>
+    <option value="cup">גביע</option>
+  </select>
+
+  <input id="amount" placeholder="כמות" type="number" />
+
+  <button onclick="addFood()">הוסף</button>
+</div>
+
+<div class="card" id="log"></div>
+
+<script>
+const weight = 94.1;
+const maintenance = weight * 24;
+const goalCalories = Math.round(maintenance - 500);
+
+const proteinGoal = Math.round(weight * 1.8);
+const fatGoal = Math.round(weight * 0.8);
+const carbGoal = Math.round((goalCalories - (proteinGoal*4 + fatGoal*9)) / 4);
+
+goalCal.innerText = goalCalories;
+
+let data = JSON.parse(localStorage.getItem("food")) || [];
+
+const translate = {
+  "אורז":"rice",
+  "עוף":"chicken",
+  "ביצה":"egg",
+  "חלב":"milk",
+  "גבינה":"cheese",
+  "קוטג":"cottage",
+  "בננה":"banana"
 };
 
-function calculateSmartGoal(weightKg, heightCm) {
-  const calories = Math.round(weightKg * 24); // moderate fat-loss estimate
-  const protein = Math.round(weightKg * 1.8);
-  const fat = Math.round(weightKg * 0.8);
-  const carbs = Math.max(80, Math.round((calories - (protein * 4 + fat * 9)) / 4));
-  return { calories, protein, carbs, fat, bmi: weightKg / Math.pow(heightCm / 100, 2) };
+async function searchFood(q){
+  if(!q)return;
+
+  if(translate[q]) q = translate[q];
+
+  const res = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${q}&search_simple=1&action=process&json=1&page_size=5`);
+  const d = await res.json();
+
+  results.innerHTML = d.products.map(p=>`
+    <div class="item" onclick='selectFood(${JSON.stringify(p)})'>
+      ${p.product_name || "מוצר"}
+      <div class="small">${p.nutriments?.energy_kcal_100g || 0} קלוריות</div>
+    </div>
+  `).join("");
 }
 
-function translateName(name) {
-  if (!name) return 'מזון';
-  let out = name;
-  Object.entries(HE_MAP).forEach(([en, he]) => {
-    const re = new RegExp(`\b${en}\b`, 'ig');
-    out = out.replace(re, he);
-  });
-  return out;
-}
+let selected;
 
-function todayKey() {
-  return new Date().toISOString().slice(0,10);
-}
-
-function getLast7Days() {
-  const arr = [];
-  const d = new Date();
-  for (let i = 6; i >= 0; i--) {
-    const x = new Date(d);
-    x.setDate(d.getDate() - i);
-    arr.push(x.toISOString().slice(0,10));
-  }
-  return arr;
-}
-
-async function searchFood(q) {
-  if (!q) { results.innerHTML = ''; return; }
-  results.innerHTML = '<div class="muted">מחפש...</div>';
-  try {
-    const res = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=10`);
-    const data = await res.json();
-    results.innerHTML = (data.products || []).map(p => {
-      const kcal = Number(p.nutriments?.energy_kcal_100g || 0);
-      const displayName = translateName(p.product_name || p.brands || 'מוצר');
-      return `<div class="searchItem" onclick='selectFood(${JSON.stringify({
-        product_name: displayName,
-        kcal100: kcal,
-        pro100: Number(p.nutriments?.proteins_100g || 0),
-        carb100: Number(p.nutriments?.carbohydrates_100g || 0),
-        fat100: Number(p.nutriments?.fat_100g || 0)
-      }).replace(/'/g,"&#39;")})'>
-        <strong>${displayName}</strong>
-        <div class="small">${kcal} קלוריות ל־100 גרם</div>
-      </div>`;
-    }).join('') || '<div class="muted">לא נמצאו תוצאות</div>';
-  } catch (e) {
-    results.innerHTML = '<div class="muted">החיפוש נכשל כרגע</div>';
-  }
-}
-
-function selectFood(p) {
+function selectFood(p){
   selected = p;
-  results.innerHTML = `<div class="searchItem"><strong>נבחר:</strong><div class="small">${p.product_name}</div></div>`;
+  results.innerHTML = "נבחר: " + (p.product_name || "");
 }
 
-function unitToGrams(amount, unit) {
-  switch(unit) {
-    case 'tbsp': return amount * 15;
-    case 'cup': return amount * 240;
-    case 'piece': return amount * 100;
-    default: return amount;
-  }
+function convert(amount,unit){
+  if(unit==="tbsp") return amount*15;
+  if(unit==="cup") return amount*240;
+  return amount;
 }
 
-function addFood() {
-  if (!selected) return alert('בחר מזון מהחיפוש');
-  const amountVal = +amount.value;
-  if (!amountVal || amountVal <= 0) return alert('הזן כמות תקינה');
-  const mealVal = meal.value;
-  const unitVal = unit.value;
-  const grams = unitToGrams(amountVal, unitVal);
+function addFood(){
+  if(!selected)return;
+
+  const grams = convert(+amount.value,unit.value);
 
   const item = {
-    id: Date.now().toString(36),
-    date: todayKey(),
-    meal: mealVal,
-    name: selected.product_name,
-    amount: amountVal,
-    unit: unitVal,
-    grams,
-    kcal: selected.kcal100 / 100 * grams,
-    protein: selected.pro100 / 100 * grams,
-    carbs: selected.carb100 / 100 * grams,
-    fat: selected.fat100 / 100 * grams
+    cal:(selected.nutriments.energy_kcal_100g||0)/100*grams,
+    pro:(selected.nutriments.proteins_100g||0)/100*grams,
+    carb:(selected.nutriments.carbohydrates_100g||0)/100*grams,
+    fat:(selected.nutriments.fat_100g||0)/100*grams,
+    name:selected.product_name
   };
 
-  foodSnapshots.push(item);
-  localStorage.setItem('nutritionProLogV2', JSON.stringify(foodSnapshots));
-  amount.value = '';
+  data.push(item);
+  localStorage.setItem("food",JSON.stringify(data));
+
   render();
 }
 
-function removeFood(id) {
-  foodSnapshots = foodSnapshots.filter(x => x.id !== id);
-  localStorage.setItem('nutritionProLogV2', JSON.stringify(foodSnapshots));
-  render();
+function render(){
+  let c=0,p=0,car=0,f=0;
+
+  log.innerHTML = data.map(x=>{
+    c+=x.cal;p+=x.pro;car+=x.carb;f+=x.fat;
+    return `<div>${x.name}</div>`;
+  }).join("");
+
+  cal.innerText = Math.round(c);
+
+  pro.innerText = Math.round(p);
+  carb.innerText = Math.round(car);
+  fat.innerText = Math.round(f);
+
+  proBar.style.width = (p/proteinGoal*100)+"%";
+  carbBar.style.width = (car/carbGoal*100)+"%";
+  fatBar.style.width = (f/fatGoal*100)+"%";
 }
 
-function todayLog() {
-  return foodSnapshots.filter(x => x.date === todayKey());
-}
+search.oninput = e=>searchFood(e.target.value);
 
-function totals(list) {
-  return list.reduce((a, x) => {
-    a.k += x.kcal; a.p += x.protein; a.c += x.carbs; a.f += x.fat;
-    return a;
-  }, { k:0, p:0, c:0, f:0 });
-}
-
-function renderSummary() {
-  document.getElementById('goalCalories').textContent = GOAL.calories;
-  document.getElementById('goalProtein').textContent = GOAL.protein + 'g';
-  document.getElementById('goalCarbs').textContent = GOAL.carbs + 'g';
-  document.getElementById('goalFat').textContent = GOAL.fat + 'g';
-
-  const t = totals(todayLog());
-  cal.textContent = Math.round(t.k);
-  pro.textContent = Math.round(t.p);
-  carb.textContent = Math.round(t.c);
-  fat.textContent = Math.round(t.f);
-
-  calLine.textContent = `${Math.round(t.k)} / ${GOAL.calories}`;
-  proLine.textContent = `${Math.round(t.p)} / ${GOAL.protein}`;
-  carbLine.textContent = `${Math.round(t.c)} / ${GOAL.carbs}`;
-  fatLine.textContent = `${Math.round(t.f)} / ${GOAL.fat}`;
-
-  calProg.style.width = Math.min(100, t.k / GOAL.calories * 100) + '%';
-  proProg.style.width = Math.min(100, t.p / GOAL.protein * 100) + '%';
-  carbProg.style.width = Math.min(100, t.c / GOAL.carbs * 100) + '%';
-  fatProg.style.width = Math.min(100, t.f / GOAL.fat * 100) + '%';
-}
-
-function renderLog() {
-  const grouped = ['ארוחת בוקר','ארוחת צהריים','ארוחת ערב','ביניים'];
-  log.innerHTML = grouped.map(mealName => {
-    const items = todayLog().filter(x => x.meal === mealName);
-    if (!items.length) return '';
-    return `<div class="result"><strong>${mealName}</strong></div>` + items.map(x => `
-      <div class="result">
-        <div class="row-between">
-          <strong>${x.name}</strong>
-          <button class="secondary" style="width:auto;padding:8px 10px;margin:0" onclick="removeFood('${x.id}')">מחק</button>
-        </div>
-        <div class="small">${x.amount} ${translateUnit(x.unit)} • ${Math.round(x.kcal)} קלוריות</div>
-        <div class="small">חלבון ${Math.round(x.protein)}g | פחמימות ${Math.round(x.carbs)}g | שומן ${Math.round(x.fat)}g</div>
-      </div>
-    `).join('');
-  }).join('') || '<div class="muted">אין עדיין מזונות היום</div>';
-}
-
-function translateUnit(unit) {
-  if (unit === 'gram') return 'גרם';
-  if (unit === 'piece') return 'יחידה';
-  if (unit === 'tbsp') return 'כף';
-  if (unit === 'cup') return 'גביע';
-  return unit;
-}
-
-function dailyTotalsFor(date) {
-  const list = foodSnapshots.filter(x => x.date === date);
-  return totals(list);
-}
-
-function drawLineChart(svgId, points, color, formatter) {
-  const svg = document.getElementById(svgId);
-  const w = 360, h = 180, left = 18, right = 18, top = 16, bottom = 28;
-  const usableW = w - left - right;
-  const usableH = h - top - bottom;
-  const vals = points.map(p => p.value);
-  const min = Math.min(...vals, 0);
-  const max = Math.max(...vals, 1);
-  const mapped = points.map((p, i) => {
-    const x = left + i * (usableW / Math.max(1, points.length - 1));
-    const y = top + (1 - ((p.value - min) / (max - min || 1))) * usableH;
-    return { x, y, label: p.label, value: p.value };
-  });
-  const poly = mapped.map(p => `${p.x},${p.y}`).join(' ');
-  svg.innerHTML = `
-    <line x1="${left}" y1="${h-bottom}" x2="${w-right}" y2="${h-bottom}" stroke="rgba(255,255,255,.08)" />
-    <polyline fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${poly}" />
-    ${mapped.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4" fill="#0f172a" stroke="${color}" stroke-width="2" />`).join('')}
-    ${mapped.map(p => `<text x="${p.x}" y="${h-10}" fill="#94a3b8" font-size="10" text-anchor="middle">${p.label}</text>`).join('')}
-    ${mapped.map(p => `<text x="${p.x}" y="${p.y - 10}" fill="#cbd5e1" font-size="10" text-anchor="middle">${formatter(p.value)}</text>`).join('')}
-  `;
-}
-
-function renderCharts() {
-  const days = getLast7Days();
-  const calData = days.map(d => ({ label: d.slice(5), value: Math.round(dailyTotalsFor(d).k) }));
-  drawLineChart('calorieChart', calData, '#fb923c', v => `${v}`);
-
-  const weightMap = new Map(weeklyWeights.map(w => [w.date, w.value]));
-  const weightData = days.map(d => ({ label: d.slice(5), value: Number(weightMap.get(d) || PROFILE.weightKg) }));
-  drawLineChart('weightChart', weightData, '#38bdf8', v => Number(v).toFixed(1));
-}
-
-function saveWeight() {
-  const value = Number(weightInput.value || 0);
-  if (!value || value <= 0) return alert('הזן משקל תקין');
-  const key = todayKey();
-  weeklyWeights = weeklyWeights.filter(x => x.date !== key);
-  weeklyWeights.push({ date: key, value });
-  localStorage.setItem('nutritionProWeightsV2', JSON.stringify(weeklyWeights));
-  weightInput.value = '';
-  renderCharts();
-}
-
-function clearWeek() {
-  if (!confirm('לנקות את נתוני השבוע?')) return;
-  const days = new Set(getLast7Days());
-  foodSnapshots = foodSnapshots.filter(x => !days.has(x.date));
-  weeklyWeights = weeklyWeights.filter(x => !days.has(x.date));
-  localStorage.setItem('nutritionProLogV2', JSON.stringify(foodSnapshots));
-  localStorage.setItem('nutritionProWeightsV2', JSON.stringify(weeklyWeights));
-  render();
-}
-
-function render() {
-  renderSummary();
-  renderLog();
-  renderCharts();
-}
-
-search.addEventListener('input', e => searchFood(e.target.value));
 render();
-</script></body>
+</script>
+
+</body>
 </html>
