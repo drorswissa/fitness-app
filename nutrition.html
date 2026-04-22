@@ -13,7 +13,13 @@ body {
   color:white;
   max-width:430px;
   margin:auto;
-  padding:15px;
+  padding:12px;
+}
+
+.header {
+  text-align:center;
+  font-size:22px;
+  margin-bottom:10px;
 }
 
 .card {
@@ -23,17 +29,27 @@ body {
   margin-bottom:10px;
 }
 
-.title {
-  font-size:22px;
-  font-weight:bold;
-  text-align:center;
-  margin-bottom:10px;
+.grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
 }
 
-.row {
-  display:flex;
-  justify-content:space-between;
-  margin:5px 0;
+.mini {
+  background:#1f2937;
+  padding:10px;
+  border-radius:15px;
+  text-align:center;
+}
+
+input, select {
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border-radius:10px;
+  border:none;
+  background:#1f2937;
+  color:white;
 }
 
 button {
@@ -46,63 +62,108 @@ button {
   margin-top:10px;
 }
 
-input {
-  width:100%;
-  padding:10px;
-  margin-top:8px;
-  border-radius:10px;
-  border:none;
-  background:#1f2937;
-  color:white;
+.food {
+  display:flex;
+  justify-content:space-between;
+  margin:6px 0;
+  font-size:14px;
+}
+
+.cal-circle {
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  border:6px solid orange;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:auto;
+  font-size:20px;
 }
 </style>
 </head>
 
 <body>
 
+<div class="header">מעקב תזונה</div>
+
 <div class="card">
-  <div class="title">מעקב תזונה</div>
+  <div class="cal-circle" id="calCircle">0</div>
+</div>
+
+<div class="card grid">
+  <div class="mini">חלבון<br><b id="pro">0</b></div>
+  <div class="mini">פחמימות<br><b id="carb">0</b></div>
+  <div class="mini">שומן<br><b id="fat">0</b></div>
+  <div class="mini">קלוריות<br><b id="cal">0</b></div>
 </div>
 
 <div class="card">
-  <div class="row"><span>קלוריות</span><span id="cal">0</span></div>
-  <div class="row"><span>חלבון</span><span id="pro">0</span></div>
-  <div class="row"><span>פחמימות</span><span id="carb">0</span></div>
-  <div class="row"><span>שומן</span><span id="fat">0</span></div>
+  <div>הוסף מזון</div>
+  <input id="foodName" placeholder="לדוגמה: rice / chicken">
+  <input id="amount" placeholder="כמות">
+  <select id="unit">
+    <option value="1">גרם</option>
+    <option value="15">כף</option>
+    <option value="250">גביע</option>
+  </select>
+  <button onclick="searchFood()">הוסף</button>
 </div>
 
 <div class="card">
-  <div class="title">הוסף מזון</div>
-  <input id="name" placeholder="שם מזון">
-  <input id="calInput" placeholder="קלוריות">
-  <input id="proInput" placeholder="חלבון">
-  <input id="carbInput" placeholder="פחמימות">
-  <input id="fatInput" placeholder="שומן">
-  <button onclick="addFood()">הוסף</button>
-</div>
-
-<div class="card">
-  <div class="title">יומן</div>
+  <div>יומן</div>
   <div id="list"></div>
 </div>
 
-<button onclick="goBack()">חזרה לאימונים</button>
+<button onclick="back()">חזרה לאימונים</button>
 
 <script>
+
+const API_KEY = "FZ5pPibHVuZ7ZTTNCf7sZCYjfH1alteH2YTdhDP2";
+
 let data = JSON.parse(localStorage.getItem("food")) || [];
 
-function addFood(){
+async function searchFood(){
+  const name = foodName.value;
+  const qty = +amount.value;
+  const unit = +unitSelect();
+
+  if(!name || !qty) return alert("מלא שם וכמות");
+
+  const res = await fetch(
+    `https://api.nal.usda.gov/fdc/v1/foods/search?query=${name}&api_key=${API_KEY}`
+  );
+
+  const json = await res.json();
+  const food = json.foods[0];
+
+  if(!food) return alert("לא נמצא מזון");
+
+  const nutrients = food.foodNutrients;
+
+  function get(id){
+    const n = nutrients.find(x=>x.nutrientId===id);
+    return n ? n.value : 0;
+  }
+
+  const grams = qty * unit / 100;
+
   const item = {
-    name: name.value,
-    cal: +calInput.value,
-    pro: +proInput.value,
-    carb: +carbInput.value,
-    fat: +fatInput.value
+    name,
+    cal: get(1008)*grams,
+    pro: get(1003)*grams,
+    carb: get(1005)*grams,
+    fat: get(1004)*grams
   };
 
   data.push(item);
   localStorage.setItem("food", JSON.stringify(data));
+
   render();
+}
+
+function unitSelect(){
+  return document.getElementById("unit").value;
 }
 
 function render(){
@@ -113,20 +174,27 @@ function render(){
     p+=x.pro;
     car+=x.carb;
     f+=x.fat;
-    return `<div>${x.name}</div>`;
+
+    return `
+    <div class="food">
+      ${x.name}
+      <span>${Math.round(x.cal)} קל'</span>
+    </div>`;
   }).join("");
 
-  cal.innerText=c;
-  pro.innerText=p;
-  carb.innerText=car;
-  fat.innerText=f;
+  cal.innerText=Math.round(c);
+  pro.innerText=Math.round(p);
+  carb.innerText=Math.round(car);
+  fat.innerText=Math.round(f);
+  calCircle.innerText=Math.round(c);
 }
 
-function goBack(){
+function back(){
   window.location.href="index.html";
 }
 
 render();
+
 </script>
 
 </body>
