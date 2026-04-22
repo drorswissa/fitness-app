@@ -3,34 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout App Fixed V2</title>
+  <title>Workout App V2 Clean</title>
   <style>
     :root {
-      --bg: #0b0f16;
-      --panel: #141a23;
-      --panel-2: #1a212d;
-      --panel-3: #0f141c;
-      --text: #f3f6fb;
-      --muted: #98a4b8;
-      --line: rgba(255,255,255,0.06);
-      --accent: #22c58b;
-      --accent-2: #18a875;
+      --bg: #0b1017;
+      --panel: #111827;
+      --panel-2: #162033;
+      --panel-3: #0c1320;
+      --text: #f5f7fb;
+      --muted: #9eabc3;
+      --line: rgba(255,255,255,0.08);
+      --accent: #2bd3a0;
+      --accent-2: #1eb885;
       --danger: #ff6f6f;
-      --shadow: 0 10px 26px rgba(0,0,0,.24);
+      --shadow: 0 10px 28px rgba(0,0,0,.25);
     }
+
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, #090d14 0%, #0b1017 100%);
+      background: linear-gradient(180deg, #08101a 0%, #0b1017 100%);
       color: var(--text);
     }
+
     .app {
       max-width: 430px;
       margin: 0 auto;
       min-height: 100vh;
       padding: 12px 12px 110px;
     }
+
     .stack { display: grid; gap: 12px; }
     .card {
       background: var(--panel);
@@ -39,6 +42,7 @@
       box-shadow: var(--shadow);
       padding: 14px;
     }
+
     .topbar {
       display: flex;
       align-items: center;
@@ -46,6 +50,7 @@
       gap: 10px;
       margin-bottom: 10px;
     }
+
     .mini-btn {
       min-width: 38px;
       height: 38px;
@@ -59,18 +64,21 @@
       font-size: 16px;
       cursor: pointer;
     }
+
     .screen-timer {
       font-size: 28px;
       font-weight: 800;
       text-align: center;
       flex: 1;
     }
+
     .days-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 8px;
       margin-bottom: 12px;
     }
+
     .day-card {
       background: var(--panel-2);
       border: 1px solid var(--line);
@@ -81,6 +89,7 @@
       color: var(--text);
       font-weight: 700;
     }
+
     .day-card small {
       display: block;
       margin-top: 4px;
@@ -88,10 +97,12 @@
       font-weight: 400;
       font-size: 11px;
     }
+
     .day-card.active {
-      outline: 2px solid rgba(34,197,139,.35);
-      background: rgba(34,197,139,.10);
+      outline: 2px solid rgba(43,211,160,.35);
+      background: rgba(43,211,160,.10);
     }
+
     .progress-track {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
@@ -99,6 +110,7 @@
       margin-bottom: 14px;
       align-items: center;
     }
+
     .progress-step {
       width: 100%;
       aspect-ratio: 1;
@@ -111,14 +123,15 @@
       justify-content: center;
       font-weight: 700;
       font-size: 14px;
-      opacity: .88;
+      opacity: .9;
       cursor: pointer;
     }
+
     .progress-step.active {
       background: var(--accent);
-      color: #062117;
-      opacity: 1;
+      color: #052017;
     }
+
     .hero-image {
       width: 100%;
       height: 176px;
@@ -128,27 +141,29 @@
       border: 1px solid var(--line);
       padding: 8px;
     }
+
     .exercise-title {
       font-size: 18px;
       font-weight: 800;
       margin-top: 14px;
       line-height: 1.2;
     }
+
     .exercise-sub {
       color: var(--muted);
       font-size: 13px;
       line-height: 1.4;
       margin-top: 6px;
     }
+
     .action-row {
       display: flex;
       gap: 8px;
       margin-top: 12px;
       flex-wrap: wrap;
     }
-    button, input, select, a.linkbtn {
-      font: inherit;
-    }
+
+    button, input, select, a.linkbtn { font: inherit; }
     button, a.linkbtn {
       border: none;
       border-radius: 16px;
@@ -159,27 +174,27 @@
       align-items: center;
       justify-content: center;
     }
+
     .primary {
       background: linear-gradient(180deg, var(--accent), var(--accent-2));
       color: #082217;
       font-weight: 800;
     }
+
     .secondary {
       background: var(--panel-2);
       color: var(--text);
       border: 1px solid var(--line);
     }
-    .danger {
-      background: rgba(255,111,111,.14);
-      color: #ffd5d5;
-      border: 1px solid rgba(255,111,111,.18);
-    }
+
     .full { width: 100%; }
+
     .sets-card {
       margin-top: 14px;
       display: grid;
       gap: 10px;
     }
+
     .set-row {
       background: var(--panel-2);
       border: 1px solid var(--line);
@@ -190,10 +205,12 @@
       gap: 10px;
       align-items: center;
     }
+
     .set-row.active {
-      box-shadow: inset 0 0 0 2px rgba(34,197,139,.35);
-      background: rgba(34,197,139,.08);
+      box-shadow: inset 0 0 0 2px rgba(43,211,160,.35);
+      background: rgba(43,211,160,.08);
     }
+
     .set-index {
       width: 32px;
       height: 32px;
@@ -205,12 +222,14 @@
       font-weight: 700;
       color: var(--text);
     }
+
     .input-wrap {
       display: grid;
       grid-template-columns: 54px auto;
       gap: 8px;
       align-items: center;
     }
+
     .tiny-input {
       width: 100%;
       background: #020406;
@@ -222,10 +241,12 @@
       font-size: 15px;
       font-weight: 700;
     }
+
     .unit {
       color: var(--muted);
       font-size: 13px;
     }
+
     .icon-btn {
       min-width: 42px;
       height: 42px;
@@ -240,11 +261,13 @@
       border: 1px solid var(--line);
       font-size: 16px;
     }
+
     .icon-btn.done {
-      background: rgba(34,197,139,.16);
+      background: rgba(43,211,160,.16);
       color: #8ff3cb;
-      border-color: rgba(34,197,139,.26);
+      border-color: rgba(43,211,160,.26);
     }
+
     .timer-footer {
       position: sticky;
       bottom: 92px;
@@ -260,9 +283,11 @@
       margin-top: 14px;
       z-index: 4;
     }
+
     .footer-block { text-align: center; }
     .footer-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
     .footer-time { font-size: 20px; font-weight: 800; }
+
     .footer-btn {
       border: none;
       border-radius: 16px;
@@ -270,15 +295,19 @@
       font-weight: 700;
       cursor: pointer;
     }
+
     .footer-btn.done { background: linear-gradient(180deg, var(--accent), var(--accent-2)); color: #062117; }
     .footer-btn.rest { background: #05080d; color: #d7dfef; border: 1px solid var(--line); }
+
     .section.hidden { display: none; }
     .section-title { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
     }
+
     .stat-box {
       background: var(--panel-3);
       border: 1px solid var(--line);
@@ -286,8 +315,10 @@
       padding: 12px;
       text-align: center;
     }
+
     .stat-box span { display: block; font-size: 12px; color: var(--muted); }
     .stat-box strong { display: block; font-size: 22px; margin-top: 4px; }
+
     .history-item {
       background: var(--panel-3);
       border: 1px solid var(--line);
@@ -295,6 +326,7 @@
       padding: 11px;
       margin-bottom: 8px;
     }
+
     .empty {
       color: var(--muted);
       text-align: center;
@@ -302,6 +334,7 @@
       border: 1px dashed var(--line);
       border-radius: 16px;
     }
+
     .sheet-backdrop {
       position: fixed;
       inset: 0;
@@ -310,6 +343,7 @@
       z-index: 19;
     }
     .sheet-backdrop.open { display: block; }
+
     .sheet {
       position: fixed;
       left: 0;
@@ -328,6 +362,7 @@
       box-shadow: var(--shadow);
     }
     .sheet.open { display: block; }
+
     input, select {
       width: 100%;
       background: var(--panel-2);
@@ -337,6 +372,7 @@
       padding: 10px 11px;
       outline: none;
     }
+
     .library-item {
       background: var(--panel-3);
       border: 1px solid var(--line);
@@ -348,6 +384,7 @@
       align-items: center;
       margin-bottom: 8px;
     }
+
     .library-item img {
       width: 54px;
       height: 54px;
@@ -357,6 +394,7 @@
       background: #fff;
       padding: 4px;
     }
+
     .fixed-spotify {
       position: fixed;
       left: 50%;
@@ -369,12 +407,14 @@
       z-index: 30;
       backdrop-filter: blur(10px);
     }
+
     .spotify-mini-label {
       color: var(--muted);
       font-size: 11px;
       margin-bottom: 6px;
       text-align: center;
     }
+
     iframe.spotify-bar {
       width: 100%;
       height: 80px;
@@ -411,7 +451,7 @@
           <button class="footer-btn rest" id="toggleWorkoutBtn">התחל אימון</button>
           <div class="footer-block">
             <div class="footer-label">Rest</div>
-            <div class="footer-time" id="restTimerDisplay">01:00</div>
+            <div class="footer-time" id="restTimerDisplay">00:00</div>
           </div>
           <button class="footer-btn done" id="toggleRestBtn">התחל מנוחה</button>
         </div>
@@ -460,7 +500,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'workout_app_v2_fixed_days';
+    const STORAGE_KEY = 'workout_app_v2_clean_new';
     let workoutTimerInterval = null;
     let restTimerInterval = null;
 
@@ -486,7 +526,7 @@
     ];
 
     function uid(){ return 'id-' + Math.random().toString(36).slice(2,10); }
-    function makeSet(ex, i){ return { id: uid(), index: i+1, reps: ex.reps, kg: ex.kg, done: false }; }
+    function makeSet(ex, i){ return { id: uid(), index: i + 1, reps: ex.reps, kg: ex.kg, done: false }; }
     function cloneExercise(id){
       const ex = LIBRARY.find(x => x.id === id);
       return {
@@ -524,64 +564,23 @@
         activeExerciseIndex: 0,
         history: [],
         spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP',
-        filters: { search:'', muscle:'הכל', equipment:'הכל' },
+        filters: { search: '', muscle: 'הכל', equipment: 'הכל' },
         timers: { workoutSeconds: 0, workoutRunning: false, restSecondsLeft: 0, restRunning: false }
       };
-    }
-
-    function ensureFourFixedDays(stateObj){
-      const defaults = createDefaultDays();
-      const required = [
-        ['שני','חזה + יד קדמית'],
-        ['רביעי','גב + יד אחורית'],
-        ['שישי','כתפיים + רגליים'],
-        ['שבת','אימון משולב']
-      ];
-      required.forEach((pair, idx) => {
-        const [name,label] = pair;
-        const existing = stateObj.days.find(d => d.name === name);
-        if (existing) {
-          existing.label = label;
-        } else {
-          stateObj.days.push(defaults.days[idx]);
-        }
-      });
-      stateObj.days = stateObj.days.filter(d => required.some(([n]) => d.name === n));
-      if (!stateObj.days.find(d => d.id === stateObj.selectedDayId)) {
-        stateObj.selectedDayId = stateObj.days.find(d => d.name === 'רביעי')?.id || stateObj.days[0]?.id;
-      }
-      return stateObj;
     }
 
     function load(){
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : null;
-        let result = parsed || defaultState();
-        result = ensureFourFixedDays(result);
+        const result = parsed || defaultState();
         if (!result.timers) result.timers = { workoutSeconds: 0, workoutRunning: false, restSecondsLeft: 0, restRunning: false };
-        result.days?.forEach(day => day.exercises?.forEach(ex => {
-          const base = LIBRARY.find(item => item.id === ex.libraryId);
-          if (base) {
-            ex.name = base.name;
-            ex.muscle = base.muscle;
-            ex.equipment = base.equipment;
-            ex.image = base.image;
-            ex.video = base.video;
-          }
-          if (!Array.isArray(ex.sets) || !ex.sets.length) {
-            const reps = ex.reps || base?.reps || '8';
-            const kg = ex.kg || base?.kg || '20';
-            ex.sets = [1,2,3].map((_,i)=>({ id: uid(), index:i+1, reps, kg, done:false }));
-          }
-          if (typeof ex.restSeconds !== 'number') ex.restSeconds = 90;
-        }));
         if (typeof result.activeExerciseIndex !== 'number') result.activeExerciseIndex = 0;
+        if (!Array.isArray(result.days) || result.days.length !== 4) {
+          return defaultState();
+        }
         return result;
       } catch {
-        return defaultState();
-      }
-    } catch {
         return defaultState();
       }
     }
@@ -590,7 +589,7 @@
     function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
     function selectedDay(){ return state.days.find(d => d.id === state.selectedDayId) || state.days[0]; }
     function activeExercise(){ return selectedDay().exercises[state.activeExerciseIndex] || selectedDay().exercises[0]; }
-    function formatTime(s){ const m=String(Math.floor((s||0)/60)).padStart(2,'0'); const ss=String((s||0)%60).padStart(2,'0'); return `${m}:${ss}`; }
+    function formatTime(s){ const m = String(Math.floor((s || 0) / 60)).padStart(2,'0'); const ss = String((s || 0) % 60).padStart(2,'0'); return `${m}:${ss}`; }
 
     function render(){
       renderDays();
@@ -612,26 +611,29 @@
 
     function renderExerciseProgress(){
       const day = selectedDay();
-      const items = day.exercises.slice(0,6);
-      document.getElementById('exerciseProgress').innerHTML = items.map((_,i)=>`<div class="progress-step ${i===state.activeExerciseIndex?'active':''}" onclick="setActiveExercise(${i})">${i+1}</div>`).join('');
+      const items = day.exercises.slice(0, 6);
+      document.getElementById('exerciseProgress').innerHTML = items.map((_, i) => `<div class="progress-step ${i===state.activeExerciseIndex?'active':''}" onclick="setActiveExercise(${i})">${i+1}</div>`).join('');
     }
 
     function renderActiveExercise(){
       const ex = activeExercise();
+      const img = document.getElementById('activeExerciseImage');
       if (!ex) {
         document.getElementById('activeExerciseName').textContent = 'אין תרגילים';
         document.getElementById('activeExerciseDesc').textContent = 'הוסף תרגיל מהמאגר';
         document.getElementById('setsList').innerHTML = '<div class="empty">אין תרגילים ביום הנבחר</div>';
         document.getElementById('youtubeLink').href = '#';
         document.getElementById('animationLink').href = '#';
+        img.src = '';
         return;
       }
-      document.getElementById('activeExerciseImage').src = ex.image;
+      img.onerror = () => { img.onerror = null; img.src = 'https://via.placeholder.com/600x300?text=Exercise'; };
+      img.src = ex.image;
       document.getElementById('activeExerciseName').textContent = ex.name;
       document.getElementById('activeExerciseDesc').textContent = `${ex.muscle} • מנוחה עולה • 3 סטים`;
       document.getElementById('youtubeLink').href = ex.video;
       document.getElementById('animationLink').href = `https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' exercise animation')}`;
-      document.getElementById('setsList').innerHTML = ex.sets.map((set, idx)=>`
+      document.getElementById('setsList').innerHTML = ex.sets.map((set, idx) => `
         <div class="set-row ${!set.done && idx===ex.sets.findIndex(s=>!s.done)?'active':''}">
           <div class="set-index">${set.index}</div>
           <div class="input-wrap">
@@ -656,14 +658,14 @@
 
     function renderStats(){
       document.getElementById('totalWorkouts').textContent = state.history.length;
-      document.getElementById('totalExercises').textContent = state.history.reduce((s,h)=>s+h.completedExercises,0);
-      document.getElementById('streak').textContent = [...new Set(state.history.map(h=>h.date))].length;
+      document.getElementById('totalExercises').textContent = state.history.reduce((s, h) => s + h.completedExercises, 0);
+      document.getElementById('streak').textContent = [...new Set(state.history.map(h => h.date))].length;
     }
 
     function renderHistory(){
       const el = document.getElementById('historyList');
       if (!state.history.length) { el.innerHTML = '<div class="empty">עדיין אין היסטוריה</div>'; return; }
-      el.innerHTML = state.history.slice().reverse().map(h=>`<div class="history-item"><strong>${escapeHtml(h.day)}</strong><div style="margin-top:6px;color:var(--muted);font-size:12px;">${h.date} • ${h.completedExercises} תרגילים • זמן ${formatTime(h.duration)}</div></div>`).join('');
+      el.innerHTML = state.history.slice().reverse().map(h => `<div class="history-item"><strong>${escapeHtml(h.day)}</strong><div style="margin-top:6px;color:var(--muted);font-size:12px;">${h.date} • ${h.completedExercises} תרגילים • זמן ${formatTime(h.duration)}</div></div>`).join('');
     }
 
     function renderMusic(){
@@ -679,18 +681,20 @@
     }
 
     function renderLibrary(){
-      const muscles = ['הכל', ...new Set(LIBRARY.map(x=>x.muscle))];
-      const equipment = ['הכל', ...new Set(LIBRARY.map(x=>x.equipment))];
-      document.getElementById('muscleFilter').innerHTML = muscles.map(x=>`<option value="${x}">${x}</option>`).join('');
-      document.getElementById('equipmentFilter').innerHTML = equipment.map(x=>`<option value="${x}">${x}</option>`).join('');
+      const muscles = ['הכל', ...new Set(LIBRARY.map(x => x.muscle))];
+      const equipment = ['הכל', ...new Set(LIBRARY.map(x => x.equipment))];
+      document.getElementById('muscleFilter').innerHTML = muscles.map(x => `<option value="${x}">${x}</option>`).join('');
+      document.getElementById('equipmentFilter').innerHTML = equipment.map(x => `<option value="${x}">${x}</option>`).join('');
       document.getElementById('muscleFilter').value = state.filters.muscle;
       document.getElementById('equipmentFilter').value = state.filters.equipment;
+
       let items = [...LIBRARY];
       const q = state.filters.search.trim().toLowerCase();
       if (q) items = items.filter(x => `${x.name} ${x.muscle} ${x.equipment}`.toLowerCase().includes(q));
-      if (state.filters.muscle !== 'הכל') items = items.filter(x=>x.muscle===state.filters.muscle);
-      if (state.filters.equipment !== 'הכל') items = items.filter(x=>x.equipment===state.filters.equipment);
-      document.getElementById('libraryList').innerHTML = items.map(item=>`
+      if (state.filters.muscle !== 'הכל') items = items.filter(x => x.muscle === state.filters.muscle);
+      if (state.filters.equipment !== 'הכל') items = items.filter(x => x.equipment === state.filters.equipment);
+
+      document.getElementById('libraryList').innerHTML = items.map(item => `
         <div class="library-item">
           <img src="${item.image}" alt="${escapeHtml(item.name)}" />
           <div>
@@ -706,25 +710,21 @@
     function setActiveExercise(i){ state.activeExerciseIndex = i; render(); }
 
     function updateSetField(exerciseId, setId, field, value){
-      const ex = selectedDay().exercises.find(e=>e.instanceId===exerciseId);
-      const set = ex?.sets.find(s=>s.id===setId);
+      const ex = selectedDay().exercises.find(e => e.instanceId === exerciseId);
+      const set = ex?.sets.find(s => s.id === setId);
       if (!set) return;
       set[field] = value;
       save();
     }
 
     function toggleSetDone(exerciseId, setId){
-      const ex = selectedDay().exercises.find(e=>e.instanceId===exerciseId);
-      const set = ex?.sets.find(s=>s.id===setId);
+      const ex = selectedDay().exercises.find(e => e.instanceId === exerciseId);
+      const set = ex?.sets.find(s => s.id === setId);
       if (!set) return;
       set.done = !set.done;
-      ex.done = ex.sets.every(s=>s.done);
-      if (set.done) {
-        startRestTimer(true);
-      }
-      if (ex.done && state.activeExerciseIndex < selectedDay().exercises.length - 1) {
-        state.activeExerciseIndex += 1;
-      }
+      ex.done = ex.sets.every(s => s.done);
+      if (set.done) startRestTimer(true);
+      if (ex.done && state.activeExerciseIndex < selectedDay().exercises.length - 1) state.activeExerciseIndex += 1;
       render();
     }
 
@@ -741,7 +741,7 @@
         state.timers.workoutRunning = false;
       } else {
         state.timers.workoutRunning = true;
-        workoutTimerInterval = setInterval(()=>{
+        workoutTimerInterval = setInterval(() => {
           state.timers.workoutSeconds += 1;
           renderTimers();
           save();
@@ -749,31 +749,6 @@
       }
       renderTimers();
       save();
-    }
-
-    function playRestFinishedAlert() {
-      try {
-        const utterance = new SpeechSynthesisUtterance('המנוחה הסתיימה');
-        utterance.lang = 'he-IL';
-        utterance.rate = 1;
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utterance);
-      } catch {}
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        const ctx = new AudioCtx();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(880, ctx.currentTime);
-        gain.gain.setValueAtTime(0.001, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.45);
-      } catch {}
     }
 
     function startRestTimer(forceRestart=false){
@@ -784,7 +759,7 @@
       if (state.timers.restRunning && !forceRestart) return;
       if (forceRestart) state.timers.restSecondsLeft = 0;
       state.timers.restRunning = true;
-      restTimerInterval = setInterval(()=>{
+      restTimerInterval = setInterval(() => {
         state.timers.restSecondsLeft += 1;
         renderTimers();
         save();
@@ -799,7 +774,7 @@
         restTimerInterval = null;
         state.timers.restRunning = false;
       } else {
-        startRestTimer(false);
+        startRestTimer(true);
         return;
       }
       renderTimers();
@@ -808,7 +783,7 @@
 
     function finishWorkout(){
       const day = selectedDay();
-      const completedExercises = day.exercises.filter(ex=>ex.done).length;
+      const completedExercises = day.exercises.filter(ex => ex.done).length;
       state.history.push({
         id: uid(),
         day: `${day.name} - ${day.label}`,
@@ -816,7 +791,7 @@
         completedExercises,
         duration: state.timers.workoutSeconds
       });
-      day.exercises.forEach(ex => { ex.done = false; ex.sets.forEach(s=>s.done=false); });
+      day.exercises.forEach(ex => { ex.done = false; ex.sets.forEach(s => s.done = false); });
       state.activeExerciseIndex = 0;
       state.timers.workoutSeconds = 0;
       state.timers.restSecondsLeft = 0;
@@ -853,15 +828,15 @@
     document.getElementById('openLibraryBtn').addEventListener('click', openSheet);
     document.getElementById('sheetBackdrop').addEventListener('click', closeSheet);
     document.getElementById('toggleWorkoutBtn').addEventListener('click', toggleWorkoutTimer);
-    document.getElementById('toggleRestBtn').addEventListener('click', ()=>toggleRestTimer(false));
+    document.getElementById('toggleRestBtn').addEventListener('click', () => toggleRestTimer(false));
     document.getElementById('finishWorkoutTopBtn').addEventListener('click', finishWorkout);
     document.getElementById('saveSpotifyBtn').addEventListener('click', saveSpotify);
-    document.getElementById('navWorkout').addEventListener('click', ()=>showSection('workout'));
-    document.getElementById('navHistory').addEventListener('click', ()=>showSection('history'));
-    document.getElementById('navMusic').addEventListener('click', ()=>showSection('music'));
-    document.getElementById('searchInput').addEventListener('input', e=>{ state.filters.search = e.target.value; renderLibrary(); save(); });
-    document.getElementById('muscleFilter').addEventListener('change', e=>{ state.filters.muscle = e.target.value; renderLibrary(); save(); });
-    document.getElementById('equipmentFilter').addEventListener('change', e=>{ state.filters.equipment = e.target.value; renderLibrary(); save(); });
+    document.getElementById('navWorkout').addEventListener('click', () => showSection('workout'));
+    document.getElementById('navHistory').addEventListener('click', () => showSection('history'));
+    document.getElementById('navMusic').addEventListener('click', () => showSection('music'));
+    document.getElementById('searchInput').addEventListener('input', e => { state.filters.search = e.target.value; renderLibrary(); save(); });
+    document.getElementById('muscleFilter').addEventListener('change', e => { state.filters.muscle = e.target.value; renderLibrary(); save(); });
+    document.getElementById('equipmentFilter').addEventListener('change', e => { state.filters.equipment = e.target.value; renderLibrary(); save(); });
 
     window.selectDay = selectDay;
     window.setActiveExercise = setActiveExercise;
@@ -871,8 +846,6 @@
 
     showSection('workout');
     render();
-    if (state.timers.workoutRunning) toggleWorkoutTimer();
-    if (state.timers.restRunning) startRestTimer();
   </script>
 </body>
 </html>
