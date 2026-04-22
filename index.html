@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout App Pro</title>
+  <title>Workout App Pro V2</title>
   <style>
     :root {
       --bg: #0b0f17;
@@ -33,10 +33,7 @@
       min-height: 100vh;
       padding: 12px 12px 28px;
     }
-    .phone {
-      display: grid;
-      gap: 12px;
-    }
+    .phone { display: grid; gap: 12px; }
     .card {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -49,24 +46,10 @@
       gap: 12px;
       background: linear-gradient(180deg, #141b28, #101722);
     }
-    .title {
-      font-size: 24px;
-      font-weight: 800;
-      text-align: center;
-    }
-    .sub {
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-    }
-    .day-tabs {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-    }
-    .day-tab, button, input, select {
-      font: inherit;
-    }
+    .title { font-size: 24px; font-weight: 800; text-align: center; }
+    .sub { color: var(--muted); font-size: 13px; text-align: center; }
+    .day-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .day-tab, button, input, select { font: inherit; }
     .day-tab {
       background: var(--panel-2);
       color: var(--text);
@@ -88,17 +71,8 @@
       outline: 2px solid rgba(32,201,151,.4);
       background: rgba(32,201,151,.12);
     }
-    .row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .buttons {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .buttons { display: flex; gap: 8px; flex-wrap: wrap; }
     button {
       border: none;
       border-radius: 16px;
@@ -125,10 +99,7 @@
       border-radius: 12px;
       font-size: 12px;
     }
-    .exercise-list {
-      display: grid;
-      gap: 12px;
-    }
+    .exercise-list { display: grid; gap: 12px; }
     .exercise {
       background: var(--panel-3);
       border: 1px solid var(--line);
@@ -156,10 +127,7 @@
       font-weight: 800;
       line-height: 1.2;
     }
-    .muted {
-      color: var(--muted);
-      font-size: 12px;
-    }
+    .muted { color: var(--muted); font-size: 12px; }
     .sets-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -180,11 +148,7 @@
       margin-top: 4px;
       font-size: 14px;
     }
-    .chiprow {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
+    .chiprow { display: flex; gap: 6px; flex-wrap: wrap; }
     .chip {
       background: var(--chip);
       color: var(--muted);
@@ -193,11 +157,7 @@
       padding: 6px 10px;
       font-size: 12px;
     }
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .stat {
       background: var(--panel-2);
       border: 1px solid var(--line);
@@ -205,11 +165,7 @@
       padding: 12px;
       text-align: center;
     }
-    .stat b {
-      display: block;
-      font-size: 22px;
-      margin-top: 5px;
-    }
+    .stat b { display: block; font-size: 22px; margin-top: 5px; }
     .bottom-nav {
       position: sticky;
       bottom: 8px;
@@ -286,6 +242,11 @@
       border: 1px solid var(--line);
       background: #fff;
     }
+    .edit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
     iframe {
       width: 100%;
       height: 152px;
@@ -304,7 +265,29 @@
     <div class="phone">
       <div class="card hero">
         <div class="title">My Workout Plan</div>
-        <div class="sub">גרסה בסגנון אפליקציה, עם 6–7 תרגילים לכל אימון, תמונות, היסטוריה, סטטיסטיקה ומאגר להוספה</div>
+        <div class="sub">עיצוב V2 עם טיימר אימון, טיימר מנוחה, ועריכת חזרות ומשקלים בתוך כל תרגיל</div>
+
+        <div class="card" style="background:#0f141f;padding:12px;border-radius:18px;border:1px solid var(--line);box-shadow:none;">
+          <div class="row" style="margin-bottom:8px;">
+            <strong>Workout timer</strong>
+            <span class="chip" id="workoutTimerDisplay">00:00</span>
+          </div>
+          <div class="buttons" style="margin-bottom:8px;">
+            <button class="primary tiny" id="startWorkoutTimerBtn">התחל</button>
+            <button class="secondary tiny" id="pauseWorkoutTimerBtn">עצור</button>
+            <button class="danger tiny" id="resetWorkoutTimerBtn">אפס</button>
+          </div>
+          <div class="row" style="margin-bottom:8px;">
+            <strong>Rest timer</strong>
+            <span class="chip" id="restTimerDisplay">01:00</span>
+          </div>
+          <div class="buttons">
+            <button class="primary tiny" id="startRestTimerBtn">הפעל מנוחה</button>
+            <button class="secondary tiny" id="pauseRestTimerBtn">עצור מנוחה</button>
+            <button class="danger tiny" id="resetRestTimerBtn">אפס מנוחה</button>
+          </div>
+        </div>
+
         <div class="buttons">
           <button class="primary" id="finishWorkoutBtn" style="flex:1;">סיימתי אימון</button>
           <button class="secondary" id="openLibraryBtn">+ תרגיל</button>
@@ -375,7 +358,9 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'workout_app_mobile_v2';
+    const STORAGE_KEY = 'workout_app_mobile_v3';
+    let workoutTimerInterval = null;
+    let restTimerInterval = null;
 
     const LIBRARY = [
       { id:'ex1', name:'דחיקת חזה בסמית', muscle:'חזה', equipment:'סמית', sets:3, reps:'8-10', kg:'20-30', image:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=400&q=80', video:'https://www.youtube.com/results?search_query=smith+machine+bench+press' },
@@ -410,8 +395,22 @@
     function uid(){ return 'id-' + Math.random().toString(36).slice(2,10); }
     function cloneExercise(id){
       const ex = LIBRARY.find(x => x.id === id);
-      return { instanceId: uid(), libraryId: ex.id, name: ex.name, muscle: ex.muscle, equipment: ex.equipment, sets: 3, reps: ex.reps, kg: ex.kg, image: ex.image, video: ex.video, done: false };
+      return {
+        instanceId: uid(),
+        libraryId: ex.id,
+        name: ex.name,
+        muscle: ex.muscle,
+        equipment: ex.equipment,
+        sets: 3,
+        reps: ex.reps,
+        kg: ex.kg,
+        image: ex.image,
+        video: ex.video,
+        restSeconds: 60,
+        done: false
+      };
     }
+
     function defaultState(){
       const wedId = uid();
       return {
@@ -424,21 +423,37 @@
         selectedDayId: wedId,
         history: [],
         spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP',
-        filters: { search:'', muscle:'הכל', equipment:'הכל' }
+        filters: { search:'', muscle:'הכל', equipment:'הכל' },
+        liveTimers: { workoutSeconds: 0, workoutRunning: false, restSecondsLeft: 60, restRunning: false }
       };
     }
 
-    let state = load();
     function load(){
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : null;
-        return parsed || defaultState();
-      } catch { return defaultState(); }
+        if (!parsed) return defaultState();
+        parsed.days?.forEach(day => day.exercises?.forEach(ex => {
+          if (typeof ex.restSeconds !== 'number') ex.restSeconds = 60;
+          if (typeof ex.sets !== 'number') ex.sets = 3;
+        }));
+        if (!parsed.liveTimers) parsed.liveTimers = { workoutSeconds: 0, workoutRunning: false, restSecondsLeft: 60, restRunning: false };
+        return parsed;
+      } catch {
+        return defaultState();
+      }
     }
+
+    let state = load();
     function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
     function selectedDay(){ return state.days.find(d => d.id === state.selectedDayId) || state.days[0]; }
     function selectDay(id){ state.selectedDayId = id; render(); }
+
+    function formatTime(totalSeconds){
+      const mins = String(Math.floor((totalSeconds || 0) / 60)).padStart(2, '0');
+      const secs = String((totalSeconds || 0) % 60).padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
 
     function render(){
       renderTabs();
@@ -447,6 +462,7 @@
       renderHistory();
       renderMusic();
       renderLibrary();
+      renderTimers();
       save();
     }
 
@@ -471,7 +487,7 @@
             <div>
               <div class="exercise-name">${escapeHtml(ex.name)}</div>
               <div class="muted">${escapeHtml(ex.muscle)}</div>
-              <div class="muted">Rest time - 01:00</div>
+              <div class="muted">Rest time - ${formatTime(ex.restSeconds || 60)}</div>
             </div>
             <button class="secondary tiny" onclick="toggleDone('${day.id}','${ex.instanceId}')">${ex.done ? '✓' : '◻'}</button>
           </div>
@@ -485,12 +501,34 @@
             <span class="chip">${escapeHtml(ex.kg)}</span>
             <span class="chip">3 סטים</span>
           </div>
+          <div class="edit-grid">
+            <input value="${escapeHtml(ex.reps)}" onchange="updateExerciseField('${day.id}','${ex.instanceId}','reps', this.value)" placeholder="חזרות" />
+            <input value="${escapeHtml(ex.kg)}" onchange="updateExerciseField('${day.id}','${ex.instanceId}','kg', this.value)" placeholder="משקל" />
+            <input value="${ex.restSeconds || 60}" type="number" min="15" step="15" onchange="updateExerciseField('${day.id}','${ex.instanceId}','restSeconds', this.value)" placeholder="מנוחה" />
+          </div>
           <div class="buttons">
             <a class="linkbtn secondary tiny" href="${ex.video}" target="_blank" rel="noopener">יוטיוב</a>
+            <button class="secondary tiny" onclick="syncRestFromExercise('${day.id}','${ex.instanceId}')">טען מנוחה</button>
             <button class="danger tiny" onclick="removeExercise('${day.id}','${ex.instanceId}')">מחק</button>
           </div>
         </div>
       `).join('');
+    }
+
+    function updateExerciseField(dayId, instanceId, field, value){
+      const ex = state.days.find(d=>d.id===dayId)?.exercises.find(e=>e.instanceId===instanceId);
+      if(!ex) return;
+      if(field === 'restSeconds') ex[field] = Math.max(15, Number(value || 60));
+      else ex[field] = value;
+      render();
+    }
+
+    function syncRestFromExercise(dayId, instanceId){
+      const ex = state.days.find(d=>d.id===dayId)?.exercises.find(e=>e.instanceId===instanceId);
+      if(!ex) return;
+      state.liveTimers.restSecondsLeft = Number(ex.restSeconds || 60);
+      pauseRestTimer();
+      render();
     }
 
     function toggleDone(dayId, instanceId){
@@ -507,6 +545,68 @@
       render();
     }
 
+    function renderTimers(){
+      document.getElementById('workoutTimerDisplay').textContent = formatTime(state.liveTimers.workoutSeconds || 0);
+      document.getElementById('restTimerDisplay').textContent = formatTime(state.liveTimers.restSecondsLeft || 60);
+    }
+
+    function startWorkoutTimer(){
+      if (workoutTimerInterval) return;
+      state.liveTimers.workoutRunning = true;
+      workoutTimerInterval = setInterval(() => {
+        state.liveTimers.workoutSeconds += 1;
+        renderTimers();
+        save();
+      }, 1000);
+      renderTimers();
+    }
+
+    function pauseWorkoutTimer(){
+      state.liveTimers.workoutRunning = false;
+      clearInterval(workoutTimerInterval);
+      workoutTimerInterval = null;
+      save();
+      renderTimers();
+    }
+
+    function resetWorkoutTimer(){
+      pauseWorkoutTimer();
+      state.liveTimers.workoutSeconds = 0;
+      save();
+      renderTimers();
+    }
+
+    function startRestTimer(){
+      if (restTimerInterval) return;
+      state.liveTimers.restRunning = true;
+      restTimerInterval = setInterval(() => {
+        if ((state.liveTimers.restSecondsLeft || 0) > 0) {
+          state.liveTimers.restSecondsLeft -= 1;
+        } else {
+          pauseRestTimer();
+          alert('זמן המנוחה הסתיים');
+        }
+        renderTimers();
+        save();
+      }, 1000);
+      renderTimers();
+    }
+
+    function pauseRestTimer(){
+      state.liveTimers.restRunning = false;
+      clearInterval(restTimerInterval);
+      restTimerInterval = null;
+      save();
+      renderTimers();
+    }
+
+    function resetRestTimer(){
+      pauseRestTimer();
+      state.liveTimers.restSecondsLeft = 60;
+      save();
+      renderTimers();
+    }
+
     function finishWorkout(){
       const day = selectedDay();
       state.history.push({
@@ -514,9 +614,11 @@
         day: `${day.name} - ${day.label}`,
         date: new Date().toLocaleDateString('he-IL'),
         completed: day.exercises.filter(x=>x.done).length,
-        total: day.exercises.length
+        total: day.exercises.length,
+        duration: state.liveTimers.workoutSeconds || 0
       });
       day.exercises.forEach(x=>x.done=false);
+      resetWorkoutTimer();
       render();
       alert('האימון נשמר בהיסטוריה');
     }
@@ -544,7 +646,7 @@
             <strong>${escapeHtml(item.day)}</strong>
             <span class="chip">${escapeHtml(item.date)}</span>
           </div>
-          <div class="muted" style="margin-top:8px;">${item.completed}/${item.total} תרגילים בוצעו</div>
+          <div class="muted" style="margin-top:8px;">${item.completed}/${item.total} תרגילים בוצעו • זמן אימון ${formatTime(item.duration || 0)}</div>
         </div>
       `).join('');
     }
@@ -647,14 +749,24 @@
     document.getElementById('searchInput').addEventListener('input', e=>{ state.filters.search=e.target.value; renderLibrary(); save(); });
     document.getElementById('muscleFilter').addEventListener('change', e=>{ state.filters.muscle=e.target.value; renderLibrary(); save(); });
     document.getElementById('equipmentFilter').addEventListener('change', e=>{ state.filters.equipment=e.target.value; renderLibrary(); save(); });
+    document.getElementById('startWorkoutTimerBtn').addEventListener('click', startWorkoutTimer);
+    document.getElementById('pauseWorkoutTimerBtn').addEventListener('click', pauseWorkoutTimer);
+    document.getElementById('resetWorkoutTimerBtn').addEventListener('click', resetWorkoutTimer);
+    document.getElementById('startRestTimerBtn').addEventListener('click', startRestTimer);
+    document.getElementById('pauseRestTimerBtn').addEventListener('click', pauseRestTimer);
+    document.getElementById('resetRestTimerBtn').addEventListener('click', resetRestTimer);
 
     window.selectDay = selectDay;
     window.toggleDone = toggleDone;
     window.removeExercise = removeExercise;
     window.addExercise = addExercise;
+    window.updateExerciseField = updateExerciseField;
+    window.syncRestFromExercise = syncRestFromExercise;
 
     showSection('workout');
     render();
+    if (state.liveTimers?.workoutRunning) startWorkoutTimer();
+    if (state.liveTimers?.restRunning) startRestTimer();
   </script>
 </body>
 </html>
