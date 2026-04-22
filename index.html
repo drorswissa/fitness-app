@@ -122,10 +122,11 @@
     .hero-image {
       width: 100%;
       height: 176px;
-      object-fit: cover;
+      object-fit: contain;
       border-radius: 16px;
       background: #fff;
       border: 1px solid var(--line);
+      padding: 8px;
     }
     .exercise-title {
       font-size: 18px;
@@ -350,10 +351,11 @@
     .library-item img {
       width: 54px;
       height: 54px;
-      object-fit: cover;
+      object-fit: contain;
       border-radius: 12px;
       border: 1px solid var(--line);
       background: #fff;
+      padding: 4px;
     }
     .fixed-spotify {
       position: fixed;
@@ -523,7 +525,7 @@
         history: [],
         spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP',
         filters: { search:'', muscle:'הכל', equipment:'הכל' },
-        timers: { workoutSeconds: 0, workoutRunning: false, restSecondsLeft: 90, restRunning: false }
+        timers: { workoutSeconds: 0, workoutRunning: false, restSecondsLeft: 0, restRunning: false }
       };
     }
 
@@ -557,18 +559,29 @@
         const parsed = raw ? JSON.parse(raw) : null;
         let result = parsed || defaultState();
         result = ensureFourFixedDays(result);
-        if (!result.timers) result.timers = { workoutSeconds: 0, workoutRunning: false, restSecondsLeft: 90, restRunning: false };
+        if (!result.timers) result.timers = { workoutSeconds: 0, workoutRunning: false, restSecondsLeft: 0, restRunning: false };
         result.days?.forEach(day => day.exercises?.forEach(ex => {
+          const base = LIBRARY.find(item => item.id === ex.libraryId);
+          if (base) {
+            ex.name = base.name;
+            ex.muscle = base.muscle;
+            ex.equipment = base.equipment;
+            ex.image = base.image;
+            ex.video = base.video;
+          }
           if (!Array.isArray(ex.sets) || !ex.sets.length) {
-            const reps = ex.reps || '8';
-            const kg = ex.kg || '20';
+            const reps = ex.reps || base?.reps || '8';
+            const kg = ex.kg || base?.kg || '20';
             ex.sets = [1,2,3].map((_,i)=>({ id: uid(), index:i+1, reps, kg, done:false }));
           }
-          if (typeof ex.restSeconds !== 'number') ex.restSeconds = 60;
+          if (typeof ex.restSeconds !== 'number') ex.restSeconds = 90;
         }));
         if (typeof result.activeExerciseIndex !== 'number') result.activeExerciseIndex = 0;
         return result;
       } catch {
+        return defaultState();
+      }
+    } catch {
         return defaultState();
       }
     }
@@ -615,7 +628,7 @@
       }
       document.getElementById('activeExerciseImage').src = ex.image;
       document.getElementById('activeExerciseName').textContent = ex.name;
-      document.getElementById('activeExerciseDesc').textContent = `${ex.muscle} • מנוחה ${formatTime(ex.restSeconds)} • 3 סטים`;
+      document.getElementById('activeExerciseDesc').textContent = `${ex.muscle} • טיימר מנוחה פתוח • 3 סטים`;
       document.getElementById('youtubeLink').href = ex.video;
       document.getElementById('animationLink').href = `https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' exercise animation')}`;
       document.getElementById('setsList').innerHTML = ex.sets.map((set, idx)=>`
@@ -707,7 +720,6 @@
       set.done = !set.done;
       ex.done = ex.sets.every(s=>s.done);
       if (set.done) {
-        state.timers.restSecondsLeft = ex.restSeconds || 90;
         startRestTimer(true);
       }
       if (ex.done && state.activeExerciseIndex < selectedDay().exercises.length - 1) {
@@ -770,14 +782,10 @@
         restTimerInterval = null;
       }
       if (state.timers.restRunning && !forceRestart) return;
+      if (forceRestart) state.timers.restSecondsLeft = 0;
       state.timers.restRunning = true;
       restTimerInterval = setInterval(()=>{
-        if (state.timers.restSecondsLeft > 0) {
-          state.timers.restSecondsLeft -= 1;
-        } else {
-          toggleRestTimer(true);
-          playRestFinishedAlert();
-        }
+        state.timers.restSecondsLeft += 1;
         renderTimers();
         save();
       }, 1000);
@@ -786,21 +794,18 @@
     }
 
     function toggleRestTimer(forceStop=false){
+      if (state.timers.restRunning || forceSfunction toggleRestTimer(forceStop=false){
       if (state.timers.restRunning || forceStop) {
         clearInterval(restTimerInterval);
         restTimerInterval = null;
         state.timers.restRunning = false;
       } else {
-        startRestTimer();
+        startRestTimer(false);
         return;
       }
       renderTimers();
       save();
-    }
-
-    function finishWorkout(){
-      const day = selectedDay();
-      const completedExercises = day.exercises.filter(ex=>ex.done).length;
+    }xercises = day.exercises.filter(ex=>ex.done).length;
       state.history.push({
         id: uid(),
         day: `${day.name} - ${day.label}`,
@@ -811,7 +816,7 @@
       day.exercises.forEach(ex => { ex.done = false; ex.sets.forEach(s=>s.done=false); });
       state.activeExerciseIndex = 0;
       state.timers.workoutSeconds = 0;
-      state.timers.restSecondsLeft = 60;
+      state.timers.restSecondsLeft = 0;
       clearInterval(workoutTimerInterval); workoutTimerInterval = null; state.timers.workoutRunning = false;
       clearInterval(restTimerInterval); restTimerInterval = null; state.timers.restRunning = false;
       render();
