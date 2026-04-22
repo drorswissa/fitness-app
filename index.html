@@ -3,1333 +3,451 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout Planner Pro</title>
+  <title>Workout App</title>
   <style>
     :root {
-      --bg: #0b1020;
-      --bg-2: #131a2f;
-      --card: rgba(24, 34, 63, 0.92);
-      --card-2: rgba(34, 46, 84, 0.92);
-      --text: #f3f7ff;
-      --muted: #aeb9d6;
+      --bg: #0d1324;
+      --card: #151d35;
+      --card-2: #1c2747;
+      --text: #f5f7ff;
+      --muted: #aeb7d4;
       --line: rgba(255,255,255,0.08);
-      --accent: #8bff7a;
-      --accent-2: #62d96b;
-      --danger: #ff7070;
-      --warning: #ffd56b;
-      --info: #78c8ff;
-      --shadow: 0 18px 40px rgba(0,0,0,0.28);
-      --radius: 22px;
+      --accent: #8dff7a;
+      --danger: #ff7c7c;
+      --radius: 18px;
     }
-
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(98,217,107,0.12), transparent 24%),
-        radial-gradient(circle at left bottom, rgba(120,200,255,0.12), transparent 20%),
-        linear-gradient(180deg, #08101d 0%, #0b1020 100%);
+      background: linear-gradient(180deg, #0a1020, #0d1324);
       color: var(--text);
-      min-height: 100vh;
     }
-
     .app {
-      max-width: 1200px;
+      max-width: 520px;
       margin: 0 auto;
-      padding: 18px 14px 100px;
+      padding: 14px 12px 40px;
     }
-
-    .topbar {
+    .screen {
       display: grid;
-      grid-template-columns: 1.2fr 1fr;
       gap: 14px;
-      margin-bottom: 16px;
     }
-
-    .hero, .stats-strip, .card, .modal-content, .drawer {
+    .card {
       background: var(--card);
       border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-
-    .hero {
-      border-radius: 28px;
-      padding: 18px;
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 16px;
-      align-items: stretch;
-      min-height: 220px;
-    }
-
-    .hero h1 {
-      margin: 0 0 10px;
-      font-size: 32px;
-    }
-
-    .hero p {
-      color: var(--muted);
-      line-height: 1.6;
-      margin: 0 0 16px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .hero-side {
-      background: linear-gradient(180deg, rgba(139,255,122,.12), rgba(120,200,255,.08));
-      border-radius: 24px;
-      padding: 16px;
-      border: 1px solid var(--line);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.08);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 13px;
-      width: fit-content;
-    }
-
-    .stats-strip {
-      border-radius: 28px;
+      border-radius: var(--radius);
       padding: 14px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
     }
-
-    .stat-box {
-      background: var(--card-2);
-      border-radius: 20px;
-      padding: 14px;
-      border: 1px solid var(--line);
-    }
-
-    .stat-label {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
-
-    .stat-value {
+    .title {
+      text-align: center;
       font-size: 28px;
       font-weight: 700;
+      margin: 6px 0 2px;
     }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 16px;
-      align-items: start;
-    }
-
-    .sidebar, .main {
-      display: grid;
-      gap: 16px;
-    }
-
-    .card {
-      border-radius: var(--radius);
-      padding: 16px;
-    }
-
-    .card h2, .card h3 {
-      margin: 0 0 12px;
-    }
-
     .sub {
+      text-align: center;
       color: var(--muted);
       font-size: 14px;
     }
-
-    .days-list, .exercise-list, .history-list, .chips {
-      display: grid;
-      gap: 10px;
-    }
-
-    .day-item, .exercise-item, .history-item {
-      background: rgba(255,255,255,0.045);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 14px;
-    }
-
-    .day-item.active {
-      outline: 2px solid rgba(139,255,122,0.55);
-      background: rgba(139,255,122,0.08);
-    }
-
-    .day-head, .row, .section-head, .exercise-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .day-title, .exercise-name {
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .muted { color: var(--muted); }
-
-    .buttons, .action-row {
+    .day-tabs, .row, .buttons {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
     }
-
-    button, .button, select, input, textarea {
+    .day-tab, button, select, input {
       font: inherit;
     }
-
-    button, .button {
+    .day-tab, button {
       border: none;
-      cursor: pointer;
-      border-radius: 16px;
+      border-radius: 14px;
       padding: 12px 14px;
-      transition: .18s ease;
+      cursor: pointer;
     }
-
-    button:hover, .button:hover { transform: translateY(-1px); }
-
+    .day-tab {
+      background: var(--card-2);
+      color: var(--text);
+      flex: 1 1 calc(50% - 8px);
+    }
+    .day-tab.active {
+      outline: 2px solid rgba(141,255,122,0.5);
+      background: rgba(141,255,122,0.14);
+    }
     .primary {
-      background: linear-gradient(180deg, var(--accent), var(--accent-2));
-      color: #10200f;
+      background: var(--accent);
+      color: #10220a;
       font-weight: 700;
+      width: 100%;
     }
-
     .secondary {
-      background: rgba(255,255,255,0.08);
+      background: var(--card-2);
       color: var(--text);
       border: 1px solid var(--line);
     }
-
     .danger {
-      background: rgba(255,112,112,0.14);
-      color: #ffd5d5;
-      border: 1px solid rgba(255,112,112,0.22);
+      background: rgba(255,124,124,0.15);
+      color: #ffd9d9;
+      border: 1px solid rgba(255,124,124,0.22);
     }
-
-    .tiny {
-      padding: 8px 10px;
-      border-radius: 12px;
-      font-size: 13px;
-    }
-
-    .grid-2, .grid-3 {
+    .exercise {
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
       display: grid;
-      gap: 12px;
+      gap: 8px;
     }
-
-    .grid-2 { grid-template-columns: repeat(2, 1fr); }
-    .grid-3 { grid-template-columns: repeat(3, 1fr); }
-
-    label {
-      display: grid;
-      gap: 6px;
-      font-size: 14px;
+    .exercise-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .exercise-name {
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .muted { color: var(--muted); font-size: 13px; }
+    .tag {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
       color: var(--muted);
     }
-
-    input, select, textarea {
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .stat {
+      text-align: center;
+      background: var(--card-2);
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid var(--line);
+    }
+    .stat strong {
+      display: block;
+      font-size: 22px;
+      margin-top: 4px;
+    }
+    .history-item {
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px;
+      margin-bottom: 8px;
+    }
+    .hidden { display: none; }
+    .bottom-bar {
+      position: sticky;
+      bottom: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      background: rgba(10,16,32,0.9);
+      padding-top: 8px;
+    }
+    .sheet {
+      position: fixed;
+      inset: auto 0 0 0;
+      background: var(--card);
+      border-top: 1px solid var(--line);
+      border-radius: 20px 20px 0 0;
+      padding: 14px;
+      max-height: 78vh;
+      overflow: auto;
+      display: none;
+      z-index: 10;
+    }
+    .sheet.open { display: block; }
+    .sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      z-index: 9;
+    }
+    .sheet-backdrop.open { display: block; }
+    input, select {
       width: 100%;
-      background: rgba(255,255,255,0.06);
+      background: var(--card-2);
       color: var(--text);
       border: 1px solid var(--line);
       border-radius: 14px;
       padding: 12px;
-      outline: none;
-    }
-
-    textarea { min-height: 90px; resize: vertical; }
-
-    .chips {
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    }
-
-    .chip {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--line);
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 999px;
-      cursor: pointer;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .chip.active {
-      background: rgba(139,255,122,0.18);
-      border-color: rgba(139,255,122,0.38);
-      color: #efffea;
-    }
-
-    .progress {
-      height: 10px;
-      background: rgba(255,255,255,0.07);
-      border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-    }
-
-    .progress > div {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), #9be8ff);
-      width: 0;
-    }
-
-    .empty {
-      text-align: center;
-      color: var(--muted);
-      padding: 20px 10px;
-      border: 1px dashed var(--line);
-      border-radius: 16px;
-    }
-
-    .spotify-box {
-      display: grid;
-      gap: 10px;
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border-radius: 18px;
-      padding: 14px;
-      border: 1px solid var(--line);
-    }
-
-    .spotify-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-    }
-
-    .modal, .drawer-wrap {
-      position: fixed;
-      inset: 0;
-      display: none;
-      z-index: 30;
-    }
-
-    .modal.open, .drawer-wrap.open { display: block; }
-
-    .overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,.55);
-    }
-
-    .modal-content {
-      position: relative;
-      width: min(900px, calc(100vw - 24px));
-      margin: 4vh auto;
-      max-height: 92vh;
-      overflow: auto;
-      border-radius: 26px;
-      padding: 16px;
-      z-index: 2;
-    }
-
-    .drawer {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: min(430px, calc(100vw - 30px));
-      padding: 18px;
-      overflow: auto;
-      border-radius: 0 24px 24px 0;
-      z-index: 2;
-    }
-
-    .library-grid {
-      display: grid;
-      gap: 10px;
-    }
-
-    .library-item {
-      display: grid;
-      gap: 10px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--line);
-      padding: 14px;
-      border-radius: 18px;
-    }
-
-    .taglist {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .tag {
-      background: rgba(255,255,255,0.08);
-      color: var(--muted);
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 12px;
-      border: 1px solid var(--line);
-    }
-
-    .footer-note {
-      color: var(--muted);
-      text-align: center;
-      margin-top: 14px;
-      font-size: 13px;
-    }
-
-    @media (max-width: 980px) {
-      .topbar, .layout, .hero, .stats-strip {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .app { padding: 12px 10px 100px; }
-      .hero h1 { font-size: 26px; }
-      .grid-2, .grid-3 { grid-template-columns: 1fr; }
-      .stat-value { font-size: 24px; }
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <section class="topbar">
-      <div class="hero">
-        <div>
-          <div class="badge">🏋️ מערכת אימונים חכמה</div>
-          <h1>תוכנית האימונים שלך</h1>
-          <p>
-            גרסה מלאה עם שמירת היסטוריה, סטטיסטיקה, בניית אימונים מתוך מאגר תרגילים,
-            סינון לפי שריר או אביזר, והוספת תרגילים לכל יום בלחיצות פשוטות.
-          </p>
-          <div class="hero-actions">
-            <button class="primary" id="startWorkoutBtn">התחל אימון היום</button>
-            <button class="secondary" id="openLibraryBtn">פתח מאגר תרגילים</button>
-            <button class="secondary" id="addWorkoutDayBtn">הוסף יום אימון</button>
-          </div>
-        </div>
-        <div class="hero-side">
+    <div class="screen">
+      <div class="card">
+        <div class="title">האימונים שלי</div>
+        <div class="sub">פשוט, נקי, ונראה כמו אפליקציה</div>
+      </div>
+
+      <div class="card">
+        <div class="day-tabs" id="dayTabs"></div>
+      </div>
+
+      <div class="card">
+        <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px;">
           <div>
-            <div class="sub">האימון הבא</div>
-            <div id="nextWorkoutName" style="font-size:26px;font-weight:700;margin-top:6px;">טוען...</div>
-            <div id="nextWorkoutHint" class="muted" style="margin-top:8px;">התאם יום אימון ובנה אותו איך שנוח לך</div>
+            <div id="workoutTitle" style="font-size:22px;font-weight:700;"></div>
+            <div id="workoutNote" class="muted"></div>
           </div>
-          <div class="spotify-box">
-            <div class="row">
-              <strong>🎵 הפלייליסט שלך לאימון</strong>
-              <span class="tag">Spotify</span>
-            </div>
-            <div class="muted">אפשר לנגן ישירות מתוך האפליקציה וגם לעדכן קישור לפלייליסט שלך</div>
-            <iframe id="spotifyEmbed"
-              style="border-radius:16px;width:100%;height:152px;border:none;"
-              src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy"></iframe>
-            <div class="grid-2">
-              <label>
-                קישור לפלייליסט / אלבום / טראק
-                <input id="spotifyInput" placeholder="הדבק כאן קישור Spotify" />
-              </label>
-              <div class="buttons" style="align-items:end;">
-                <button class="primary" id="saveSpotifyBtn">שמור נגן</button>
-                <a class="button secondary spotify-link" id="spotifyLink" href="https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP" target="_blank" rel="noopener">פתח בספוטיפיי</a>
-              </div>
-            </div>
-          </div>
+          <button class="secondary" id="openLibraryBtn">+ תרגיל</button>
+        </div>
+        <div class="buttons" style="margin-bottom:10px;">
+          <button class="primary" id="finishWorkoutBtn">סיימתי אימון</button>
+        </div>
+        <div id="exerciseList"></div>
+      </div>
+
+      <div class="card" id="statsCard">
+        <div class="mini-grid">
+          <div class="stat">אימונים<strong id="totalWorkouts">0</strong></div>
+          <div class="stat">תרגילים<strong id="totalExercises">0</strong></div>
+          <div class="stat">רצף<strong id="streak">0</strong></div>
         </div>
       </div>
 
-      <div class="stats-strip">
-        <div class="stat-box">
-          <div class="stat-label">סך אימונים שבוצעו</div>
-          <div class="stat-value" id="totalWorkoutsStat">0</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">סך תרגילים שבוצעו</div>
-          <div class="stat-value" id="totalExercisesStat">0</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">רצף נוכחי</div>
-          <div class="stat-value" id="streakStat">0</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">יום הכי פעיל</div>
-          <div class="stat-value" id="favoriteDayStat">-</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="layout">
-      <aside class="sidebar">
-        <div class="card">
-          <div class="section-head">
-            <div>
-              <h2>ימי אימון</h2>
-              <div class="sub">בחר יום והוסף אליו תרגילים</div>
-            </div>
-            <button class="secondary tiny" id="manageDaysBtn">ניהול</button>
-          </div>
-          <div class="days-list" id="daysList"></div>
-        </div>
-
-        <div class="card">
-          <h3>סינון מהיר למאגר</h3>
-          <div class="sub" style="margin-bottom:10px;">בחר שריר או אביזר</div>
-          <div class="chips" id="quickMuscleChips"></div>
-          <div style="height:10px"></div>
-          <div class="chips" id="quickEquipmentChips"></div>
-        </div>
-
-        <div class="card">
-          <h3>היסטוריה אחרונה</h3>
-          <div class="history-list" id="historyList"></div>
-        </div>
-      </aside>
-
-      <main class="main">
-        <div class="card">
-          <div class="section-head">
-            <div>
-              <h2 id="selectedDayTitle">האימון שלך</h2>
-              <div class="sub" id="selectedDayMeta">טען או צור יום אימון</div>
-            </div>
-            <div class="action-row">
-              <button class="secondary" id="addExerciseToDayBtn">הוסף תרגיל</button>
-              <button class="secondary" id="editDayBtn">ערוך יום</button>
-              <button class="primary" id="completeWorkoutBtn">סיימתי אימון</button>
-            </div>
-          </div>
-
-          <div class="progress" style="margin: 12px 0 14px;">
-            <div id="dayProgressBar"></div>
-          </div>
-
-          <div class="exercise-list" id="exerciseList"></div>
-        </div>
-
-        <div class="grid-2">
-          <div class="card">
-            <h3>סטטיסטיקה לפי שרירים</h3>
-            <div id="muscleStats"></div>
-          </div>
-          <div class="card">
-            <h3>פעולות מהירות</h3>
-            <div class="buttons">
-              <button class="secondary" id="resetStatsBtn">איפוס סטטיסטיקה</button>
-              <button class="secondary" id="resetAllBtn">איפוס מלא לאפליקציה</button>
-              <button class="secondary" id="seedDefaultsBtn">שחזור ברירת מחדל</button>
-            </div>
-            <div class="footer-note">
-              כל המידע נשמר מקומית בדפדפן באמצעות Local Storage
-            </div>
-          </div>
-        </div>
-      </main>
-    </section>
-  </div>
-
-  <div class="modal" id="modal">
-    <div class="overlay" data-close="modal"></div>
-    <div class="modal-content" id="modalContent"></div>
-  </div>
-
-  <div class="drawer-wrap" id="libraryDrawerWrap">
-    <div class="overlay" data-close="drawer"></div>
-    <div class="drawer">
-      <div class="section-head">
-        <div>
-          <h2>מאגר תרגילים</h2>
-          <div class="sub">סינון לפי שריר, אביזר או חיפוש חופשי</div>
-        </div>
-        <button class="secondary tiny" id="closeDrawerBtn">סגור</button>
+      <div class="card hidden" id="historyCard">
+        <div style="font-size:18px;font-weight:700;margin-bottom:10px;">היסטוריה</div>
+        <div id="historyList"></div>
       </div>
 
-      <div class="grid-2" style="margin:12px 0;">
-        <label>
-          חיפוש
-          <input id="librarySearch" placeholder="למשל: לחיצת חזה" />
-        </label>
-        <label>
-          שריר
-          <select id="libraryMuscleFilter"></select>
-        </label>
-        <label>
-          אביזר
-          <select id="libraryEquipmentFilter"></select>
-        </label>
-        <label>
-          הוסף ליום
-          <select id="libraryDayTarget"></select>
-        </label>
+      <div class="card hidden" id="musicCard">
+        <div style="font-size:18px;font-weight:700;margin-bottom:10px;">מוזיקה</div>
+        <iframe id="spotifyEmbed" style="border-radius:14px;width:100%;height:152px;border:none;" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        <input id="spotifyInput" placeholder="הדבק קישור Spotify" />
+        <button class="secondary" id="saveSpotifyBtn">שמור פלייליסט</button>
       </div>
 
-      <div class="buttons" style="margin-bottom: 12px;">
-        <button class="secondary tiny" id="clearLibraryFiltersBtn">נקה סינון</button>
-        <button class="secondary tiny" id="openCreateExerciseBtn">צור תרגיל חדש</button>
+      <div class="bottom-bar">
+        <button class="secondary" id="navWorkout">אימון</button>
+        <button class="secondary" id="navHistory">היסטוריה</button>
+        <button class="secondary" id="navMusic">מוזיקה</button>
       </div>
-
-      <div class="library-grid" id="libraryGrid"></div>
     </div>
   </div>
 
+  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+  <div class="sheet" id="librarySheet">
+    <div style="font-size:20px;font-weight:700;margin-bottom:10px;">הוספת תרגיל</div>
+    <input id="searchInput" placeholder="חפש תרגיל" />
+    <select id="muscleFilter"></select>
+    <select id="equipmentFilter"></select>
+    <div id="libraryList"></div>
+  </div>
+
   <script>
-    const STORAGE_KEY = 'workoutPlannerPro_v3';
+    const STORAGE_KEY = 'simple_workout_app_v1';
 
-    const EXERCISE_LIBRARY = [
-      { id: 'ex1', name: 'לחיצת חזה במכונה', muscle: 'חזה', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'שליטה מלאה בירידה', video: 'https://www.youtube.com/results?search_query=machine+chest+press', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex2', name: 'פרפר חזה במכונה', muscle: 'חזה', equipment: 'מכונה', sets: 3, reps: '10-15', notes: 'כיווץ חזק בסוף התנועה', video: 'https://www.youtube.com/results?search_query=pec+deck+fly', image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex3', name: 'כבל קרוס עליון', muscle: 'חזה', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'טווח תנועה מלא', video: 'https://www.youtube.com/results?search_query=cable+crossover', image: 'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex4', name: 'כפיפת מרפקים עם משקולות', muscle: 'יד קדמית', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12', notes: 'לא לנענע גוף', video: 'https://www.youtube.com/results?search_query=dumbbell+biceps+curl', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex5', name: 'כפיפת מרפקים בכבל', muscle: 'יד קדמית', equipment: 'כבלים', sets: 3, reps: '10-12', notes: 'שליטה בקצב', video: 'https://www.youtube.com/results?search_query=cable+biceps+curl', image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex6', name: 'פולי עליון רחב', muscle: 'גב', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'למשוך למעלה החזה', video: 'https://www.youtube.com/results?search_query=lat+pulldown', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex7', name: 'חתירה בישיבה', muscle: 'גב', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'שכמות לאחור', video: 'https://www.youtube.com/results?search_query=seated+cable+row', image: 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex8', name: 'פולאובר בכבל', muscle: 'גב', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'מתיחה וכיווץ', video: 'https://www.youtube.com/results?search_query=straight+arm+pulldown', image: 'https://images.unsplash.com/photo-1518611012118-fb2f2f2b08df?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex9', name: 'פשיטת מרפקים בחבל', muscle: 'יד אחורית', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'מרפקים צמודים', video: 'https://www.youtube.com/results?search_query=rope+triceps+pushdown', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex10', name: 'פשיטת מרפקים מעל הראש', muscle: 'יד אחורית', equipment: 'כבלים', sets: 3, reps: '10-12', notes: 'טווח מלא', video: 'https://www.youtube.com/results?search_query=overhead+cable+triceps+extension', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex11', name: 'לחיצת כתפיים במכונה', muscle: 'כתפיים', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'ללא קשת מוגזמת בגב', video: 'https://www.youtube.com/results?search_query=machine+shoulder+press', image: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex12', name: 'הרחקת כתפיים לצדדים', muscle: 'כתפיים', equipment: 'משקולות חופשיות', sets: 3, reps: '12-15', notes: 'מרפק מעט כפוף', video: 'https://www.youtube.com/results?search_query=lateral+raise', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex13', name: 'פייס פול', muscle: 'כתפיים', equipment: 'כבלים', sets: 3, reps: '12-15', notes: 'מרפקים גבוהים', video: 'https://www.youtube.com/results?search_query=face+pull', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex14', name: 'לחיצת רגליים', muscle: 'רגליים', equipment: 'מכונה', sets: 4, reps: '10-15', notes: 'לא לנעול ברכיים', video: 'https://www.youtube.com/results?search_query=leg+press', image: 'https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex15', name: 'פשיטת ברכיים', muscle: 'רגליים', equipment: 'מכונה', sets: 3, reps: '12-15', notes: 'שליטה מלאה', video: 'https://www.youtube.com/results?search_query=leg+extension', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex16', name: 'כפיפת ברכיים', muscle: 'רגליים', equipment: 'מכונה', sets: 3, reps: '12-15', notes: 'עצירה קצרה בסוף', video: 'https://www.youtube.com/results?search_query=leg+curl', image: 'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex17', name: 'סקוואט גביע', muscle: 'רגליים', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12', notes: 'ירידה מבוקרת', video: 'https://www.youtube.com/results?search_query=goblet+squat', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex18', name: 'כפיפות בטן בכבל', muscle: 'בטן', equipment: 'כבלים', sets: 3, reps: '12-20', notes: 'לא למשוך צוואר', video: 'https://www.youtube.com/results?search_query=cable+crunch', image: 'https://images.unsplash.com/photo-1549476464-37392f717541?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex19', name: 'פלאנק', muscle: 'ליבה', equipment: 'משקל גוף', sets: 3, reps: '30-60 שניות', notes: 'בטן אסופה', video: 'https://www.youtube.com/results?search_query=plank+exercise', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex20', name: 'דחיקת חזה בסמית', muscle: 'חזה', equipment: 'סמית', sets: 3, reps: '8-10', notes: 'מתאים גם כתרגיל ראשון', video: 'https://www.youtube.com/results?search_query=smith+machine+bench+press', image: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex21', name: 'משיכת מתח בסיוע', muscle: 'גב', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'ירידה מלאה', video: 'https://www.youtube.com/results?search_query=assisted+pull+up', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex22', name: 'הליכת מכרעיים', muscle: 'רגליים', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12 לכל רגל', notes: 'צעד נשלט', video: 'https://www.youtube.com/results?search_query=walking+lunges', image: 'https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex23', name: 'דדליפט רומני', muscle: 'רגליים', equipment: 'משקולות חופשיות', sets: 3, reps: '8-12', notes: 'גב ניטרלי', video: 'https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex24', name: 'הרמת שוקיים בעמידה', muscle: 'רגליים', equipment: 'מכונה', sets: 4, reps: '12-20', notes: 'עצירה למעלה', video: 'https://www.youtube.com/results?search_query=standing+calf+raise', image: 'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex25', name: 'חתירה יד אחת עם דאמבל', muscle: 'גב', equipment: 'משקולות חופשיות', sets: 3, reps: '8-12', notes: 'להוביל עם המרפק', video: 'https://www.youtube.com/results?search_query=one+arm+dumbbell+row', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex26', name: 'פול דאון אחיזה צרה', muscle: 'גב', equipment: 'כבלים', sets: 3, reps: '10-12', notes: 'משיכה לקו החזה', video: 'https://www.youtube.com/results?search_query=close+grip+lat+pulldown', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex27', name: 'טי-בר רואו', muscle: 'גב', equipment: 'מוט / מכונה', sets: 3, reps: '8-12', notes: 'שמור גב יציב', video: 'https://www.youtube.com/results?search_query=t+bar+row', image: 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex28', name: 'לחיצה צרפתית עם דאמבל', muscle: 'יד אחורית', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12', notes: 'שליטה במרפקים', video: 'https://www.youtube.com/results?search_query=dumbbell+triceps+extension', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex29', name: 'מקבילים בסיוע', muscle: 'יד אחורית', equipment: 'מכונה', sets: 3, reps: '8-12', notes: 'ירידה נשלטת', video: 'https://www.youtube.com/results?search_query=assisted+dips', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex30', name: 'פשיטת מרפקים במוט ישר', muscle: 'יד אחורית', equipment: 'כבלים', sets: 3, reps: '10-15', notes: 'ללא תנועת כתפיים', video: 'https://www.youtube.com/results?search_query=bar+triceps+pushdown', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex31', name: 'לחיצת חזה בשיפוע חיובי', muscle: 'חזה', equipment: 'משקולות חופשיות', sets: 3, reps: '8-12', notes: 'דגש על חזה עליון', video: 'https://www.youtube.com/results?search_query=incline+dumbbell+press', image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex32', name: 'פליי בדאמבלים', muscle: 'חזה', equipment: 'משקולות חופשיות', sets: 3, reps: '10-15', notes: 'קשת קלה במרפקים', video: 'https://www.youtube.com/results?search_query=dumbbell+fly', image: 'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex33', name: 'סקוואט בסמית', muscle: 'רגליים', equipment: 'סמית', sets: 4, reps: '8-12', notes: 'עמידה יציבה', video: 'https://www.youtube.com/results?search_query=smith+machine+squat', image: 'https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex34', name: 'היפ תראסט', muscle: 'רגליים', equipment: 'מוט / משקולות', sets: 4, reps: '8-12', notes: 'עצירה למעלה', video: 'https://www.youtube.com/results?search_query=hip+thrust', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex35', name: 'כפיפת פטיש', muscle: 'יד קדמית', equipment: 'משקולות חופשיות', sets: 3, reps: '10-12', notes: 'מרפקים צמודים', video: 'https://www.youtube.com/results?search_query=hammer+curl', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex36', name: 'שולדר פרס בדאמבלים', muscle: 'כתפיים', equipment: 'משקולות חופשיות', sets: 3, reps: '8-12', notes: 'ללא קימור גב', video: 'https://www.youtube.com/results?search_query=dumbbell+shoulder+press', image: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex37', name: 'הרחקה אחורית לכתף', muscle: 'כתפיים', equipment: 'משקולות חופשיות', sets: 3, reps: '12-15', notes: 'דגש על כתף אחורית', video: 'https://www.youtube.com/results?search_query=rear+delt+raise', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex38', name: 'אופניים לבטן', muscle: 'בטן', equipment: 'משקל גוף', sets: 3, reps: '20 חזרות', notes: 'קצב רציף', video: 'https://www.youtube.com/results?search_query=bicycle+crunch', image: 'https://images.unsplash.com/photo-1549476464-37392f717541?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex39', name: 'עליות ברכיים במתח', muscle: 'בטן', equipment: 'משקל גוף', sets: 3, reps: '10-15', notes: 'ללא תנופה', video: 'https://www.youtube.com/results?search_query=hanging+knee+raises', image: 'https://images.unsplash.com/photo-1549476464-37392f717541?auto=format&fit=crop&w=900&q=80' },
-      { id: 'ex40', name: 'בורפי', muscle: 'אירובי', equipment: 'משקל גוף', sets: 3, reps: '10-15', notes: 'מתאים לסיום', video: 'https://www.youtube.com/results?search_query=burpee', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80' }
+    const LIBRARY = [
+      { id:'ex1', name:'דחיקת חזה בסמית', muscle:'חזה', equipment:'סמית', sets:3, reps:'8-10', video:'https://www.youtube.com/results?search_query=smith+machine+bench+press' },
+      { id:'ex2', name:'פרפר חזה', muscle:'חזה', equipment:'מכונה', sets:3, reps:'10-15', video:'https://www.youtube.com/results?search_query=pec+deck+fly' },
+      { id:'ex3', name:'פולי עליון רחב', muscle:'גב', equipment:'מכונה', sets:3, reps:'8-12', video:'https://www.youtube.com/results?search_query=lat+pulldown' },
+      { id:'ex4', name:'חתירה בישיבה', muscle:'גב', equipment:'כבלים', sets:3, reps:'8-12', video:'https://www.youtube.com/results?search_query=seated+cable+row' },
+      { id:'ex5', name:'חתירה יד אחת עם דאמבל', muscle:'גב', equipment:'משקולות', sets:3, reps:'8-12', video:'https://www.youtube.com/results?search_query=one+arm+dumbbell+row' },
+      { id:'ex6', name:'פשיטת מרפקים בחבל', muscle:'יד אחורית', equipment:'כבלים', sets:3, reps:'10-15', video:'https://www.youtube.com/results?search_query=rope+triceps+pushdown' },
+      { id:'ex7', name:'פשיטת מרפקים מעל הראש', muscle:'יד אחורית', equipment:'כבלים', sets:3, reps:'10-12', video:'https://www.youtube.com/results?search_query=overhead+cable+triceps+extension' },
+      { id:'ex8', name:'מקבילים בסיוע', muscle:'יד אחורית', equipment:'מכונה', sets:3, reps:'8-12', video:'https://www.youtube.com/results?search_query=assisted+dips' },
+      { id:'ex9', name:'כפיפת מרפקים עם דאמבלים', muscle:'יד קדמית', equipment:'משקולות', sets:3, reps:'10-12', video:'https://www.youtube.com/results?search_query=dumbbell+biceps+curl' },
+      { id:'ex10', name:'לחיצת כתפיים', muscle:'כתפיים', equipment:'מכונה', sets:3, reps:'8-12', video:'https://www.youtube.com/results?search_query=machine+shoulder+press' },
+      { id:'ex11', name:'הרחקת כתפיים לצדדים', muscle:'כתפיים', equipment:'משקולות', sets:3, reps:'12-15', video:'https://www.youtube.com/results?search_query=lateral+raise' },
+      { id:'ex12', name:'לחיצת רגליים', muscle:'רגליים', equipment:'מכונה', sets:4, reps:'10-15', video:'https://www.youtube.com/results?search_query=leg+press' },
+      { id:'ex13', name:'כפיפת ברכיים', muscle:'רגליים', equipment:'מכונה', sets:3, reps:'12-15', video:'https://www.youtube.com/results?search_query=leg+curl' },
+      { id:'ex14', name:'סקוואט גביע', muscle:'רגליים', equipment:'משקולות', sets:3, reps:'10-12', video:'https://www.youtube.com/results?search_query=goblet+squat' },
+      { id:'ex15', name:'פלאנק', muscle:'בטן', equipment:'משקל גוף', sets:3, reps:'30-60 שניות', video:'https://www.youtube.com/results?search_query=plank+exercise' }
     ];
 
-    const DEFAULT_DAYS = [
-      {
-        id: uid(),
-        name: 'שני - חזה + יד קדמית',
-        notes: 'אימון דחיפה ויד קדמית',
-        exercises: [pickExercise('ex20'), pickExercise('ex2'), pickExercise('ex3'), pickExercise('ex4'), pickExercise('ex5')]
-      },
-      {
-        id: uid(),
-        name: 'רביעי - גב + יד אחורית',
-        notes: 'אימון משיכה ויד אחורית',
-        exercises: [pickExercise('ex6'), pickExercise('ex7'), pickExercise('ex8'), pickExercise('ex9'), pickExercise('ex10')]
-      },
-      {
-        id: uid(),
-        name: 'שישי - כתפיים + רגליים',
-        notes: 'שילוב כתפיים ורגליים',
-        exercises: [pickExercise('ex11'), pickExercise('ex12'), pickExercise('ex13'), pickExercise('ex14'), pickExercise('ex16'), pickExercise('ex24')]
-      },
-      {
-        id: uid(),
-        name: 'שבת - אימון משולב',
-        notes: 'אימון כללי קצר',
-        exercises: [pickExercise('ex1'), pickExercise('ex7'), pickExercise('ex12'), pickExercise('ex17'), pickExercise('ex18')]
-      }
-    ];
-
-    function uid() {
-      return 'id-' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+    function uid(){ return 'id-'+Math.random().toString(36).slice(2,9); }
+    function cloneExercise(id){
+      const ex = LIBRARY.find(x => x.id === id);
+      return { instanceId: uid(), libraryId: ex.id, name: ex.name, muscle: ex.muscle, equipment: ex.equipment, sets: ex.sets, reps: ex.reps, video: ex.video, done: false };
     }
 
-    function pickExercise(baseId) {
-      const ex = EXERCISE_LIBRARY.find(x => x.id === baseId);
+    function defaultState(){
+      const wedId = uid();
       return {
-        instanceId: uid(),
-        libraryId: ex.id,
-        name: ex.name,
-        muscle: ex.muscle,
-        equipment: ex.equipment,
-        sets: ex.sets,
-        reps: ex.reps,
-        notes: ex.notes,
-        video: ex.video,
-        completed: false
-      };
-    }
-
-    function createInitialState() {
-      return {
-        days: JSON.parse(JSON.stringify(DEFAULT_DAYS)),
-        selectedDayId: DEFAULT_DAYS[0].id,
+        days: [
+          { id: uid(), name: 'שני', label: 'חזה + יד קדמית', exercises: [cloneExercise('ex1'), cloneExercise('ex2'), cloneExercise('ex9')] },
+          { id: wedId, name: 'רביעי', label: 'גב + יד אחורית', exercises: [cloneExercise('ex3'), cloneExercise('ex4'), cloneExercise('ex6'), cloneExercise('ex7')] },
+          { id: uid(), name: 'שישי', label: 'כתפיים + רגליים', exercises: [cloneExercise('ex10'), cloneExercise('ex11'), cloneExercise('ex12'), cloneExercise('ex13')] },
+          { id: uid(), name: 'שבת', label: 'אימון משולב', exercises: [cloneExercise('ex5'), cloneExercise('ex14'), cloneExercise('ex15')] }
+        ],
+        selectedDayId: wedId,
         history: [],
-        customExercises: [],
-        filters: {
-          muscle: 'הכל',
-          equipment: 'הכל',
-          search: ''
-        },
-        spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP'
+        spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP',
+        filters: { search:'', muscle:'הכל', equipment:'הכל' }
       };
     }
 
-    let state = loadState();
-
-    function loadState() {
+    let state = load();
+    function load(){
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return createInitialState();
-        const parsed = JSON.parse(raw);
-        if (!parsed.days || !Array.isArray(parsed.days)) return createInitialState();
-        return {
-          ...createInitialState(),
-          ...parsed,
-          filters: { muscle: 'הכל', equipment: 'הכל', search: '', ...(parsed.filters || {}) }
-        };
-      } catch {
-        return createInitialState();
-      }
+        return raw ? JSON.parse(raw) : defaultState();
+      } catch { return defaultState(); }
     }
+    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function selectedDay(){ return state.days.find(d => d.id === state.selectedDayId) || state.days[0]; }
 
-    function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function getAllLibraryExercises() {
-      return [...EXERCISE_LIBRARY, ...state.customExercises];
-    }
-
-    function getSelectedDay() {
-      return state.days.find(d => d.id === state.selectedDayId) || state.days[0] || null;
-    }
-
-    function render() {
-      renderDays();
-      renderSelectedDay();
-      renderHistory();
+    function render(){
+      renderTabs();
+      renderWorkout();
       renderStats();
-      renderQuickChips();
-      renderLibraryFilters();
+      renderHistory();
       renderLibrary();
-      renderHero();
-      saveState();
+      renderMusic();
+      save();
     }
 
-    function renderHero() {
-      const nextWorkout = getSelectedDay();
-      document.getElementById('nextWorkoutName').textContent = nextWorkout ? nextWorkout.name : 'אין יום אימון';
-      document.getElementById('nextWorkoutHint').textContent = nextWorkout ? `${nextWorkout.exercises.length} תרגילים בתוכנית הנבחרת` : 'הוסף יום אימון חדש';
-      document.getElementById('spotifyLink').href = state.spotifyUrl || 'https://open.spotify.com/';
-      const input = document.getElementById('spotifyInput');
-      if (input) input.value = state.spotifyUrl || '';
-      const embed = document.getElementById('spotifyEmbed');
-      if (embed) embed.src = buildSpotifyEmbedUrl(state.spotifyUrl);
+    function renderTabs(){
+      const el = document.getElementById('dayTabs');
+      el.innerHTML = state.days.map(day => `<button class="day-tab ${day.id===state.selectedDayId?'active':''}" onclick="selectDay('${day.id}')">${day.name}<br><span class='muted'>${day.label}</span></button>`).join('');
     }
 
-    function renderDays() {
-      const el = document.getElementById('daysList');
-      if (!state.days.length) {
-        el.innerHTML = '<div class="empty">אין ימים כרגע. צור יום אימון חדש.</div>';
-        return;
-      }
-      el.innerHTML = state.days.map(day => {
-        const done = day.exercises.filter(x => x.completed).length;
-        const total = day.exercises.length;
-        return `
-          <div class="day-item ${day.id === state.selectedDayId ? 'active' : ''}">
-            <div class="day-head">
-              <div>
-                <div class="day-title">${escapeHtml(day.name)}</div>
-                <div class="muted">${escapeHtml(day.notes || 'ללא הערה')}</div>
-              </div>
-              <button class="secondary tiny" onclick="selectDay('${day.id}')">בחר</button>
-            </div>
-            <div class="row" style="margin-top:10px;">
-              <span class="tag">${total} תרגילים</span>
-              <span class="tag">${done}/${total} הושלמו</span>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function renderSelectedDay() {
-      const day = getSelectedDay();
-      const title = document.getElementById('selectedDayTitle');
-      const meta = document.getElementById('selectedDayMeta');
+    function renderWorkout(){
+      const day = selectedDay();
+      document.getElementById('workoutTitle').textContent = `${day.name} - ${day.label}`;
+      document.getElementById('workoutNote').textContent = `${day.exercises.length} תרגילים`;
       const list = document.getElementById('exerciseList');
-      const progressBar = document.getElementById('dayProgressBar');
-
-      if (!day) {
-        title.textContent = 'אין יום אימון';
-        meta.textContent = 'צור יום חדש';
-        list.innerHTML = '<div class="empty">אין תוכן להצגה</div>';
-        progressBar.style.width = '0%';
-        return;
-      }
-
-      title.textContent = day.name;
-      meta.textContent = `${day.exercises.length} תרגילים • ${day.notes || 'ללא הערות'}`;
-
-      const completed = day.exercises.filter(e => e.completed).length;
-      const progress = day.exercises.length ? Math.round((completed / day.exercises.length) * 100) : 0;
-      progressBar.style.width = progress + '%';
-
-      if (!day.exercises.length) {
-        list.innerHTML = '<div class="empty">אין תרגילים ביום הזה. לחץ על "הוסף תרגיל".</div>';
-        return;
-      }
-
-      list.innerHTML = day.exercises.map((ex, index) => `
-        <div class="exercise-item">
+      list.innerHTML = day.exercises.map(ex => `
+        <div class="exercise">
           <div class="exercise-top">
             <div>
-              <div class="exercise-name">${escapeHtml(ex.name)}</div>
-              <div class="muted">${escapeHtml(ex.muscle)} • ${escapeHtml(ex.equipment)}</div>
+              <div class="exercise-name">${ex.name}</div>
+              <div class="muted">${ex.muscle} • ${ex.equipment}</div>
             </div>
-            <div class="buttons">
-              <button class="secondary tiny" onclick="toggleExerciseDone('${day.id}','${ex.instanceId}')">${ex.completed ? 'בטל סימון' : 'סמן בוצע'}</button>
-              <button class="secondary tiny" onclick="moveExercise('${day.id}','${ex.instanceId}',-1)">↑</button>
-              <button class="secondary tiny" onclick="moveExercise('${day.id}','${ex.instanceId}',1)">↓</button>
-              <button class="danger tiny" onclick="removeExercise('${day.id}','${ex.instanceId}')">מחק</button>
-            </div>
+            <button class="secondary" onclick="toggleDone('${day.id}','${ex.instanceId}')">${ex.done ? 'בוצע ✓' : 'סמן'}</button>
           </div>
-          <div class="grid-3" style="margin-top:12px;">
-            <div class="tag">סטים: ${escapeHtml(String(ex.sets))}</div>
-            <div class="tag">חזרות: ${escapeHtml(String(ex.reps))}</div>
-            <div class="tag">סטטוס: ${ex.completed ? 'בוצע' : 'ממתין'}</div>
+          <div class="row">
+            <span class="tag">${ex.sets} סטים</span>
+            <span class="tag">${ex.reps}</span>
           </div>
-          <div class="muted" style="margin-top:10px;">${escapeHtml(ex.notes || 'ללא דגשים')}</div>
-          <div class="buttons" style="margin-top:10px;">
-            <a class="button secondary tiny" href="${ex.video || '#'}" target="_blank" rel="noopener">סרטון / הדגמה</a>
-            <button class="secondary tiny" onclick="openEditExerciseModal('${day.id}','${ex.instanceId}')">ערוך תרגיל</button>
+          <div class="row">
+            <a class="secondary" style="text-decoration:none;padding:10px 12px;display:inline-block;" href="${ex.video}" target="_blank" rel="noopener">יוטיוב</a>
+            <button class="danger" onclick="removeExercise('${day.id}','${ex.instanceId}')">מחק</button>
           </div>
         </div>
       `).join('');
     }
 
-    function renderHistory() {
+    function renderStats(){
+      document.getElementById('totalWorkouts').textContent = state.history.length;
+      document.getElementById('totalExercises').textContent = state.history.reduce((s,x)=>s+x.completed,0);
+      document.getElementById('streak').textContent = calcStreak();
+    }
+
+    function renderHistory(){
       const el = document.getElementById('historyList');
-      if (!state.history.length) {
-        el.innerHTML = '<div class="empty">עדיין אין היסטוריה. סיים אימון ראשון כדי להתחיל לצבור נתונים.</div>';
-        return;
-      }
-      el.innerHTML = state.history.slice().reverse().slice(0, 6).map(item => `
-        <div class="history-item">
+      if(!state.history.length){ el.innerHTML = '<div class="muted">עדיין אין היסטוריה</div>'; return; }
+      el.innerHTML = state.history.slice().reverse().map(item => `<div class="history-item"><strong>${item.day}</strong><div class="muted">${item.date} • ${item.completed}/${item.total} בוצעו</div></div>`).join('');
+    }
+
+    function renderMusic(){
+      document.getElementById('spotifyInput').value = state.spotifyUrl || '';
+      document.getElementById('spotifyEmbed').src = embedUrl(state.spotifyUrl);
+    }
+
+    function renderLibrary(){
+      const muscles = ['הכל', ...new Set(LIBRARY.map(x=>x.muscle))];
+      const equips = ['הכל', ...new Set(LIBRARY.map(x=>x.equipment))];
+      document.getElementById('muscleFilter').innerHTML = muscles.map(x=>`<option>${x}</option>`).join('');
+      document.getElementById('equipmentFilter').innerHTML = equips.map(x=>`<option>${x}</option>`).join('');
+      document.getElementById('muscleFilter').value = state.filters.muscle;
+      document.getElementById('equipmentFilter').value = state.filters.equipment;
+
+      let items = [...LIBRARY];
+      const q = state.filters.search.trim().toLowerCase();
+      if(q) items = items.filter(x => `${x.name} ${x.muscle} ${x.equipment}`.toLowerCase().includes(q));
+      if(state.filters.muscle !== 'הכל') items = items.filter(x => x.muscle === state.filters.muscle);
+      if(state.filters.equipment !== 'הכל') items = items.filter(x => x.equipment === state.filters.equipment);
+
+      document.getElementById('libraryList').innerHTML = items.map(item => `
+        <div class="exercise" style="margin-bottom:8px;">
+          <div class="exercise-name">${item.name}</div>
+          <div class="muted">${item.muscle} • ${item.equipment}</div>
           <div class="row">
-            <strong>${escapeHtml(item.dayName)}</strong>
-            <span class="tag">${formatDate(item.date)}</span>
+            <span class="tag">${item.sets} סטים</span>
+            <span class="tag">${item.reps}</span>
           </div>
-          <div class="muted" style="margin-top:8px;">
-            ${item.completedExercises} מתוך ${item.totalExercises} תרגילים • ${item.focus.join(', ') || 'ללא מיקוד'}
+          <div class="row">
+            <button class="primary" onclick="addExercise('${item.id}')">הוסף</button>
+            <a class="secondary" style="text-decoration:none;padding:10px 12px;display:inline-block;" href="${item.video}" target="_blank" rel="noopener">יוטיוב</a>
           </div>
         </div>
       `).join('');
     }
 
-    function renderStats() {
-      const totalWorkouts = state.history.length;
-      const totalExercises = state.history.reduce((sum, item) => sum + item.completedExercises, 0);
-      const streak = calculateStreak();
-      const favoriteDay = getFavoriteDay();
-
-      document.getElementById('totalWorkoutsStat').textContent = totalWorkouts;
-      document.getElementById('totalExercisesStat').textContent = totalExercises;
-      document.getElementById('streakStat').textContent = streak;
-      document.getElementById('favoriteDayStat').textContent = favoriteDay || '-';
-
-      const muscleCounts = {};
-      state.history.forEach(item => {
-        item.focus.forEach(m => {
-          muscleCounts[m] = (muscleCounts[m] || 0) + 1;
-        });
-      });
-      const box = document.getElementById('muscleStats');
-      const entries = Object.entries(muscleCounts).sort((a,b)=>b[1]-a[1]);
-      if (!entries.length) {
-        box.innerHTML = '<div class="empty">הסטטיסטיקה תופיע אחרי שתסיים אימונים</div>';
-        return;
-      }
-      box.innerHTML = entries.map(([muscle,count]) => `
-        <div class="history-item" style="margin-bottom:10px;">
-          <div class="row">
-            <strong>${escapeHtml(muscle)}</strong>
-            <span class="tag">${count} אימונים</span>
-          </div>
-        </div>
-      `).join('');
+    function selectDay(id){ state.selectedDayId = id; render(); }
+    function toggleDone(dayId, instanceId){
+      const ex = state.days.find(d=>d.id===dayId)?.exercises.find(e=>e.instanceId===instanceId);
+      if(!ex) return;
+      ex.done = !ex.done; render();
     }
-
-    function renderQuickChips() {
-      const muscles = ['הכל', ...new Set(getAllLibraryExercises().map(x => x.muscle))];
-      const equipment = ['הכל', ...new Set(getAllLibraryExercises().map(x => x.equipment))];
-
-      document.getElementById('quickMuscleChips').innerHTML = muscles.map(m => `
-        <button class="chip ${state.filters.muscle === m ? 'active' : ''}" onclick="setQuickFilter('muscle','${escapeAttr(m)}')">${escapeHtml(m)}</button>
-      `).join('');
-
-      document.getElementById('quickEquipmentChips').innerHTML = equipment.map(eq => `
-        <button class="chip ${state.filters.equipment === eq ? 'active' : ''}" onclick="setQuickFilter('equipment','${escapeAttr(eq)}')">${escapeHtml(eq)}</button>
-      `).join('');
+    function removeExercise(dayId, instanceId){
+      const day = state.days.find(d=>d.id===dayId); if(!day) return;
+      day.exercises = day.exercises.filter(e=>e.instanceId!==instanceId); render();
     }
-
-    function renderLibraryFilters() {
-      const muscles = ['הכל', ...new Set(getAllLibraryExercises().map(x => x.muscle))];
-      const equipment = ['הכל', ...new Set(getAllLibraryExercises().map(x => x.equipment))];
-      const days = state.days;
-
-      const muscleSelect = document.getElementById('libraryMuscleFilter');
-      const equipmentSelect = document.getElementById('libraryEquipmentFilter');
-      const dayTarget = document.getElementById('libraryDayTarget');
-      const search = document.getElementById('librarySearch');
-
-      muscleSelect.innerHTML = muscles.map(m => `<option value="${escapeAttr(m)}">${escapeHtml(m)}</option>`).join('');
-      equipmentSelect.innerHTML = equipment.map(eq => `<option value="${escapeAttr(eq)}">${escapeHtml(eq)}</option>`).join('');
-      dayTarget.innerHTML = days.map(day => `<option value="${day.id}">${escapeHtml(day.name)}</option>`).join('');
-
-      muscleSelect.value = state.filters.muscle;
-      equipmentSelect.value = state.filters.equipment;
-      dayTarget.value = state.selectedDayId || days[0]?.id || '';
-      search.value = state.filters.search;
-    }
-
-    function renderLibrary() {
-      const grid = document.getElementById('libraryGrid');
-      const dayId = document.getElementById('libraryDayTarget').value || state.selectedDayId;
-      let items = getAllLibraryExercises();
-
-      if (state.filters.search.trim()) {
-        const q = state.filters.search.trim().toLowerCase();
-        items = items.filter(x => [x.name, x.muscle, x.equipment, x.notes].join(' ').toLowerCase().includes(q));
-      }
-      if (state.filters.muscle !== 'הכל') items = items.filter(x => x.muscle === state.filters.muscle);
-      if (state.filters.equipment !== 'הכל') items = items.filter(x => x.equipment === state.filters.equipment);
-
-      if (!items.length) {
-        grid.innerHTML = '<div class="empty">לא נמצאו תרגילים בסינון הזה</div>';
-        return;
-      }
-
-      grid.innerHTML = items.map(item => `
-        <div class="library-item">
-          <img src="${item.image || 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80'}" alt="${escapeAttr(item.name)}" style="width:100%;height:160px;object-fit:cover;border-radius:16px;border:1px solid var(--line);" />
-          <div class="row">
-            <strong>${escapeHtml(item.name)}</strong>
-            <span class="tag">${escapeHtml(item.muscle)}</span>
-          </div>
-          <div class="taglist">
-            <span class="tag">${escapeHtml(item.equipment)}</span>
-            <span class="tag">${escapeHtml(String(item.sets))} סטים</span>
-            <span class="tag">${escapeHtml(String(item.reps))}</span>
-          </div>
-          <div class="muted">${escapeHtml(item.notes || 'ללא הערות')}</div>
-          <div class="buttons">
-            <button class="primary tiny" onclick="addLibraryExerciseToDay('${item.id}','${dayId}')">הוסף ליום הנבחר</button>
-            <a class="button secondary tiny" href="${item.video || '#'}" target="_blank" rel="noopener">סרטון יוטיוב</a>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function selectDay(dayId) {
-      state.selectedDayId = dayId;
-      render();
-    }
-
-    function toggleExerciseDone(dayId, instanceId) {
-      const day = state.days.find(d => d.id === dayId);
-      const ex = day?.exercises.find(e => e.instanceId === instanceId);
-      if (!ex) return;
-      ex.completed = !ex.completed;
-      render();
-    }
-
-    function removeExercise(dayId, instanceId) {
-      const day = state.days.find(d => d.id === dayId);
-      if (!day) return;
-      day.exercises = day.exercises.filter(e => e.instanceId !== instanceId);
-      render();
-    }
-
-    function moveExercise(dayId, instanceId, direction) {
-      const day = state.days.find(d => d.id === dayId);
-      if (!day) return;
-      const idx = day.exercises.findIndex(e => e.instanceId === instanceId);
-      const newIdx = idx + direction;
-      if (idx < 0 || newIdx < 0 || newIdx >= day.exercises.length) return;
-      const [item] = day.exercises.splice(idx, 1);
-      day.exercises.splice(newIdx, 0, item);
-      render();
-    }
-
-    function addLibraryExerciseToDay(libraryId, dayId) {
-      const ex = getAllLibraryExercises().find(x => x.id === libraryId);
-      const day = state.days.find(d => d.id === dayId);
-      if (!ex || !day) return;
-      day.exercises.push({
-        instanceId: uid(),
-        libraryId: ex.id,
-        name: ex.name,
-        muscle: ex.muscle,
-        equipment: ex.equipment,
-        sets: ex.sets,
-        reps: ex.reps,
-        notes: ex.notes,
-        video: ex.video,
-        completed: false
-      });
-      state.selectedDayId = dayId;
-      render();
-    }
-
-    function completeWorkout() {
-      const day = getSelectedDay();
-      if (!day || !day.exercises.length) return alert('אין תרגילים ביום הנבחר');
-      const completedExercises = day.exercises.filter(x => x.completed).length;
-      const totalExercises = day.exercises.length;
-      const focus = [...new Set(day.exercises.map(x => x.muscle))];
-
+    function addExercise(id){ selectedDay().exercises.push(cloneExercise(id)); closeSheet(); render(); }
+    function finishWorkout(){
+      const day = selectedDay();
       state.history.push({
-        id: uid(),
-        dayId: day.id,
-        dayName: day.name,
-        date: new Date().toISOString(),
-        completedExercises,
-        totalExercises,
-        focus
+        day: `${day.name} - ${day.label}`,
+        date: new Date().toLocaleDateString('he-IL'),
+        completed: day.exercises.filter(x=>x.done).length,
+        total: day.exercises.length
       });
-
-      day.exercises.forEach(x => x.completed = false);
+      day.exercises.forEach(x=>x.done=false);
       render();
-      alert('האימון נשמר בהיסטוריה בהצלחה');
+      alert('האימון נשמר');
+    }
+    function calcStreak(){
+      if(!state.history.length) return 0;
+      const unique = [...new Set(state.history.map(x=>x.date))];
+      return unique.length;
+    }
+    function embedUrl(url){
+      const fallback='https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator';
+      const m = url && url.match(/open\.spotify\.com\/(playlist|album|track)\/([A-Za-z0-9]+)/);
+      return m ? `https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator` : fallback;
+    }
+    function saveSpotify(){
+      const value = document.getElementById('spotifyInput').value.trim();
+      if(!value.includes('spotify.com')) return alert('הדבק קישור Spotify תקין');
+      state.spotifyUrl = value; render();
+    }
+    function openSheet(){ document.getElementById('librarySheet').classList.add('open'); document.getElementById('sheetBackdrop').classList.add('open'); }
+    function closeSheet(){ document.getElementById('librarySheet').classList.remove('open'); document.getElementById('sheetBackdrop').classList.remove('open'); }
+    function showSection(section){
+      document.getElementById('statsCard').classList.toggle('hidden', section !== 'workout');
+      document.getElementById('historyCard').classList.toggle('hidden', section !== 'history');
+      document.getElementById('musicCard').classList.toggle('hidden', section !== 'music');
     }
 
-    function calculateStreak() {
-      if (!state.history.length) return 0;
-      const dates = [...new Set(state.history.map(x => x.date.slice(0,10)))].sort().reverse();
-      let streak = 0;
-      let current = new Date();
-      current.setHours(0,0,0,0);
-
-      for (let i = 0; i < 365; i++) {
-        const iso = current.toISOString().slice(0,10);
-        if (dates.includes(iso)) {
-          streak++;
-          current.setDate(current.getDate() - 1);
-        } else {
-          if (streak === 0) current.setDate(current.getDate() - 1);
-          else break;
-        }
-      }
-      return streak;
-    }
-
-    function getFavoriteDay() {
-      if (!state.history.length) return '';
-      const counts = {};
-      state.history.forEach(item => { counts[item.dayName] = (counts[item.dayName] || 0) + 1; });
-      return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0] || '';
-    }
-
-    function buildSpotifyEmbedUrl(url) {
-      const fallback = 'https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator';
-      if (!url) return fallback;
-      try {
-        if (url.includes('/embed/')) return url;
-        const match = url.match(/open\.spotify\.com\/(playlist|album|track|artist)\/([A-Za-z0-9]+)/);
-        if (!match) return fallback;
-        return `https://open.spotify.com/embed/${match[1]}/${match[2]}?utm_source=generator`;
-      } catch {
-        return fallback;
-      }
-    }
-
-    function saveSpotifyUrl() {
-      const value = document.getElementById('spotifyInput')?.value.trim();
-      if (!value || !value.includes('spotify.com')) return alert('הדבק קישור תקין של Spotify');
-      state.spotifyUrl = value;
-      render();
-      alert('הנגן עודכן בהצלחה');
-    }
-
-    function openModal(html) {
-      document.getElementById('modalContent').innerHTML = html;
-      document.getElementById('modal').classList.add('open');
-    }
-
-    function closeModal() {
-      document.getElementById('modal').classList.remove('open');
-    }
-
-    function openDrawer() {
-      document.getElementById('libraryDrawerWrap').classList.add('open');
-      renderLibrary();
-    }
-
-    function closeDrawer() {
-      document.getElementById('libraryDrawerWrap').classList.remove('open');
-    }
-
-    function openDayModal(existingId = null) {
-      const existing = existingId ? state.days.find(d => d.id === existingId) : null;
-      openModal(`
-        <div class="section-head">
-          <div>
-            <h2>${existing ? 'עריכת יום אימון' : 'יצירת יום אימון'}</h2>
-            <div class="sub">אפשר להוסיף יום חדש או לערוך יום קיים</div>
-          </div>
-          <button class="secondary tiny" onclick="closeModal()">סגור</button>
-        </div>
-        <div class="grid-2" style="margin-top:14px;">
-          <label>שם היום
-            <input id="dayNameInput" value="${escapeAttr(existing?.name || '')}" placeholder="למשל: ראשון - גב" />
-          </label>
-          <label>הערות
-            <input id="dayNotesInput" value="${escapeAttr(existing?.notes || '')}" placeholder="דגשים ליום הזה" />
-          </label>
-        </div>
-        <div class="buttons" style="margin-top:14px;">
-          <button class="primary" onclick="saveDayModal('${existing?.id || ''}')">שמור</button>
-          ${existing ? `<button class="danger" onclick="deleteDay('${existing.id}')">מחק יום</button>` : ''}
-        </div>
-      `);
-    }
-
-    function saveDayModal(existingId) {
-      const name = document.getElementById('dayNameInput').value.trim();
-      const notes = document.getElementById('dayNotesInput').value.trim();
-      if (!name) return alert('יש להזין שם ליום האימון');
-      if (existingId) {
-        const day = state.days.find(d => d.id === existingId);
-        if (!day) return;
-        day.name = name;
-        day.notes = notes;
-      } else {
-        const newDay = { id: uid(), name, notes, exercises: [] };
-        state.days.push(newDay);
-        state.selectedDayId = newDay.id;
-      }
-      closeModal();
-      render();
-    }
-
-    function deleteDay(dayId) {
-      if (!confirm('למחוק את יום האימון הזה?')) return;
-      state.days = state.days.filter(d => d.id !== dayId);
-      state.selectedDayId = state.days[0]?.id || null;
-      closeModal();
-      render();
-    }
-
-    function openCreateExerciseModal() {
-      openModal(`
-        <div class="section-head">
-          <div>
-            <h2>יצירת תרגיל חדש</h2>
-            <div class="sub">התרגיל יישמר במאגר האישי שלך</div>
-          </div>
-          <button class="secondary tiny" onclick="closeModal()">סגור</button>
-        </div>
-        <div class="grid-2" style="margin-top:14px;">
-          <label>שם התרגיל<input id="newExName" placeholder="למשל: לחיצת כתפיים בדאמבלים" /></label>
-          <label>שריר<input id="newExMuscle" placeholder="למשל: כתפיים" /></label>
-          <label>אביזר<input id="newExEquipment" placeholder="למשל: משקולות חופשיות" /></label>
-          <label>סטים<input id="newExSets" type="number" min="1" value="3" /></label>
-          <label>חזרות<input id="newExReps" placeholder="למשל: 8-12" /></label>
-          <label>קישור וידאו<input id="newExVideo" placeholder="קישור ליוטיוב / הדגמה" /></label>
-        </div>
-        <label style="margin-top:12px;">הערות<textarea id="newExNotes" placeholder="דגשים לביצוע"></textarea></label>
-        <div class="buttons" style="margin-top:14px;">
-          <button class="primary" onclick="saveNewExercise()">שמור תרגיל</button>
-        </div>
-      `);
-    }
-
-    function saveNewExercise() {
-      const item = {
-        id: uid(),
-        name: document.getElementById('newExName').value.trim(),
-        muscle: document.getElementById('newExMuscle').value.trim(),
-        equipment: document.getElementById('newExEquipment').value.trim(),
-        sets: Number(document.getElementById('newExSets').value || 3),
-        reps: document.getElementById('newExReps').value.trim() || '8-12',
-        video: document.getElementById('newExVideo').value.trim() || 'https://www.youtube.com/',
-        notes: document.getElementById('newExNotes').value.trim()
-      };
-      if (!item.name || !item.muscle || !item.equipment) return alert('יש למלא שם, שריר ואביזר');
-      state.customExercises.push(item);
-      closeModal();
-      render();
-      openDrawer();
-    }
-
-    function openEditExerciseModal(dayId, instanceId) {
-      const day = state.days.find(d => d.id === dayId);
-      const ex = day?.exercises.find(e => e.instanceId === instanceId);
-      if (!ex) return;
-      openModal(`
-        <div class="section-head">
-          <div>
-            <h2>עריכת תרגיל</h2>
-            <div class="sub">עדכון תרגיל בתוך יום האימון</div>
-          </div>
-          <button class="secondary tiny" onclick="closeModal()">סגור</button>
-        </div>
-        <div class="grid-2" style="margin-top:14px;">
-          <label>שם התרגיל<input id="editExName" value="${escapeAttr(ex.name)}" /></label>
-          <label>שריר<input id="editExMuscle" value="${escapeAttr(ex.muscle)}" /></label>
-          <label>אביזר<input id="editExEquipment" value="${escapeAttr(ex.equipment)}" /></label>
-          <label>סטים<input id="editExSets" type="number" min="1" value="${escapeAttr(String(ex.sets))}" /></label>
-          <label>חזרות<input id="editExReps" value="${escapeAttr(String(ex.reps))}" /></label>
-          <label>קישור וידאו<input id="editExVideo" value="${escapeAttr(ex.video || '')}" /></label>
-        </div>
-        <label style="margin-top:12px;">הערות<textarea id="editExNotes">${escapeHtml(ex.notes || '')}</textarea></label>
-        <div class="buttons" style="margin-top:14px;">
-          <button class="primary" onclick="saveEditedExercise('${dayId}','${instanceId}')">שמור שינויים</button>
-        </div>
-      `);
-    }
-
-    function saveEditedExercise(dayId, instanceId) {
-      const day = state.days.find(d => d.id === dayId);
-      const ex = day?.exercises.find(e => e.instanceId === instanceId);
-      if (!ex) return;
-      ex.name = document.getElementById('editExName').value.trim();
-      ex.muscle = document.getElementById('editExMuscle').value.trim();
-      ex.equipment = document.getElementById('editExEquipment').value.trim();
-      ex.sets = Number(document.getElementById('editExSets').value || 3);
-      ex.reps = document.getElementById('editExReps').value.trim();
-      ex.video = document.getElementById('editExVideo').value.trim();
-      ex.notes = document.getElementById('editExNotes').value.trim();
-      closeModal();
-      render();
-    }
-
-    function setQuickFilter(type, value) {
-      state.filters[type] = value;
-      render();
-      openDrawer();
-    }
-
-    function startWorkout() {
-      const day = getSelectedDay();
-      if (!day) return alert('אין יום אימון נבחר');
-      alert('האימון של היום: ' + day.name + '\nסמן תרגילים כבוצעו ואז לחץ "סיימתי אימון" לשמירה בהיסטוריה.');
-    }
-
-    function resetStats() {
-      if (!confirm('לאפס רק את ההיסטוריה והסטטיסטיקה?')) return;
-      state.history = [];
-      render();
-    }
-
-    function resetAll() {
-      if (!confirm('לאפס את כל האפליקציה? כל הנתונים יימחקו.')) return;
-      localStorage.removeItem(STORAGE_KEY);
-      state = createInitialState();
-      render();
-    }
-
-    function seedDefaults() {
-      if (!confirm('להחזיר את ימי ברירת המחדל?')) return;
-      state.days = JSON.parse(JSON.stringify(DEFAULT_DAYS));
-      state.selectedDayId = state.days[0]?.id || null;
-      render();
-    }
-
-    function formatDate(iso) {
-      const d = new Date(iso);
-      return d.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    }
-
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    function escapeAttr(str) {
-      return escapeHtml(str).replace(/`/g, '&#96;');
-    }
-
-    document.getElementById('startWorkoutBtn').addEventListener('click', startWorkout);
-    document.getElementById('openLibraryBtn').addEventListener('click', openDrawer);
-    document.getElementById('closeDrawerBtn').addEventListener('click', closeDrawer);
-    document.getElementById('addWorkoutDayBtn').addEventListener('click', () => openDayModal());
-    document.getElementById('manageDaysBtn').addEventListener('click', () => openDayModal(getSelectedDay()?.id));
-    document.getElementById('editDayBtn').addEventListener('click', () => openDayModal(getSelectedDay()?.id));
-    document.getElementById('addExerciseToDayBtn').addEventListener('click', openDrawer);
-    document.getElementById('completeWorkoutBtn').addEventListener('click', completeWorkout);
-    document.getElementById('resetStatsBtn').addEventListener('click', resetStats);
-    document.getElementById('resetAllBtn').addEventListener('click', resetAll);
-    document.getElementById('seedDefaultsBtn').addEventListener('click', seedDefaults);
-
-    document.getElementById('librarySearch').addEventListener('input', e => {
-      state.filters.search = e.target.value;
-      renderLibrary();
-      saveState();
-    });
-    document.getElementById('libraryMuscleFilter').addEventListener('change', e => {
-      state.filters.muscle = e.target.value;
-      render();
-    });
-    document.getElementById('libraryEquipmentFilter').addEventListener('change', e => {
-      state.filters.equipment = e.target.value;
-      render();
-    });
-    document.getElementById('libraryDayTarget').addEventListener('change', () => renderLibrary());
-    document.getElementById('clearLibraryFiltersBtn').addEventListener('click', () => {
-      state.filters = { muscle: 'הכל', equipment: 'הכל', search: '' };
-      render();
-    });
-    document.getElementById('openCreateExerciseBtn').addEventListener('click', openCreateExerciseModal);
-    document.getElementById('saveSpotifyBtn').addEventListener('click', saveSpotifyUrl);
-
-    document.querySelectorAll('[data-close]').forEach(el => {
-      el.addEventListener('click', () => {
-        closeModal();
-        closeDrawer();
-      });
-    });
+    document.getElementById('openLibraryBtn').addEventListener('click', openSheet);
+    document.getElementById('sheetBackdrop').addEventListener('click', closeSheet);
+    document.getElementById('finishWorkoutBtn').addEventListener('click', finishWorkout);
+    document.getElementById('saveSpotifyBtn').addEventListener('click', saveSpotify);
+    document.getElementById('navWorkout').addEventListener('click', ()=>showSection('workout'));
+    document.getElementById('navHistory').addEventListener('click', ()=>showSection('history'));
+    document.getElementById('navMusic').addEventListener('click', ()=>showSection('music'));
+    document.getElementById('searchInput').addEventListener('input', e=>{ state.filters.search=e.target.value; renderLibrary(); save(); });
+    document.getElementById('muscleFilter').addEventListener('change', e=>{ state.filters.muscle=e.target.value; renderLibrary(); save(); });
+    document.getElementById('equipmentFilter').addEventListener('change', e=>{ state.filters.equipment=e.target.value; renderLibrary(); save(); });
 
     window.selectDay = selectDay;
-    window.toggleExerciseDone = toggleExerciseDone;
+    window.toggleDone = toggleDone;
     window.removeExercise = removeExercise;
-    window.moveExercise = moveExercise;
-    window.addLibraryExerciseToDay = addLibraryExerciseToDay;
-    window.openEditExerciseModal = openEditExerciseModal;
-    window.saveEditedExercise = saveEditedExercise;
-    window.setQuickFilter = setQuickFilter;
-    window.closeModal = closeModal;
-    window.saveDayModal = saveDayModal;
-    window.deleteDay = deleteDay;
-    window.saveNewExercise = saveNewExercise;
+    window.addExercise = addExercise;
 
+    showSection('workout');
     render();
   </script>
 </body>
