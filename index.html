@@ -628,7 +628,7 @@
       }
       document.getElementById('activeExerciseImage').src = ex.image;
       document.getElementById('activeExerciseName').textContent = ex.name;
-      document.getElementById('activeExerciseDesc').textContent = `${ex.muscle} • טיימר מנוחה פתוח • 3 סטים`;
+      document.getElementById('activeExerciseDesc').textContent = `${ex.muscle} • מנוחה עולה • 3 סטים`;
       document.getElementById('youtubeLink').href = ex.video;
       document.getElementById('animationLink').href = `https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' exercise animation')}`;
       document.getElementById('setsList').innerHTML = ex.sets.map((set, idx)=>`
@@ -794,7 +794,6 @@
     }
 
     function toggleRestTimer(forceStop=false){
-      if (state.timers.restRunning || forceSfunction toggleRestTimer(forceStop=false){
       if (state.timers.restRunning || forceStop) {
         clearInterval(restTimerInterval);
         restTimerInterval = null;
@@ -805,7 +804,11 @@
       }
       renderTimers();
       save();
-    }xercises = day.exercises.filter(ex=>ex.done).length;
+    }
+
+    function finishWorkout(){
+      const day = selectedDay();
+      const completedExercises = day.exercises.filter(ex=>ex.done).length;
       state.history.push({
         id: uid(),
         day: `${day.name} - ${day.label}`,
