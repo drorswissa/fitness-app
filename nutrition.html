@@ -7,60 +7,65 @@
 <style>
 body{
   margin:0;
-  background:#060b12;
+  background:#050a12;
   color:white;
   font-family:Arial;
   max-width:430px;
   margin:auto;
-  padding:12px;
+  padding:14px;
 }
 
 /* HEADER */
 .header{
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
   margin-bottom:10px;
+}
+
+.back{
+  background:#111827;
+  padding:8px 14px;
+  border-radius:12px;
+  cursor:pointer;
 }
 
 /* CARD */
 .card{
   background:linear-gradient(180deg,#0f172a,#020617);
-  border-radius:22px;
+  border-radius:24px;
   padding:16px;
-  margin-bottom:12px;
-  box-shadow:0 0 20px rgba(0,0,0,0.5);
+  margin-bottom:14px;
 }
 
-/* TOP */
-.top{
+/* CIRCLE */
+.circleWrap{
   display:flex;
-  gap:12px;
-  align-items:center;
+  justify-content:center;
+  margin-bottom:10px;
 }
 
 .circle{
-  width:120px;
-  height:120px;
+  width:150px;
+  height:150px;
   border-radius:50%;
-  border:10px solid #fb923c;
+  border:12px solid #fb923c;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:22px;
+  font-size:26px;
   font-weight:bold;
 }
 
-/* MACRO BOX */
+/* MACROS */
 .macros{
   display:flex;
-  gap:8px;
-  flex:1;
+  gap:10px;
 }
 
-.macroBox{
+.macro{
   flex:1;
-  padding:10px;
+  padding:12px;
   border-radius:14px;
   text-align:center;
 }
@@ -69,7 +74,7 @@ body{
 .carb{background:#064e3b}
 .fat{background:#78350f}
 
-/* FOOD ITEM */
+/* FOOD */
 .food{
   display:flex;
   align-items:center;
@@ -79,22 +84,13 @@ body{
 }
 
 .food img{
-  width:45px;
-  height:45px;
+  width:50px;
+  height:50px;
   border-radius:10px;
   object-fit:cover;
 }
 
-/* BUTTON */
-.addBtn{
-  background:#7c3aed;
-  padding:14px;
-  border-radius:16px;
-  text-align:center;
-  margin-top:10px;
-}
-
-/* SEARCH */
+/* INPUT */
 input{
   width:100%;
   padding:12px;
@@ -102,71 +98,70 @@ input{
   border:none;
   background:#111827;
   color:white;
-  margin-top:10px;
 }
 
+/* FAB */
+.fab{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#7c3aed;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="header">מעקב תזונה</div>
+<div class="header">
+  <div class="back" onclick="location.href='index.html'">← אימונים</div>
+  <div>מעקב תזונה</div>
+  <div></div>
+</div>
 
-<!-- TOP -->
 <div class="card">
-  <div class="top">
+  <div class="circleWrap">
     <div class="circle" id="cal">0</div>
-
-    <div class="macros">
-      <div class="macroBox pro">
-        חלבון<br><b id="pro">0</b>
-      </div>
-
-      <div class="macroBox carb">
-        פחמימות<br><b id="carb">0</b>
-      </div>
-
-      <div class="macroBox fat">
-        שומן<br><b id="fat">0</b>
-      </div>
-    </div>
   </div>
 
-  <div style="margin-top:10px;text-align:center;font-size:13px;color:#aaa">
-    יעד יומי: <span id="goal"></span> קלוריות (גרעון 500)
+  <div style="text-align:center;color:#aaa;font-size:13px">
+    יעד: <span id="goal"></span> קלוריות (גרעון 500)
+  </div>
+
+  <div class="macros">
+    <div class="macro pro">חלבון<br><b id="pro">0</b></div>
+    <div class="macro carb">פחמימות<br><b id="carb">0</b></div>
+    <div class="macro fat">שומן<br><b id="fat">0</b></div>
   </div>
 </div>
 
-<!-- SEARCH -->
 <div class="card">
-  <input id="search" placeholder="חפש מזון (אורז, עוף, ביצה...)" />
+  <input id="search" placeholder="חפש מזון (עוף, אורז, ביצה...)" />
   <div id="results"></div>
 </div>
 
-<!-- LOG -->
-<div class="card">
-  <div id="log"></div>
+<div class="card" id="log"></div>
 
-  <div class="addBtn" onclick="addFood()">➕ הוסף מזון</div>
-</div>
+<div class="fab" onclick="addFood()">+</div>
 
 <script>
 
 const weight = 94.1;
 const goalCalories = Math.round(weight*24 - 500);
-
 goal.innerText = goalCalories;
 
 let data = JSON.parse(localStorage.getItem("food")) || [];
 
-const translate={
-  "אורז":"rice",
-  "עוף":"chicken",
-  "ביצה":"egg",
-  "טונה":"tuna",
-  "גבינה":"cheese",
-  "לחם":"bread",
-  "בננה":"banana"
+const dict = {
+  "אורז":"rice","עוף":"chicken","ביצה":"egg","טונה":"tuna",
+  "גבינה":"cheese","לחם":"bread","בננה":"banana","חלב":"milk"
 };
 
 let selected;
@@ -174,9 +169,9 @@ let selected;
 async function searchFood(q){
   if(!q)return;
 
-  if(translate[q]) q = translate[q];
+  let query = dict[q] || q;
 
-  const res = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${q}&search_simple=1&action=process&json=1&page_size=6`);
+  const res = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${query}&search_simple=1&action=process&json=1&page_size=10`);
   const d = await res.json();
 
   results.innerHTML = d.products.map(p=>`
@@ -225,4 +220,17 @@ function render(){
     `;
   }).join("");
 
-  cal
+  cal.innerText = Math.round(c);
+  pro.innerText = Math.round(p);
+  carb.innerText = Math.round(car);
+  fat.innerText = Math.round(f);
+}
+
+search.oninput = e=>searchFood(e.target.value);
+
+render();
+
+</script>
+
+</body>
+</html>
