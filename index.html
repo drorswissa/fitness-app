@@ -400,6 +400,7 @@
 
         <div class="action-row">
           <a class="linkbtn secondary" id="youtubeLink" href="#" target="_blank" rel="noopener">יוטיוב</a>
+          <a class="linkbtn secondary" id="animationLink" href="#" target="_blank" rel="noopener">אנימציה</a>
         </div>
 
         <div class="sets-card" id="setsList"></div>
@@ -462,24 +463,24 @@
     let restTimerInterval = null;
 
     const LIBRARY = [
-      { id:'ex1', name:'Dumbbell Bench Press', muscle:'חזה', equipment:'משקולות', reps:'8', kg:'20', image:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Bench-Press.gif', video:'https://www.youtube.com/results?search_query=dumbbell+bench+press' },
-      { id:'ex2', name:'Machine Chest Press', muscle:'חזה', equipment:'מכונה', reps:'10', kg:'25', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2022/11/Lever-Chest-Press.gif', video:'https://www.youtube.com/results?search_query=machine+chest+press' },
-      { id:'ex3', name:'Cable Fly', muscle:'חזה', equipment:'כבלים', reps:'12', kg:'15', image:'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Crossover.gif', video:'https://www.youtube.com/results?search_query=cable+fly' },
-      { id:'ex4', name:'Dumbbell Curl', muscle:'יד קדמית', equipment:'משקולות', reps:'12', kg:'10', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Curl.gif', video:'https://www.youtube.com/results?search_query=dumbbell+biceps+curl' },
-      { id:'ex5', name:'Hammer Curl', muscle:'יד קדמית', equipment:'משקולות', reps:'12', kg:'10', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Hammer-Curl.gif', video:'https://www.youtube.com/results?search_query=hammer+curl' },
-      { id:'ex6', name:'Lat Pulldown', muscle:'גב', equipment:'מכונה', reps:'8', kg:'30', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Lat-Pulldown.gif', video:'https://www.youtube.com/results?search_query=lat+pulldown' },
-      { id:'ex7', name:'Seated Cable Row', muscle:'גב', equipment:'כבלים', reps:'8', kg:'25', image:'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Seated-Cable-Row.gif', video:'https://www.youtube.com/results?search_query=seated+cable+row' },
-      { id:'ex8', name:'One Arm Dumbbell Row', muscle:'גב', equipment:'משקולות', reps:'10', kg:'18', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/One-Arm-Dumbbell-Row.gif', video:'https://www.youtube.com/results?search_query=one+arm+dumbbell+row' },
-      { id:'ex9', name:'Straight Arm Pulldown', muscle:'גב', equipment:'כבלים', reps:'12', kg:'15', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Straight-Arm-Pulldown.gif', video:'https://www.youtube.com/results?search_query=straight+arm+pulldown' },
-      { id:'ex10', name:'Rope Pushdown', muscle:'יד אחורית', equipment:'כבלים', reps:'12', kg:'12', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Rope-Pushdown.gif', video:'https://www.youtube.com/results?search_query=rope+triceps+pushdown' },
-      { id:'ex11', name:'Overhead Extension', muscle:'יד אחורית', equipment:'כבלים', reps:'10', kg:'10', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/06/Cable-Overhead-Triceps-Extension.gif', video:'https://www.youtube.com/results?search_query=overhead+triceps+extension' },
-      { id:'ex12', name:'Assisted Dips', muscle:'יד אחורית', equipment:'מכונה', reps:'10', kg:'סיוע', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2022/06/Assisted-Triceps-Dips.gif', video:'https://www.youtube.com/results?search_query=assisted+dips' },
-      { id:'ex13', name:'Shoulder Press', muscle:'כתפיים', equipment:'מכונה', reps:'10', kg:'20', image:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Machine-Shoulder-Press.gif', video:'https://www.youtube.com/results?search_query=shoulder+press+machine' },
-      { id:'ex14', name:'Lateral Raise', muscle:'כתפיים', equipment:'משקולות', reps:'12', kg:'8', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif', video:'https://www.youtube.com/results?search_query=lateral+raise' },
-      { id:'ex15', name:'Face Pull', muscle:'כתפיים', equipment:'כבלים', reps:'12', kg:'12', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Face-Pull.gif', video:'https://www.youtube.com/results?search_query=face+pull' },
-      { id:'ex16', name:'Leg Press', muscle:'רגליים', equipment:'מכונה', reps:'12', kg:'80', image:'https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Leg-Press.gif', video:'https://www.youtube.com/results?search_query=leg+press' },
-      { id:'ex17', name:'Leg Curl', muscle:'רגליים', equipment:'מכונה', reps:'12', kg:'30', image:'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Lying-Leg-Curl.gif', video:'https://www.youtube.com/results?search_query=leg+curl' },
-      { id:'ex18', name:'Goblet Squat', muscle:'רגליים', equipment:'משקולות', reps:'10', kg:'18', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=500&q=80', gif:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Goblet-Squat.gif', video:'https://www.youtube.com/results?search_query=goblet+squat' }
+      { id:'ex1', name:'Dumbbell Bench Press', muscle:'חזה', equipment:'משקולות', reps:'8', kg:'20', image:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=dumbbell+bench+press' },
+      { id:'ex2', name:'Machine Chest Press', muscle:'חזה', equipment:'מכונה', reps:'10', kg:'25', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=machine+chest+press' },
+      { id:'ex3', name:'Cable Fly', muscle:'חזה', equipment:'כבלים', reps:'12', kg:'15', image:'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=cable+fly' },
+      { id:'ex4', name:'Dumbbell Curl', muscle:'יד קדמית', equipment:'משקולות', reps:'12', kg:'10', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=dumbbell+biceps+curl' },
+      { id:'ex5', name:'Hammer Curl', muscle:'יד קדמית', equipment:'משקולות', reps:'12', kg:'10', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=hammer+curl' },
+      { id:'ex6', name:'Lat Pulldown', muscle:'גב', equipment:'מכונה', reps:'8', kg:'30', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=lat+pulldown' },
+      { id:'ex7', name:'Seated Cable Row', muscle:'גב', equipment:'כבלים', reps:'8', kg:'25', image:'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=seated+cable+row' },
+      { id:'ex8', name:'One Arm Dumbbell Row', muscle:'גב', equipment:'משקולות', reps:'10', kg:'18', image:'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=one+arm+dumbbell+row' },
+      { id:'ex9', name:'Straight Arm Pulldown', muscle:'גב', equipment:'כבלים', reps:'12', kg:'15', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=straight+arm+pulldown' },
+      { id:'ex10', name:'Rope Pushdown', muscle:'יד אחורית', equipment:'כבלים', reps:'12', kg:'12', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=rope+triceps+pushdown' },
+      { id:'ex11', name:'Overhead Extension', muscle:'יד אחורית', equipment:'כבלים', reps:'10', kg:'10', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=overhead+triceps+extension' },
+      { id:'ex12', name:'Assisted Dips', muscle:'יד אחורית', equipment:'מכונה', reps:'10', kg:'סיוע', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=assisted+dips' },
+      { id:'ex13', name:'Shoulder Press', muscle:'כתפיים', equipment:'מכונה', reps:'10', kg:'20', image:'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=shoulder+press+machine' },
+      { id:'ex14', name:'Lateral Raise', muscle:'כתפיים', equipment:'משקולות', reps:'12', kg:'8', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=lateral+raise' },
+      { id:'ex15', name:'Face Pull', muscle:'כתפיים', equipment:'כבלים', reps:'12', kg:'12', image:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=face+pull' },
+      { id:'ex16', name:'Leg Press', muscle:'רגליים', equipment:'מכונה', reps:'12', kg:'80', image:'https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=leg+press' },
+      { id:'ex17', name:'Leg Curl', muscle:'רגליים', equipment:'מכונה', reps:'12', kg:'30', image:'https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=leg+curl' },
+      { id:'ex18', name:'Goblet Squat', muscle:'רגליים', equipment:'משקולות', reps:'10', kg:'18', image:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=500&q=80', video:'https://www.youtube.com/results?search_query=goblet+squat' }
     ];
 
     function uid(){ return 'id-' + Math.random().toString(36).slice(2,10); }
@@ -493,7 +494,6 @@
         muscle: ex.muscle,
         equipment: ex.equipment,
         image: ex.image,
-        gif: ex.gif || '',
         video: ex.video,
         restSeconds: 90,
         done: false,
@@ -564,7 +564,7 @@
             const kg = ex.kg || '20';
             ex.sets = [1,2,3].map((_,i)=>({ id: uid(), index:i+1, reps, kg, done:false }));
           }
-          if (typeof ex.restSeconds !== 'number') ex.restSeconds = 90;
+          if (typeof ex.restSeconds !== 'number') ex.restSeconds = 60;
         }));
         if (typeof result.activeExerciseIndex !== 'number') result.activeExerciseIndex = 0;
         return result;
@@ -610,14 +610,14 @@
         document.getElementById('activeExerciseDesc').textContent = 'הוסף תרגיל מהמאגר';
         document.getElementById('setsList').innerHTML = '<div class="empty">אין תרגילים ביום הנבחר</div>';
         document.getElementById('youtubeLink').href = '#';
+        document.getElementById('animationLink').href = '#';
         return;
       }
-      const media = document.getElementById('activeExerciseImage');
-      media.onerror = () => { media.onerror = null; media.src = ex.gif || ex.image; };
-      media.src = ex.gif || ex.image;
+      document.getElementById('activeExerciseImage').src = ex.image;
       document.getElementById('activeExerciseName').textContent = ex.name;
       document.getElementById('activeExerciseDesc').textContent = `${ex.muscle} • מנוחה ${formatTime(ex.restSeconds)} • 3 סטים`;
       document.getElementById('youtubeLink').href = ex.video;
+      document.getElementById('animationLink').href = `https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' exercise animation')}`;
       document.getElementById('setsList').innerHTML = ex.sets.map((set, idx)=>`
         <div class="set-row ${!set.done && idx===ex.sets.findIndex(s=>!s.done)?'active':''}">
           <div class="set-index">${set.index}</div>
@@ -679,7 +679,7 @@
       if (state.filters.equipment !== 'הכל') items = items.filter(x=>x.equipment===state.filters.equipment);
       document.getElementById('libraryList').innerHTML = items.map(item=>`
         <div class="library-item">
-          <img src="${item.gif || item.image}" alt="${escapeHtml(item.name)}" />
+          <img src="${item.image}" alt="${escapeHtml(item.name)}" />
           <div>
             <div style="font-weight:700;">${escapeHtml(item.name)}</div>
             <div style="font-size:12px;color:var(--muted);">${escapeHtml(item.muscle)} • ${escapeHtml(item.equipment)}</div>
@@ -715,8 +715,6 @@
       }
       render();
     }
-
-    
 
     function addExercise(id){
       selectedDay().exercises.push(cloneExercise(id));
@@ -772,17 +770,12 @@
         restTimerInterval = null;
       }
       if (state.timers.restRunning && !forceRestart) return;
-      if (!state.timers.restSecondsLeft || state.timers.restSecondsLeft <= 0) {
-        state.timers.restSecondsLeft = Number(activeExercise()?.restSeconds || 90);
-      }
       state.timers.restRunning = true;
       restTimerInterval = setInterval(()=>{
-        state.timers.restSecondsLeft -= 1;
-        if (state.timers.restSecondsLeft <= 0) {
-          state.timers.restSecondsLeft = 0;
-          clearInterval(restTimerInterval);
-          restTimerInterval = null;
-          state.timers.restRunning = false;
+        if (state.timers.restSecondsLeft > 0) {
+          state.timers.restSecondsLeft -= 1;
+        } else {
+          toggleRestTimer(true);
           playRestFinishedAlert();
         }
         renderTimers();
@@ -792,11 +785,17 @@
       save();
     }
 
-    function finishWorkoutx?.restSeconds || 90);
-      if (!state.timers.restSecondsLeft || state.timers.restSecondsLeft <= 0 || state.timers.restSecondsLeft > defaultRest) {
-        state.timers.restSecondsLeft = defaultRest;
+    function toggleRestTimer(forceStop=false){
+      if (state.timers.restRunning || forceStop) {
+        clearInterval(restTimerInterval);
+        restTimerInterval = null;
+        state.timers.restRunning = false;
+      } else {
+        startRestTimer();
+        return;
       }
-      startRestTimer(true);
+      renderTimers();
+      save();
     }
 
     function finishWorkout(){
@@ -812,7 +811,7 @@
       day.exercises.forEach(ex => { ex.done = false; ex.sets.forEach(s=>s.done=false); });
       state.activeExerciseIndex = 0;
       state.timers.workoutSeconds = 0;
-      state.timers.restSecondsLeft = 90;
+      state.timers.restSecondsLeft = 60;
       clearInterval(workoutTimerInterval); workoutTimerInterval = null; state.timers.workoutRunning = false;
       clearInterval(restTimerInterval); restTimerInterval = null; state.timers.restRunning = false;
       render();
@@ -849,7 +848,6 @@
     document.getElementById('toggleRestBtn').addEventListener('click', ()=>toggleRestTimer(false));
     document.getElementById('finishWorkoutTopBtn').addEventListener('click', finishWorkout);
     document.getElementById('saveSpotifyBtn').addEventListener('click', saveSpotify);
-    
     document.getElementById('navWorkout').addEventListener('click', ()=>showSection('workout'));
     document.getElementById('navHistory').addEventListener('click', ()=>showSection('history'));
     document.getElementById('navMusic').addEventListener('click', ()=>showSection('music'));
