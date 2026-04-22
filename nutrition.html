@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>מעקב תזונה</title>
 
 <style>
 body{
   margin:0;
   background:#050a14;
-  font-family:-apple-system;
+  font-family:-apple-system,Arial;
   color:white;
   max-width:420px;
   margin:auto;
@@ -27,21 +26,21 @@ body{
 
 .back{
   background:#111827;
-  padding:8px 12px;
-  border-radius:12px;
+  padding:8px 14px;
+  border-radius:14px;
   cursor:pointer;
 }
 
-/* CARD */
+/* MAIN CARD */
 .card{
   margin:12px;
-  padding:18px;
-  border-radius:26px;
-  background:linear-gradient(180deg,#0c1427,#030712);
+  padding:20px;
+  border-radius:28px;
+  background:linear-gradient(180deg,#0c1427,#020617);
 }
 
 /* CIRCLE */
-.wrap{
+.circle-wrap{
   display:flex;
   justify-content:center;
   position:relative;
@@ -51,26 +50,33 @@ svg{
   transform:rotate(-90deg);
 }
 
-.text{
+.circle-text{
   position:absolute;
   top:50%;
   transform:translateY(-50%);
-  font-size:28px;
-  font-weight:bold;
+  font-size:30px;
+  font-weight:700;
+}
+
+.goal{
+  text-align:center;
+  color:#9ca3af;
+  margin-top:10px;
 }
 
 /* MACROS */
 .macros{
   display:flex;
   gap:10px;
-  margin-top:16px;
+  margin-top:18px;
 }
 
-.box{
+.macro{
   flex:1;
-  padding:14px;
-  border-radius:16px;
+  padding:16px;
+  border-radius:18px;
   text-align:center;
+  font-weight:600;
 }
 
 .pro{background:#4338ca;}
@@ -84,32 +90,36 @@ svg{
 
 input{
   width:100%;
-  padding:14px;
+  padding:16px;
   border:none;
-  border-radius:16px;
+  border-radius:20px;
   background:#111827;
   color:white;
+  font-size:16px;
 }
 
 /* RESULTS */
 .result{
-  padding:12px;
-  border-bottom:1px solid #222;
+  padding:14px;
+  border-bottom:1px solid #111;
   cursor:pointer;
 }
 
-/* FOOD */
+/* LIST */
 .food{
   display:flex;
-  gap:12px;
-  padding:12px;
-  border-bottom:1px solid #111;
+  justify-content:space-between;
+  padding:14px 16px;
+  border-bottom:1px solid #0f172a;
 }
 
-.food img{
-  width:50px;
-  height:50px;
-  border-radius:12px;
+.food-name{
+  font-weight:600;
+}
+
+.food-cal{
+  color:#9ca3af;
+  font-size:14px;
 }
 
 /* FAB */
@@ -126,6 +136,7 @@ input{
   justify-content:center;
   align-items:center;
   font-size:32px;
+  box-shadow:0 0 20px rgba(124,58,237,0.6);
 }
 </style>
 </head>
@@ -140,23 +151,27 @@ input{
 
 <div class="card">
 
-<div class="wrap">
+<div class="circle-wrap">
 <svg width="170" height="170">
 <circle cx="85" cy="85" r="75" stroke="#1f2937" stroke-width="12" fill="none"/>
-<circle id="progress" cx="85" cy="85" r="75" stroke="#fb923c" stroke-width="12"
-fill="none" stroke-dasharray="470" stroke-dashoffset="470"/>
+<circle id="progress" cx="85" cy="85" r="75"
+stroke="#fb923c" stroke-width="12"
+fill="none"
+stroke-dasharray="470"
+stroke-dashoffset="470"/>
 </svg>
-<div class="text" id="cal">0</div>
+
+<div class="circle-text" id="cal">0</div>
 </div>
 
-<div style="text-align:center;color:#aaa;margin-top:10px">
- יעד: <span id="goal"></span> קלוריות
+<div class="goal">
+יעד: <span id="goal"></span> קלוריות
 </div>
 
 <div class="macros">
-<div class="box pro">חלבון<br><b id="pro">0</b></div>
-<div class="box carb">פחמימות<br><b id="carb">0</b></div>
-<div class="box fat">שומן<br><b id="fat">0</b></div>
+<div class="macro pro">חלבון<br><span id="pro">0</span></div>
+<div class="macro carb">פחמימות<br><span id="carb">0</span></div>
+<div class="macro fat">שומן<br><span id="fat">0</span></div>
 </div>
 
 </div>
@@ -172,9 +187,23 @@ fill="none" stroke-dasharray="470" stroke-dashoffset="470"/>
 
 <script>
 
-/* ===== הגדרות ===== */
+/* ===== נתונים ===== */
 const weight = 94.1;
 const goalCalories = Math.round(weight * 24 - 500);
+
+const dict = {
+ "עוף":"chicken",
+ "חזה עוף":"chicken breast",
+ "אורז":"rice",
+ "ביצה":"egg",
+ "טונה":"tuna",
+ "גבינה":"cheese",
+ "לחם":"bread",
+ "בננה":"banana"
+};
+
+let data = JSON.parse(localStorage.getItem("food")) || [];
+let selected = null;
 
 /* ===== אלמנטים ===== */
 const goal = document.getElementById("goal");
@@ -187,51 +216,29 @@ const search = document.getElementById("search");
 const results = document.getElementById("results");
 const progress = document.getElementById("progress");
 
-/* ===== נתונים ===== */
-let data = JSON.parse(localStorage.getItem("food")) || [];
-let selected = null;
-
-/* ===== מילון עברית ===== */
-const dict = {
- "עוף":"chicken",
- "חזה עוף":"chicken breast",
- "אורז":"rice",
- "ביצה":"egg",
- "טונה":"tuna",
- "גבינה":"cheese",
- "לחם":"bread",
- "בננה":"banana"
-};
-
-/* ===== יעד ===== */
 goal.innerText = goalCalories;
 
 /* ===== חיפוש ===== */
 search.oninput = async (e)=>{
  let q = e.target.value.trim();
  if(q.length < 2){
-   results.innerHTML = "";
+   results.innerHTML="";
    return;
  }
 
  let query = dict[q] || q;
 
- try{
-   let res = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${query}&search_simple=1&action=process&json=1&page_size=6`);
-   let d = await res.json();
+ let res = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${query}&search_simple=1&action=process&json=1&page_size=5`);
+ let d = await res.json();
 
-   results.innerHTML = d.products
-   .filter(p=>p.product_name)
-   .map(p=>`
-     <div class="result" onclick='selectFood(${JSON.stringify(p)})'>
-       ${p.product_name}<br>
-       <small>${Math.round(p.nutriments.energy_kcal_100g||0)} קלוריות</small>
-     </div>
-   `).join("");
-
- }catch{
-   results.innerHTML="שגיאה";
- }
+ results.innerHTML = d.products
+ .filter(p=>p.product_name)
+ .map(p=>`
+   <div class="result" onclick='selectFood(${JSON.stringify(p)})'>
+     ${p.product_name}
+     <br><small>${Math.round(p.nutriments.energy_kcal_100g||0)} קלוריות</small>
+   </div>
+ `).join("");
 };
 
 /* ===== בחירה ===== */
@@ -249,8 +256,7 @@ function addFood(){
   cal:selected.nutriments.energy_kcal_100g||0,
   pro:selected.nutriments.proteins_100g||0,
   carb:selected.nutriments.carbohydrates_100g||0,
-  fat:selected.nutriments.fat_100g||0,
-  img:selected.image_front_thumb_url||""
+  fat:selected.nutriments.fat_100g||0
  };
 
  data.push(item);
@@ -267,8 +273,10 @@ function render(){
 
   return `
   <div class="food">
-   <img src="${x.img || 'https://via.placeholder.com/50'}">
-   <div>${x.name}<br><small>${Math.round(x.cal)} קלוריות</small></div>
+    <div>
+      <div class="food-name">${x.name}</div>
+      <div class="food-cal">${Math.round(x.cal)} קלוריות</div>
+    </div>
   </div>`;
  }).join("");
 
