@@ -1,297 +1,413 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>מעקב תזונה</title>
-
-<style>
-body{
-  margin:0;
-  background:#050a14;
-  font-family:-apple-system,Arial;
-  color:white;
-  max-width:420px;
-  margin:auto;
-}
-
-/* HEADER */
-.header{
-  display:flex;
-  justify-content:space-between;
-  padding:16px;
-  font-size:20px;
-  font-weight:600;
-}
-
-.back{
-  background:#111827;
-  padding:8px 14px;
-  border-radius:14px;
-  cursor:pointer;
-}
-
-/* MAIN CARD */
-.card{
-  margin:12px;
-  padding:20px;
-  border-radius:28px;
-  background:linear-gradient(180deg,#0c1427,#020617);
-}
-
-/* CIRCLE */
-.circle-wrap{
-  display:flex;
-  justify-content:center;
-  position:relative;
-}
-
-svg{
-  transform:rotate(-90deg);
-}
-
-.circle-text{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:30px;
-  font-weight:700;
-}
-
-.goal{
-  text-align:center;
-  color:#9ca3af;
-  margin-top:10px;
-}
-
-/* MACROS */
-.macros{
-  display:flex;
-  gap:10px;
-  margin-top:18px;
-}
-
-.macro{
-  flex:1;
-  padding:16px;
-  border-radius:18px;
-  text-align:center;
-  font-weight:600;
-}
-
-.pro{background:#4338ca;}
-.carb{background:#047857;}
-.fat{background:#b45309;}
-
-/* SEARCH */
-.search{
-  margin:12px;
-}
-
-input{
-  width:100%;
-  padding:16px;
-  border:none;
-  border-radius:20px;
-  background:#111827;
-  color:white;
-  font-size:16px;
-}
-
-/* RESULTS */
-.result{
-  padding:14px;
-  border-bottom:1px solid #111;
-  cursor:pointer;
-}
-
-/* LIST */
-.food{
-  display:flex;
-  justify-content:space-between;
-  padding:14px 16px;
-  border-bottom:1px solid #0f172a;
-}
-
-.food-name{
-  font-weight:600;
-}
-
-.food-cal{
-  color:#9ca3af;
-  font-size:14px;
-}
-
-/* FAB */
-.fab{
-  position:fixed;
-  bottom:25px;
-  left:50%;
-  transform:translateX(-50%);
-  width:70px;
-  height:70px;
-  border-radius:50%;
-  background:linear-gradient(45deg,#7c3aed,#a855f7);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:32px;
-  box-shadow:0 0 20px rgba(124,58,237,0.6);
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>מעקב תזונה PRO</title>
+  <style>
+    :root{
+      --bg:#050914;
+      --panel:#0b1324;
+      --panel-2:#101a31;
+      --panel-3:#0f1830;
+      --line:rgba(255,255,255,.07);
+      --text:#f7f9fd;
+      --muted:#97a3bc;
+      --orange:#ff9f43;
+      --purple:#6f59ff;
+      --green:#17b67a;
+      --yellow:#d88417;
+      --shadow:0 18px 40px rgba(0,0,0,.34);
+      --radius:26px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:radial-gradient(circle at top,#091325 0%,#050914 48%,#04070f 100%);color:var(--text);font-family:Inter,Arial,Helvetica,sans-serif}
+    body{max-width:430px;margin:0 auto;min-height:100vh;padding:14px 12px 110px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+    .topbar h1{font-size:18px;margin:0;font-weight:800;letter-spacing:.2px}
+    .back-btn{border:none;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);padding:13px 18px;border-radius:18px;font-weight:800;cursor:pointer}
+    .card{background:linear-gradient(180deg,rgba(11,19,36,.96),rgba(7,12,24,.96));border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+    .summary-card{padding:20px 18px 18px}
+    .ring-wrap{display:flex;justify-content:center;position:relative;margin-bottom:12px}
+    .ring-wrap svg{transform:rotate(-90deg)}
+    .ring-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+    .ring-text .main{font-size:28px;font-weight:900;line-height:1}
+    .ring-text .sub{font-size:13px;color:var(--muted);margin-top:8px}
+    .goal-row{text-align:center;color:var(--muted);font-size:13px;margin-bottom:16px}
+    .macro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .macro{border-radius:20px;padding:14px 12px;text-align:center}
+    .macro .label{font-size:13px;opacity:.95}
+    .macro .value{font-size:16px;font-weight:900;margin-top:8px}
+    .macro.protein{background:linear-gradient(180deg,rgba(111,89,255,.95),rgba(75,59,189,.95))}
+    .macro.carbs{background:linear-gradient(180deg,rgba(23,182,122,.95),rgba(12,124,83,.95))}
+    .macro.fat{background:linear-gradient(180deg,rgba(216,132,23,.95),rgba(143,77,10,.95))}
+    .search-card{padding:14px}
+    .search-shell{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:22px;padding:10px 14px}
+    .search-shell input{width:100%;border:none;outline:none;background:transparent;color:var(--text);font-size:17px;padding:8px 0}
+    .search-shell input::placeholder{color:#7f8aa2}
+    .quick-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .chip{border:none;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:999px;font-size:13px;cursor:pointer}
+    .results-card{padding:8px 0 0;background:transparent;border:none;box-shadow:none;margin-bottom:10px}
+    .section-title{font-size:17px;font-weight:900;margin:0 0 10px 6px}
+    .result-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:linear-gradient(180deg,rgba(12,18,34,.96),rgba(8,13,24,.96));border:1px solid var(--line);border-radius:22px;margin-bottom:10px;cursor:pointer;transition:.18s transform,.18s border-color,.18s background}
+    .result-item:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16)}
+    .result-item.active{border-color:rgba(111,89,255,.55);background:linear-gradient(180deg,rgba(34,28,70,.96),rgba(16,18,33,.96))}
+    .result-title{font-size:16px;font-weight:800;line-height:1.25}
+    .result-sub{font-size:12px;color:var(--muted);margin-top:5px}
+    .add-mini{border:none;background:linear-gradient(180deg,#8c5cff,#6f59ff);color:white;width:42px;height:42px;border-radius:14px;font-size:22px;cursor:pointer;flex:0 0 auto}
+    .selected-card{padding:16px}
+    .selected-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .field{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:12px}
+    .field label{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}
+    .field input,.field select{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-size:18px;font-weight:800}
+    .preview-box{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+    .preview-metric{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;padding:10px;text-align:center}
+    .preview-metric .n{font-size:16px;font-weight:900}
+    .preview-metric .t{font-size:11px;color:var(--muted);margin-top:4px}
+    .primary-btn{width:100%;margin-top:14px;border:none;border-radius:20px;padding:15px 16px;font-size:18px;font-weight:900;background:linear-gradient(180deg,#7d56ff,#6a49ff);color:#fff;cursor:pointer;box-shadow:0 10px 24px rgba(106,73,255,.28)}
+    .meal-card{padding:16px 16px 10px}
+    .meal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:10px}
+    .meal-name{font-size:18px;font-weight:900}
+    .meal-kcal{font-size:14px;color:var(--muted)}
+    .meal-row{display:grid;grid-template-columns:1fr auto;gap:10px;padding:12px 0;border-top:1px solid rgba(255,255,255,.05)}
+    .meal-row:first-of-type{border-top:none}
+    .meal-food{font-size:15px;font-weight:700}
+    .meal-sub{font-size:12px;color:var(--muted);margin-top:4px}
+    .remove-btn{border:none;background:rgba(255,255,255,.05);border:1px solid var(--line);color:#dbe2f0;border-radius:12px;padding:8px 10px;cursor:pointer;height:max-content}
+    .empty{padding:16px;text-align:center;color:var(--muted);font-size:14px;border:1px dashed rgba(255,255,255,.09);border-radius:18px;background:rgba(255,255,255,.02)}
+    .bottom-spacer{height:10px}
+    @media (max-width:390px){
+      .macro-grid,.preview-box{grid-template-columns:1fr}
+      .selected-grid{grid-template-columns:1fr}
+    }
+  </style>
 </head>
-
 <body>
+  <div class="topbar">
+    <button class="back-btn" onclick="location.href='index.html'">אימונים ←</button>
+    <h1>מעקב תזונה</h1>
+    <div style="width:88px"></div>
+  </div>
 
-<div class="header">
-  <div class="back" onclick="location.href='index.html'">← אימונים</div>
-  מעקב תזונה
-  <div></div>
-</div>
-
-<div class="card">
-
-<div class="circle-wrap">
-<svg width="170" height="170">
-<circle cx="85" cy="85" r="75" stroke="#1f2937" stroke-width="12" fill="none"/>
-<circle id="progress" cx="85" cy="85" r="75"
-stroke="#fb923c" stroke-width="12"
-fill="none"
-stroke-dasharray="470"
-stroke-dashoffset="470"/>
-</svg>
-
-<div class="circle-text" id="cal">0</div>
-</div>
-
-<div class="goal">
-יעד: <span id="goal"></span> קלוריות
-</div>
-
-<div class="macros">
-<div class="macro pro">חלבון<br><span id="pro">0</span></div>
-<div class="macro carb">פחמימות<br><span id="carb">0</span></div>
-<div class="macro fat">שומן<br><span id="fat">0</span></div>
-</div>
-
-</div>
-
-<div class="search">
-<input id="search" placeholder="חפש מזון (עוף, אורז...)" />
-<div id="results"></div>
-</div>
-
-<div id="log"></div>
-
-<div class="fab" onclick="addFood()">+</div>
-
-<script>
-
-/* ===== נתונים ===== */
-const weight = 94.1;
-const goalCalories = Math.round(weight * 24 - 500);
-
-const dict = {
- "עוף":"chicken",
- "חזה עוף":"chicken breast",
- "אורז":"rice",
- "ביצה":"egg",
- "טונה":"tuna",
- "גבינה":"cheese",
- "לחם":"bread",
- "בננה":"banana"
-};
-
-let data = JSON.parse(localStorage.getItem("food")) || [];
-let selected = null;
-
-/* ===== אלמנטים ===== */
-const goal = document.getElementById("goal");
-const cal = document.getElementById("cal");
-const pro = document.getElementById("pro");
-const carb = document.getElementById("carb");
-const fat = document.getElementById("fat");
-const log = document.getElementById("log");
-const search = document.getElementById("search");
-const results = document.getElementById("results");
-const progress = document.getElementById("progress");
-
-goal.innerText = goalCalories;
-
-/* ===== חיפוש ===== */
-search.oninput = async (e)=>{
- let q = e.target.value.trim();
- if(q.length < 2){
-   results.innerHTML="";
-   return;
- }
-
- let query = dict[q] || q;
-
- let res = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${query}&search_simple=1&action=process&json=1&page_size=5`);
- let d = await res.json();
-
- results.innerHTML = d.products
- .filter(p=>p.product_name)
- .map(p=>`
-   <div class="result" onclick='selectFood(${JSON.stringify(p)})'>
-     ${p.product_name}
-     <br><small>${Math.round(p.nutriments.energy_kcal_100g||0)} קלוריות</small>
-   </div>
- `).join("");
-};
-
-/* ===== בחירה ===== */
-function selectFood(p){
- selected = p;
- results.innerHTML = "✔ נבחר";
-}
-
-/* ===== הוספה ===== */
-function addFood(){
- if(!selected) return alert("בחר מזון");
-
- let item = {
-  name:selected.product_name,
-  cal:selected.nutriments.energy_kcal_100g||0,
-  pro:selected.nutriments.proteins_100g||0,
-  carb:selected.nutriments.carbohydrates_100g||0,
-  fat:selected.nutriments.fat_100g||0
- };
-
- data.push(item);
- localStorage.setItem("food",JSON.stringify(data));
- render();
-}
-
-/* ===== רינדור ===== */
-function render(){
- let c=0,p=0,car=0,f=0;
-
- log.innerHTML = data.map(x=>{
-  c+=x.cal;p+=x.pro;car+=x.carb;f+=x.fat;
-
-  return `
-  <div class="food">
-    <div>
-      <div class="food-name">${x.name}</div>
-      <div class="food-cal">${Math.round(x.cal)} קלוריות</div>
+  <div class="card summary-card">
+    <div class="ring-wrap">
+      <svg width="190" height="190" viewBox="0 0 190 190">
+        <circle cx="95" cy="95" r="78" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="14"></circle>
+        <circle id="progressRing" cx="95" cy="95" r="78" fill="none" stroke="var(--orange)" stroke-width="14" stroke-linecap="round" stroke-dasharray="490.1" stroke-dashoffset="490.1"></circle>
+      </svg>
+      <div class="ring-text">
+        <div class="main" id="caloriesValue">0</div>
+        <div class="sub">מתוך <span id="goalValue">0</span></div>
+      </div>
     </div>
-  </div>`;
- }).join("");
+    <div class="goal-row">יעד מותאם: גרעון יומי של 500 קלוריות לפי 178 ס״מ ו־94.1 ק״ג</div>
+    <div class="macro-grid">
+      <div class="macro fat">
+        <div class="label">שומן</div>
+        <div class="value"><span id="fatValue">0</span> גרם</div>
+      </div>
+      <div class="macro carbs">
+        <div class="label">פחמימות</div>
+        <div class="value"><span id="carbsValue">0</span> גרם</div>
+      </div>
+      <div class="macro protein">
+        <div class="label">חלבון</div>
+        <div class="value"><span id="proteinValue">0</span> גרם</div>
+      </div>
+    </div>
+  </div>
 
- cal.innerText = Math.round(c);
- pro.innerText = Math.round(p);
- carb.innerText = Math.round(car);
- fat.innerText = Math.round(f);
+  <div class="card search-card">
+    <div class="search-shell">
+      <input id="searchInput" type="text" placeholder="חפש מזון בעברית... למשל: חזה עוף, אורז, ביצה" autocomplete="off" />
+    </div>
+    <div class="quick-row">
+      <button class="chip" onclick="quickSearch('חזה עוף')">חזה עוף</button>
+      <button class="chip" onclick="quickSearch('אורז')">אורז</button>
+      <button class="chip" onclick="quickSearch('ביצה')">ביצה</button>
+      <button class="chip" onclick="quickSearch('קוטג׳')">קוטג׳</button>
+      <button class="chip" onclick="quickSearch('טונה')">טונה</button>
+    </div>
+  </div>
 
- let percent = c/goalCalories;
- progress.style.strokeDashoffset = 470 - (470*percent);
-}
+  <div class="results-card">
+    <div class="section-title">תוצאות חיפוש</div>
+    <div id="resultsList"></div>
+  </div>
 
-render();
+  <div class="card selected-card">
+    <div class="section-title" style="margin:0">פרטי מנה</div>
+    <div id="selectedName" style="font-size:18px;font-weight:900;margin-top:10px">לא נבחר מזון</div>
+    <div id="selectedBase" class="result-sub" style="margin-top:6px">בחר מזון כדי להוסיף אותו ליומן</div>
+    <div class="selected-grid">
+      <div class="field">
+        <label>כמות</label>
+        <input id="amountInput" type="number" min="0" step="0.5" value="100" />
+      </div>
+      <div class="field">
+        <label>יחידה</label>
+        <select id="unitSelect">
+          <option value="gram">גרם</option>
+          <option value="piece">יחידה</option>
+          <option value="tbsp">כף</option>
+          <option value="cup">גביע</option>
+        </select>
+      </div>
+      <div class="field" style="grid-column:1/-1">
+        <label>ארוחה</label>
+        <select id="mealSelect">
+          <option value="breakfast">ארוחת בוקר</option>
+          <option value="lunch">ארוחת צהריים</option>
+          <option value="dinner">ארוחת ערב</option>
+          <option value="snack">ביניים</option>
+        </select>
+      </div>
+    </div>
+    <div class="preview-box">
+      <div class="preview-metric"><div class="n" id="previewCalories">0</div><div class="t">קלוריות</div></div>
+      <div class="preview-metric"><div class="n" id="previewProtein">0</div><div class="t">חלבון</div></div>
+      <div class="preview-metric"><div class="n" id="previewCarbs">0</div><div class="t">פחמימות</div></div>
+      <div class="preview-metric"><div class="n" id="previewFat">0</div><div class="t">שומן</div></div>
+    </div>
+    <button class="primary-btn" id="addBtn">הוסף ליומן</button>
+  </div>
 
-</script>
+  <div class="card meal-card">
+    <div class="meal-head"><div class="meal-name">ארוחת בוקר</div><div class="meal-kcal" id="breakfastTotal">0 קלוריות</div></div>
+    <div id="breakfastList"></div>
+  </div>
 
+  <div class="card meal-card">
+    <div class="meal-head"><div class="meal-name">ארוחת צהריים</div><div class="meal-kcal" id="lunchTotal">0 קלוריות</div></div>
+    <div id="lunchList"></div>
+  </div>
+
+  <div class="card meal-card">
+    <div class="meal-head"><div class="meal-name">ארוחת ערב</div><div class="meal-kcal" id="dinnerTotal">0 קלוריות</div></div>
+    <div id="dinnerList"></div>
+  </div>
+
+  <div class="card meal-card">
+    <div class="meal-head"><div class="meal-name">ביניים</div><div class="meal-kcal" id="snackTotal">0 קלוריות</div></div>
+    <div id="snackList"></div>
+  </div>
+
+  <div class="bottom-spacer"></div>
+
+  <script>
+    const STORAGE_KEY = 'nutrition_pro_he_v3';
+    const GOAL = { calories: 1758, protein: 169, carbs: 132, fat: 63 };
+
+    const FOODS = [
+      { id:'chicken_breast', he:'חזה עוף', aliases:['עוף','חזה עוף','chicken','chicken breast'], per100:{ calories:165, protein:31, carbs:0, fat:3.6 }, units:{ gram:1, piece:120, tbsp:15, cup:140 } },
+      { id:'rice_cooked', he:'אורז מבושל', aliases:['אורז','אורז מבושל','rice'], per100:{ calories:130, protein:2.7, carbs:28, fat:0.3 }, units:{ gram:1, tbsp:20, cup:150 } },
+      { id:'egg', he:'ביצה', aliases:['ביצה','ביצים','egg'], per100:{ calories:155, protein:13, carbs:1.1, fat:11 }, units:{ gram:1, piece:50 } },
+      { id:'cottage', he:'קוטג׳', aliases:['קוטג','קוטג׳','גבינה קוטג','cottage'], per100:{ calories:98, protein:11, carbs:3.4, fat:4.3 }, units:{ gram:1, tbsp:15, cup:250 } },
+      { id:'tuna', he:'טונה במים', aliases:['טונה','tuna'], per100:{ calories:116, protein:26, carbs:0, fat:1 }, units:{ gram:1, tbsp:15, cup:100 } },
+      { id:'banana', he:'בננה', aliases:['בננה','banana'], per100:{ calories:89, protein:1.1, carbs:23, fat:0.3 }, units:{ gram:1, piece:120 } },
+      { id:'bread', he:'לחם פרוס', aliases:['לחם','לחם פרוס','bread'], per100:{ calories:265, protein:9, carbs:49, fat:3.2 }, units:{ gram:1, piece:30 } },
+      { id:'oats', he:'שיבולת שועל', aliases:['שיבולת שועל','שיבולת','oats'], per100:{ calories:389, protein:16.9, carbs:66.3, fat:6.9 }, units:{ gram:1, tbsp:10, cup:80 } },
+      { id:'yogurt_pro', he:'יוגורט חלבון', aliases:['יוגורט','יוגורט חלבון','yogurt'], per100:{ calories:73, protein:10, carbs:4, fat:1.7 }, units:{ gram:1, cup:200 } },
+      { id:'sweet_potato', he:'בטטה אפויה', aliases:['בטטה','בטטה אפויה','sweet potato'], per100:{ calories:90, protein:2, carbs:21, fat:0.1 }, units:{ gram:1, piece:130 } },
+      { id:'apple', he:'תפוח', aliases:['תפוח','apple'], per100:{ calories:52, protein:0.3, carbs:14, fat:0.2 }, units:{ gram:1, piece:150 } },
+      { id:'almonds', he:'שקדים', aliases:['שקדים','almonds'], per100:{ calories:579, protein:21, carbs:22, fat:50 }, units:{ gram:1, tbsp:10 } },
+      { id:'cheese_white', he:'גבינה לבנה', aliases:['גבינה לבנה','גבינה','white cheese'], per100:{ calories:95, protein:10, carbs:4, fat:5 }, units:{ gram:1, tbsp:15, cup:250 } },
+      { id:'milk_3', he:'חלב 3%', aliases:['חלב','milk'], per100:{ calories:61, protein:3.3, carbs:4.8, fat:3.2 }, units:{ gram:1, cup:240 } }
+    ];
+
+    const state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+      items: [],
+      selectedFoodId: null
+    };
+
+    const searchInput = document.getElementById('searchInput');
+    const resultsList = document.getElementById('resultsList');
+    const selectedName = document.getElementById('selectedName');
+    const selectedBase = document.getElementById('selectedBase');
+    const amountInput = document.getElementById('amountInput');
+    const unitSelect = document.getElementById('unitSelect');
+    const mealSelect = document.getElementById('mealSelect');
+    const addBtn = document.getElementById('addBtn');
+
+    function save(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function unitLabel(unit){
+      return { gram:'גרם', piece:'יחידה', tbsp:'כף', cup:'גביע' }[unit] || unit;
+    }
+
+    function findFood(id){
+      return FOODS.find(f => f.id === id);
+    }
+
+    function filterFoods(q){
+      const query = q.trim().toLowerCase();
+      if(!query) return FOODS.slice(0,6);
+      return FOODS.filter(food => food.aliases.some(a => a.toLowerCase().includes(query)) || food.he.includes(query)).slice(0,8);
+    }
+
+    function gramsFor(food, amount, unit){
+      return amount * (food.units[unit] || 1);
+    }
+
+    function calc(food, amount, unit){
+      const grams = gramsFor(food, amount, unit);
+      const factor = grams / 100;
+      return {
+        grams,
+        calories: food.per100.calories * factor,
+        protein: food.per100.protein * factor,
+        carbs: food.per100.carbs * factor,
+        fat: food.per100.fat * factor
+      };
+    }
+
+    function setSelected(foodId){
+      state.selectedFoodId = foodId;
+      save();
+      renderSelected();
+      renderResults(searchInput.value);
+    }
+
+    function renderResults(q=''){
+      const foods = filterFoods(q);
+      resultsList.innerHTML = foods.map(food => `
+        <div class="result-item ${state.selectedFoodId===food.id?'active':''}" onclick="setSelected('${food.id}')">
+          <div>
+            <div class="result-title">${food.he}</div>
+            <div class="result-sub">ל־100 גרם: ${food.per100.calories} קלוריות • חלבון ${food.per100.protein} • פחמימות ${food.per100.carbs} • שומן ${food.per100.fat}</div>
+          </div>
+          <button class="add-mini" onclick="event.stopPropagation(); setSelected('${food.id}')">+</button>
+        </div>
+      `).join('') || '<div class="empty">לא נמצאו תוצאות. נסה למשל: חזה עוף, אורז, ביצה, קוטג׳</div>';
+    }
+
+    function renderSelected(){
+      const food = findFood(state.selectedFoodId);
+      if(!food){
+        selectedName.textContent = 'לא נבחר מזון';
+        selectedBase.textContent = 'בחר מזון מתוך הרשימה למעלה';
+        unitSelect.innerHTML = '<option value="gram">גרם</option>';
+        document.getElementById('previewCalories').textContent = '0';
+        document.getElementById('previewProtein').textContent = '0';
+        document.getElementById('previewCarbs').textContent = '0';
+        document.getElementById('previewFat').textContent = '0';
+        return;
+      }
+      selectedName.textContent = food.he;
+      selectedBase.textContent = `בסיס נתונים פנימי מלא בעברית • ל־100 גרם: ${food.per100.calories} קלוריות`;
+      unitSelect.innerHTML = Object.keys(food.units).map(u => `<option value="${u}">${unitLabel(u)}</option>`).join('');
+      updatePreview();
+    }
+
+    function updatePreview(){
+      const food = findFood(state.selectedFoodId);
+      if(!food) return;
+      const amount = Number(amountInput.value || 0);
+      const unit = unitSelect.value;
+      const values = calc(food, amount, unit);
+      document.getElementById('previewCalories').textContent = Math.round(values.calories);
+      document.getElementById('previewProtein').textContent = Math.round(values.protein);
+      document.getElementById('previewCarbs').textContent = Math.round(values.carbs);
+      document.getElementById('previewFat').textContent = Math.round(values.fat);
+    }
+
+    function addItem(){
+      const food = findFood(state.selectedFoodId);
+      const amount = Number(amountInput.value || 0);
+      const unit = unitSelect.value;
+      const meal = mealSelect.value;
+      if(!food) return alert('בחר מזון');
+      if(!amount || amount <= 0) return alert('הזן כמות תקינה');
+      const values = calc(food, amount, unit);
+      state.items.push({
+        id: Date.now().toString(36),
+        foodId: food.id,
+        he: food.he,
+        meal,
+        amount,
+        unit,
+        ...values
+      });
+      save();
+      renderAll();
+    }
+
+    function removeItem(id){
+      state.items = state.items.filter(item => item.id !== id);
+      save();
+      renderAll();
+    }
+
+    function totals(items){
+      return items.reduce((acc,item)=>{
+        acc.calories += item.calories;
+        acc.protein += item.protein;
+        acc.carbs += item.carbs;
+        acc.fat += item.fat;
+        return acc;
+      },{calories:0,protein:0,carbs:0,fat:0});
+    }
+
+    function renderSummary(){
+      const sum = totals(state.items);
+      document.getElementById('caloriesValue').textContent = Math.round(sum.calories);
+      document.getElementById('goalValue').textContent = GOAL.calories;
+      document.getElementById('proteinValue').textContent = Math.round(sum.protein);
+      document.getElementById('carbsValue').textContent = Math.round(sum.carbs);
+      document.getElementById('fatValue').textContent = Math.round(sum.fat);
+      const circumference = 490.1;
+      const pct = Math.min(sum.calories / GOAL.calories, 1);
+      document.getElementById('progressRing').style.strokeDashoffset = circumference - (circumference * pct);
+    }
+
+    function renderMeal(mealKey, listId, totalId){
+      const nameMap = {
+        breakfast:'ארוחת בוקר',
+        lunch:'ארוחת צהריים',
+        dinner:'ארוחת ערב',
+        snack:'ביניים'
+      };
+      const items = state.items.filter(item => item.meal === mealKey);
+      const total = totals(items);
+      document.getElementById(totalId).textContent = `${Math.round(total.calories)} קלוריות`;
+      const list = document.getElementById(listId);
+      if(!items.length){
+        list.innerHTML = '<div class="empty">אין פריטים בארוחה זו</div>';
+        return;
+      }
+      list.innerHTML = items.map(item => `
+        <div class="meal-row">
+          <div>
+            <div class="meal-food">${item.he}</div>
+            <div class="meal-sub">${item.amount} ${unitLabel(item.unit)} • ${Math.round(item.calories)} קלוריות • חלבון ${Math.round(item.protein)} • פחמימות ${Math.round(item.carbs)} • שומן ${Math.round(item.fat)}</div>
+          </div>
+          <button class="remove-btn" onclick="removeItem('${item.id}')">מחק</button>
+        </div>
+      `).join('');
+    }
+
+    function renderAll(){
+      renderSummary();
+      renderResults(searchInput.value);
+      renderSelected();
+      renderMeal('breakfast','breakfastList','breakfastTotal');
+      renderMeal('lunch','lunchList','lunchTotal');
+      renderMeal('dinner','dinnerList','dinnerTotal');
+      renderMeal('snack','snackList','snackTotal');
+    }
+
+    searchInput.addEventListener('input', e => renderResults(e.target.value));
+    amountInput.addEventListener('input', updatePreview);
+    unitSelect.addEventListener('change', updatePreview);
+    addBtn.addEventListener('click', addItem);
+
+    window.setSelected = setSelected;
+    window.removeItem = removeItem;
+    window.quickSearch = function(v){ searchInput.value = v; renderResults(v); };
+
+    renderAll();
+  </script>
 </body>
 </html>
