@@ -1,249 +1,116 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body{
-  margin:0;
-  background:#050a14;
-  font-family:-apple-system, BlinkMacSystemFont;
-  color:white;
-  max-width:420px;
-  margin:auto;
-}
-
-/* HEADER */
-.header{
-  display:flex;
-  justify-content:space-between;
-  padding:16px;
-  font-size:20px;
-  font-weight:600;
-}
-
-.back{
-  background:#111827;
-  padding:8px 12px;
-  border-radius:12px;
-  cursor:pointer;
-}
-
-/* CARD */
-.card{
-  margin:12px;
-  padding:18px;
-  border-radius:26px;
-  background:linear-gradient(180deg,#0c1427,#030712);
-  box-shadow:0 0 30px rgba(0,0,0,0.6);
-}
-
-/* CIRCLE */
-.wrap{
-  display:flex;
-  justify-content:center;
-  position:relative;
-}
-
-svg{
-  transform:rotate(-90deg);
-}
-
-.text{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:28px;
-  font-weight:600;
-}
-
-/* MACROS */
-.macros{
-  display:flex;
-  gap:10px;
-  margin-top:16px;
-}
-
-.box{
-  flex:1;
-  padding:14px;
-  border-radius:16px;
-  text-align:center;
-}
-
-.pro{background:#4338ca;}
-.carb{background:#047857;}
-.fat{background:#b45309;}
-
-/* SEARCH */
-.search{
-  margin:12px;
-}
-
-input{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:16px;
-  background:#111827;
-  color:white;
-}
-
-/* RESULTS */
-.result{
-  padding:12px;
-  border-bottom:1px solid #222;
-}
-
-/* FOOD LIST */
-.food{
-  display:flex;
-  gap:12px;
-  padding:12px;
-  border-bottom:1px solid #111;
-}
-
-.food img{
-  width:50px;
-  height:50px;
-  border-radius:12px;
-  object-fit:cover;
-}
-
-/* FAB */
-.fab{
-  position:fixed;
-  bottom:25px;
-  left:50%;
-  transform:translateX(-50%);
-  width:70px;
-  height:70px;
-  border-radius:50%;
-  background:linear-gradient(45deg,#7c3aed,#a855f7);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:32px;
-  box-shadow:0 0 25px rgba(124,58,237,0.8);
-}
-</style>
-</head>
-
-<body>
-
-<div class="header">
-  <div class="back" onclick="location.href='index.html'">← אימונים</div>
-  מעקב תזונה
-  <div></div>
-</div>
-
-<div class="card">
-
-<div class="wrap">
-<svg width="170" height="170">
-<circle cx="85" cy="85" r="75" stroke="#1f2937" stroke-width="12" fill="none"/>
-<circle id="progress" cx="85" cy="85" r="75" stroke="#fb923c" stroke-width="12"
-fill="none" stroke-dasharray="470" stroke-dashoffset="470"/>
-</svg>
-<div class="text" id="cal">0</div>
-</div>
-
-<div style="text-align:center;color:#aaa;margin-top:10px">
- יעד: <span id="goal"></span> קלוריות
-</div>
-
-<div class="macros">
-<div class="box pro">חלבון<br><b id="pro">0</b></div>
-<div class="box carb">פחמימות<br><b id="carb">0</b></div>
-<div class="box fat">שומן<br><b id="fat">0</b></div>
-</div>
-
-</div>
-
-<div class="search">
-<input id="search" placeholder="חפש מזון (עוף, אורז...)" />
-<div id="results"></div>
-</div>
-
-<div id="log"></div>
-
-<div class="fab" onclick="addFood()">+</div>
-
 <script>
 
-const weight=94.1;
-const goalCalories=Math.round(weight*24-500);
-goal.innerText=goalCalories;
+const weight = 94.1;
+const goalCalories = Math.round(weight * 24 - 500);
+goal.innerText = goalCalories;
 
-let data=JSON.parse(localStorage.getItem("food"))||[];
+let data = JSON.parse(localStorage.getItem("food")) || [];
 
-const map={
- "עוף":"chicken","אורז":"rice","ביצה":"egg","טונה":"tuna",
- "גבינה":"cheese","לחם":"bread","בננה":"banana"
+const dict = {
+ "עוף":"chicken",
+ "חזה עוף":"chicken breast",
+ "אורז":"rice",
+ "ביצה":"egg",
+ "טונה":"tuna",
+ "גבינה":"cheese",
+ "לחם":"bread",
+ "בננה":"banana",
+ "תפוח":"apple",
+ "חלב":"milk"
 };
 
-let selected;
+let selected = null;
 
-search.oninput=async(e)=>{
- let q=e.target.value;
- if(!q)return;
+/* 🔍 חיפוש חכם */
+search.oninput = async (e) => {
+ let q = e.target.value.trim();
+ if (q.length < 2) {
+   results.innerHTML = "";
+   return;
+ }
 
- let query=map[q]||q;
+ let query = dict[q] || q;
 
- let res=await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${query}&search_simple=1&action=process&json=1&page_size=6`);
- let d=await res.json();
+ try {
+   const res = await fetch(
+     `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${query}&search_simple=1&action=process&json=1&page_size=10`
+   );
 
- results.innerHTML=d.products.map(p=>`
- <div class="result" onclick='selectFood(${JSON.stringify(p)})'>
- ${p.product_name||"מוצר"}
- </div>`).join("");
+   const d = await res.json();
+
+   results.innerHTML = d.products
+     .filter(p => p.product_name)
+     .slice(0, 6)
+     .map(p => `
+       <div class="result" onclick='selectFood(${JSON.stringify(p)})'>
+         <b>${p.product_name}</b><br>
+         <small>${Math.round(p.nutriments.energy_kcal_100g || 0)} קלוריות ל-100ג'</small>
+       </div>
+     `).join("");
+
+ } catch (err) {
+   results.innerHTML = "<div>שגיאה בחיפוש</div>";
+ }
+};
+
+/* בחירת מזון */
+function selectFood(p){
+ selected = p;
+ results.innerHTML = `
+   <div style="padding:12px;color:#22c55e">
+   ✔ נבחר: ${p.product_name}
+   </div>
+ `;
 }
 
-function selectFood(p){selected=p;}
-
+/* הוספה */
 function addFood(){
- if(!selected)return;
+ if(!selected) return alert("בחר מזון קודם");
 
- let item={
-  name:selected.product_name,
-  cal:selected.nutriments.energy_kcal_100g||0,
-  pro:selected.nutriments.proteins_100g||0,
-  carb:selected.nutriments.carbohydrates_100g||0,
-  fat:selected.nutriments.fat_100g||0,
-  img:selected.image_front_thumb_url||""
+ let item = {
+  name: selected.product_name,
+  cal: selected.nutriments.energy_kcal_100g || 0,
+  pro: selected.nutriments.proteins_100g || 0,
+  carb: selected.nutriments.carbohydrates_100g || 0,
+  fat: selected.nutriments.fat_100g || 0,
+  img: selected.image_front_thumb_url || selected.image_url || ""
  };
 
  data.push(item);
- localStorage.setItem("food",JSON.stringify(data));
+ localStorage.setItem("food", JSON.stringify(data));
+ selected = null;
  render();
 }
 
+/* רינדור */
 function render(){
  let c=0,p=0,car=0,f=0;
 
- log.innerHTML=data.map(x=>{
- c+=x.cal;p+=x.pro;car+=x.carb;f+=x.fat;
+ log.innerHTML = data.map(x=>{
+   c+=x.cal;
+   p+=x.pro;
+   car+=x.carb;
+   f+=x.fat;
 
- return `
- <div class="food">
- <img src="${x.img}">
- <div>${x.name}<br><small>${Math.round(x.cal)} קלוריות</small></div>
- </div>`;
+   return `
+   <div class="food">
+     <img src="${x.img || 'https://via.placeholder.com/50'}">
+     <div>
+       ${x.name}<br>
+       <small>${Math.round(x.cal)} קלוריות</small>
+     </div>
+   </div>`;
  }).join("");
 
- cal.innerText=Math.round(c);
- pro.innerText=Math.round(p);
- carb.innerText=Math.round(car);
- fat.innerText=Math.round(f);
+ cal.innerText = Math.round(c);
+ pro.innerText = Math.round(p);
+ carb.innerText = Math.round(car);
+ fat.innerText = Math.round(f);
 
- let percent=c/goalCalories;
- progress.style.strokeDashoffset=470-(470*percent);
+ let percent = c / goalCalories;
+ progress.style.strokeDashoffset = 470 - (470 * percent);
 }
 
 render();
 
 </script>
-
-</body>
-</html>
