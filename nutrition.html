@@ -1,79 +1,407 @@
-      { id:'quinoa', he:'קינואה מבושלת', aliases:['קינואה'], per100:{ calories:120, protein:4.4, carbs:21.3, fat:1.9 }, units:{ gram:1, cup:150 } },
-      { id:'potato', he:'תפוח אדמה', aliases:['תפוחאדמה','תפוא'], per100:{ calories:77, protein:2, carbs:17, fat:0.1 }, units:{ gram:1, piece:150 } },
-      { id:'sweet_potato', he:'בטטה', aliases:['בטטה'], per100:{ calories:90, protein:2, carbs:21, fat:0.1 }, units:{ gram:1, piece:130 } },
-      { id:'oats', he:'שיבולת שועל', aliases:['קוואקר','שיבולתשועל'], per100:{ calories:389, protein:16.9, carbs:66.3, fat:6.9 }, units:{ gram:1, tbsp:10, cup:80 } },
-      { id:'bread', he:'לחם', aliases:['לחם'], per100:{ calories:265, protein:9, carbs:49, fat:3.2 }, units:{ gram:1, slice:30 } },
-      { id:'whole_wheat_bread', he:'לחם מלא', aliases:['לחםמלא'], per100:{ calories:247, protein:13, carbs:41, fat:4.2 }, units:{ gram:1, slice:32 } },
-      { id:'pita', he:'פיתה', aliases:['פיתה'], per100:{ calories:275, protein:9, carbs:55, fat:1.2 }, units:{ gram:1, piece:60 } },
-      { id:'tortilla', he:'טורטיה', aliases:['טורטיה'], per100:{ calories:310, protein:8, carbs:52, fat:8 }, units:{ gram:1, piece:50 } },
-      { id:'cottage', he:'קוטג׳', aliases:['קוטג','קוטג׳'], per100:{ calories:98, protein:11, carbs:3.4, fat:4.3 }, units:{ gram:1, tbsp:15, cup:250 } },
-      { id:'white_cheese', he:'גבינה לבנה', aliases:['גבינהלבנה'], per100:{ calories:95, protein:10, carbs:4, fat:5 }, units:{ gram:1, tbsp:15, cup:250 } },
-      { id:'yellow_cheese', he:'גבינה צהובה', aliases:['גבינהצהובה'], per100:{ calories:356, protein:25, carbs:2.2, fat:27 }, units:{ gram:1, slice:28 } },
-      { id:'greek_yogurt', he:'יוגורט יווני', aliases:['יוגורטיווני'], per100:{ calories:97, protein:9, carbs:3.9, fat:5 }, units:{ gram:1, cup:200 } },
-      { id:'yogurt', he:'יוגורט', aliases:['יוגורט'], per100:{ calories:60, protein:5, carbs:5, fat:3 }, units:{ gram:1, cup:200 } },
-      { id:'yogurt_pro', he:'יוגורט חלבון', aliases:['יוגורטחלבון'], per100:{ calories:73, protein:10, carbs:4, fat:1.7 }, units:{ gram:1, cup:200 } },
-      { id:'milk_3', he:'חלב 3%', aliases:['חלב'], per100:{ calories:61, protein:3.3, carbs:4.8, fat:3.2 }, units:{ gram:1, cup:240 } },
-      { id:'banana', he:'בננה', aliases:['בננה'], per100:{ calories:89, protein:1.1, carbs:23, fat:0.3 }, units:{ gram:1, piece:120 } },
-      { id:'apple', he:'תפוח', aliases:['תפוח'], per100:{ calories:52, protein:0.3, carbs:14, fat:0.2 }, units:{ gram:1, piece:150 } },
-      { id:'orange', he:'תפוז', aliases:['תפוז'], per100:{ calories:47, protein:0.9, carbs:12, fat:0.1 }, units:{ gram:1, piece:130 } },
-      { id:'pear', he:'אגס', aliases:['אגס'], per100:{ calories:57, protein:0.4, carbs:15, fat:0.1 }, units:{ gram:1, piece:160 } },
-      { id:'avocado', he:'אבוקדו', aliases:['אבוקדו'], per100:{ calories:160, protein:2, carbs:8.5, fat:14.7 }, units:{ gram:1, piece:170, tbsp:15 } },
-      { id:'almonds', he:'שקדים', aliases:['שקדים'], per100:{ calories:579, protein:21, carbs:22, fat:50 }, units:{ gram:1, tbsp:10 } },
-      { id:'walnuts', he:'אגוזי מלך', aliases:['אגוזי מלך','אגוזים'], per100:{ calories:654, protein:15, carbs:14, fat:65 }, units:{ gram:1, tbsp:10 } },
-      { id:'peanut_butter', he:'חמאת בוטנים', aliases:['חמאתבוטנים'], per100:{ calories:588, protein:25, carbs:20, fat:50 }, units:{ gram:1, tbsp:16 } },
-      { id:'tahini', he:'טחינה', aliases:['טחינה'], per100:{ calories:595, protein:17, carbs:21, fat:53 }, units:{ gram:1, tbsp:15 } },
-      { id:'olive_oil', he:'שמן זית', aliases:['שמןזית'], per100:{ calories:884, protein:0, carbs:0, fat:100 }, units:{ gram:1, tbsp:13, tsp:5 } },
-      { id:'hummus', he:'חומוס', aliases:['חומוס'], per100:{ calories:166, protein:8, carbs:14, fat:9.6 }, units:{ gram:1, tbsp:15 } },
-      { id:'cucumber', he:'מלפפון', aliases:['מלפפון'], per100:{ calories:15, protein:0.7, carbs:3.6, fat:0.1 }, units:{ gram:1, piece:120 } },
-      { id:'tomato', he:'עגבנייה', aliases:['עגבניה'], per100:{ calories:18, protein:0.9, carbs:3.9, fat:0.2 }, units:{ gram:1, piece:120 } },
-      { id:'lettuce', he:'חסה', aliases:['חסה'], per100:{ calories:15, protein:1.4, carbs:2.9, fat:0.2 }, units:{ gram:1 } },
-      { id:'broccoli', he:'ברוקולי', aliases:['ברוקולי'], per100:{ calories:34, protein:2.8, carbs:7, fat:0.4 }, units:{ gram:1 } },
-      { id:'corn', he:'תירס', aliases:['תירס'], per100:{ calories:96, protein:3.4, carbs:21, fat:1.5 }, units:{ gram:1 } },
-      { id:'protein_bar', he:'חטיף חלבון', aliases:['חטיף','חטיףחלבון'], per100:{ calories:370, protein:30, carbs:35, fat:12 }, units:{ gram:1, piece:60 } }
-    ];
+<script>
+  const STORAGE_KEY = 'nutrition_pro_he_url_v2';
+  const GOAL = { calories: 1758, protein: 169, carbs: 132, fat: 63 };
+  const OFF_URL = 'https://world.openfoodfacts.org/cgi/search.pl';
 
-    const state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { items: [], selectedFoodId: null };
-    const searchInput = document.getElementById('searchInput');
-    const resultsList = document.getElementById('resultsList');
-    const selectedName = document.getElementById('selectedName');
-    const selectedBase = document.getElementById('selectedBase');
-    const amountInput = document.getElementById('amountInput');
-    const unitSelect = document.getElementById('unitSelect');
-    const mealSelect = document.getElementById('mealSelect');
-    const addBtn = document.getElementById('addBtn');
+  const SYNONYMS = {
+    'חזהעוף':'חזה עוף','עוף':'חזה עוף','פרגית':'פרגית','אורז':'אורז מבושל','אורזלבן':'אורז מבושל',
+    'ביצה':'ביצה','ביצים':'ביצה','קוטג':'קוטג׳','קוטג׳':'קוטג׳','גבינהלבנה':'גבינה לבנה',
+    'גבינהצהובה':'גבינה צהובה','יוגורט':'יוגורט','יוגורטיווני':'יוגורט יווני','יוגורטחלבון':'יוגורט חלבון',
+    'לחם':'לחם','לחםמלא':'לחם מלא','שיבולתשועל':'שיבולת שועל','קוואקר':'שיבולת שועל','בטטה':'בטטה',
+    'תפוחאדמה':'תפוח אדמה','אבוקדו':'אבוקדו','טחינה':'טחינה','חומוס':'חומוס','מלפפון':'מלפפון',
+    'עגבניה':'עגבנייה','עגבנייה':'עגבנייה','בננה':'בננה','תפוח':'תפוח','שקדים':'שקדים',
+    'חמאתבוטנים':'חמאת בוטנים','טונה':'טונה במים','סלמון':'סלמון','בקר':'בשר בקר טחון','בשרטחון':'בשר בקר טחון',
+    'חטיףחלבון':'חטיף חלבון','חלב':'חלב 3%','הודו':'הודו','טורטיה':'טורטיה','פיתה':'פיתה',
+    'קוסקוס':'קוסקוס מבושל','קינואה':'קינואה מבושלת','אגוזים':'אגוזי מלך','תפוז':'תפוז','אגס':'אגס'
+  };
 
-    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-    function unitLabel(unit){ return { gram:'גרם', piece:'יחידה', tbsp:'כף', cup:'גביע', slice:'פרוסה', tsp:'כפית' }[unit] || unit; }
-    function findFood(id){ return FOODS.find(f => f.id === id); }
-    function normalizeQuery(q){ return String(q || '').trim().toLowerCase().replace(/[׳'\"`]/g,'').replace(/\\s+/g,' '); }
-    function compactQuery(q){ return normalizeQuery(q).replace(/\\s+/g,''); }
+  const HEB_TO_EN = {
+    'חזהעוף':'chicken breast','עוף':'chicken breast','פרגית':'chicken thigh','אורז':'rice','אורזלבן':'white rice',
+    'ביצה':'egg','ביצים':'egg','קוטג':'cottage cheese','קוטג׳':'cottage cheese','גבינהלבנה':'white cheese',
+    'גבינהצהובה':'yellow cheese','יוגורט':'yogurt','יוגורטיווני':'greek yogurt','יוגורטחלבון':'protein yogurt',
+    'לחם':'bread','לחםמלא':'whole wheat bread','שיבולתשועל':'oats','קוואקר':'oats','בטטה':'sweet potato',
+    'תפוחאדמה':'potato','אבוקדו':'avocado','טחינה':'tahini','חומוס':'hummus','מלפפון':'cucumber',
+    'עגבניה':'tomato','עגבנייה':'tomato','בננה':'banana','תפוח':'apple','שקדים':'almonds',
+    'חמאתבוטנים':'peanut butter','טונה':'tuna','סלמון':'salmon','בקר':'ground beef','בשרטחון':'ground beef',
+    'חטיףחלבון':'protein bar','חלב':'milk','הודו':'turkey','טורטיה':'tortilla','פיתה':'pita',
+    'קוסקוס':'couscous','קינואה':'quinoa','אגוזים':'walnuts','תפוז':'orange','אגס':'pear'
+  };
 
-    function filterFoods(q){
-      const query = normalizeQuery(q);
-      const compact = compactQuery(q);
-      if(!query) return FOODS.slice(0,8);
+  const LOCAL_FOODS = [
+    { id:'chicken_breast', he:'חזה עוף', aliases:['עוף','חזה עוף','חזהעוף'], per100:{ calories:165, protein:31, carbs:0, fat:3.6 }, units:{ gram:1, piece:120, tbsp:15, cup:140 } },
+    { id:'chicken_thigh', he:'פרגית', aliases:['פרגית','ירך עוף'], per100:{ calories:209, protein:26, carbs:0, fat:10.9 }, units:{ gram:1, piece:130 } },
+    { id:'turkey', he:'הודו', aliases:['הודו'], per100:{ calories:135, protein:29, carbs:0, fat:1.2 }, units:{ gram:1, piece:120 } },
+    { id:'ground_beef', he:'בשר בקר טחון', aliases:['בקר','בשר טחון','בשרטחון','בשר בקר'], per100:{ calories:250, protein:26, carbs:0, fat:17 }, units:{ gram:1, tbsp:20 } },
+    { id:'salmon', he:'סלמון', aliases:['סלמון'], per100:{ calories:208, protein:20, carbs:0, fat:13 }, units:{ gram:1, piece:150 } },
+    { id:'tuna', he:'טונה במים', aliases:['טונה'], per100:{ calories:116, protein:26, carbs:0, fat:1 }, units:{ gram:1, tbsp:15, cup:100 } },
+    { id:'egg', he:'ביצה', aliases:['ביצה','ביצים'], per100:{ calories:155, protein:13, carbs:1.1, fat:11 }, units:{ gram:1, piece:50 } },
+    { id:'egg_white', he:'חלבון ביצה', aliases:['חלבון ביצה','לבן ביצה'], per100:{ calories:52, protein:11, carbs:0.7, fat:0.2 }, units:{ gram:1, piece:33 } },
+    { id:'rice_cooked', he:'אורז מבושל', aliases:['אורז','אורזלבן'], per100:{ calories:130, protein:2.7, carbs:28, fat:0.3 }, units:{ gram:1, tbsp:20, cup:150 } },
+    { id:'brown_rice', he:'אורז מלא מבושל', aliases:['אורז מלא','אורזמלא'], per100:{ calories:123, protein:2.7, carbs:25.6, fat:1 }, units:{ gram:1, cup:150 } },
+    { id:'pasta', he:'פסטה מבושלת', aliases:['פסטה'], per100:{ calories:157, protein:5.8, carbs:30.9, fat:0.9 }, units:{ gram:1, cup:140 } },
+    { id:'couscous', he:'קוסקוס מבושל', aliases:['קוסקוס'], per100:{ calories:112, protein:3.8, carbs:23.2, fat:0.2 }, units:{ gram:1, cup:150 } },
+    { id:'quinoa', he:'קינואה מבושלת', aliases:['קינואה'], per100:{ calories:120, protein:4.4, carbs:21.3, fat:1.9 }, units:{ gram:1, cup:150 } },
+    { id:'potato', he:'תפוח אדמה', aliases:['תפוחאדמה','תפוא'], per100:{ calories:77, protein:2, carbs:17, fat:0.1 }, units:{ gram:1, piece:150 } },
+    { id:'sweet_potato', he:'בטטה', aliases:['בטטה'], per100:{ calories:90, protein:2, carbs:21, fat:0.1 }, units:{ gram:1, piece:130 } },
+    { id:'oats', he:'שיבולת שועל', aliases:['קוואקר','שיבולתשועל'], per100:{ calories:389, protein:16.9, carbs:66.3, fat:6.9 }, units:{ gram:1, tbsp:10, cup:80 } },
+    { id:'bread', he:'לחם', aliases:['לחם'], per100:{ calories:265, protein:9, carbs:49, fat:3.2 }, units:{ gram:1, slice:30 } },
+    { id:'whole_wheat_bread', he:'לחם מלא', aliases:['לחםמלא'], per100:{ calories:247, protein:13, carbs:41, fat:4.2 }, units:{ gram:1, slice:32 } },
+    { id:'pita', he:'פיתה', aliases:['פיתה'], per100:{ calories:275, protein:9, carbs:55, fat:1.2 }, units:{ gram:1, piece:60 } },
+    { id:'tortilla', he:'טורטיה', aliases:['טורטיה'], per100:{ calories:310, protein:8, carbs:52, fat:8 }, units:{ gram:1, piece:50 } },
+    { id:'cottage', he:'קוטג׳', aliases:['קוטג','קוטג׳'], per100:{ calories:98, protein:11, carbs:3.4, fat:4.3 }, units:{ gram:1, tbsp:15, cup:250 } },
+    { id:'white_cheese', he:'גבינה לבנה', aliases:['גבינהלבנה'], per100:{ calories:95, protein:10, carbs:4, fat:5 }, units:{ gram:1, tbsp:15, cup:250 } },
+    { id:'yellow_cheese', he:'גבינה צהובה', aliases:['גבינהצהובה'], per100:{ calories:356, protein:25, carbs:2.2, fat:27 }, units:{ gram:1, slice:28 } },
+    { id:'greek_yogurt', he:'יוגורט יווני', aliases:['יוגורטיווני'], per100:{ calories:97, protein:9, carbs:3.9, fat:5 }, units:{ gram:1, cup:200 } },
+    { id:'yogurt', he:'יוגורט', aliases:['יוגורט'], per100:{ calories:60, protein:5, carbs:5, fat:3 }, units:{ gram:1, cup:200 } },
+    { id:'yogurt_pro', he:'יוגורט חלבון', aliases:['יוגורטחלבון'], per100:{ calories:73, protein:10, carbs:4, fat:1.7 }, units:{ gram:1, cup:200 } },
+    { id:'milk_3', he:'חלב 3%', aliases:['חלב'], per100:{ calories:61, protein:3.3, carbs:4.8, fat:3.2 }, units:{ gram:1, cup:240 } },
+    { id:'banana', he:'בננה', aliases:['בננה'], per100:{ calories:89, protein:1.1, carbs:23, fat:0.3 }, units:{ gram:1, piece:120 } },
+    { id:'apple', he:'תפוח', aliases:['תפוח'], per100:{ calories:52, protein:0.3, carbs:14, fat:0.2 }, units:{ gram:1, piece:150 } },
+    { id:'orange', he:'תפוז', aliases:['תפוז'], per100:{ calories:47, protein:0.9, carbs:12, fat:0.1 }, units:{ gram:1, piece:130 } },
+    { id:'pear', he:'אגס', aliases:['אגס'], per100:{ calories:57, protein:0.4, carbs:15, fat:0.1 }, units:{ gram:1, piece:160 } },
+    { id:'avocado', he:'אבוקדו', aliases:['אבוקדו'], per100:{ calories:160, protein:2, carbs:8.5, fat:14.7 }, units:{ gram:1, piece:170, tbsp:15 } },
+    { id:'almonds', he:'שקדים', aliases:['שקדים'], per100:{ calories:579, protein:21, carbs:22, fat:50 }, units:{ gram:1, tbsp:10 } },
+    { id:'walnuts', he:'אגוזי מלך', aliases:['אגוזי מלך','אגוזים'], per100:{ calories:654, protein:15, carbs:14, fat:65 }, units:{ gram:1, tbsp:10 } },
+    { id:'peanut_butter', he:'חמאת בוטנים', aliases:['חמאתבוטנים'], per100:{ calories:588, protein:25, carbs:20, fat:50 }, units:{ gram:1, tbsp:16 } },
+    { id:'tahini', he:'טחינה', aliases:['טחינה'], per100:{ calories:595, protein:17, carbs:21, fat:53 }, units:{ gram:1, tbsp:15 } },
+    { id:'olive_oil', he:'שמן זית', aliases:['שמןזית'], per100:{ calories:884, protein:0, carbs:0, fat:100 }, units:{ gram:1, tbsp:13, tsp:5 } },
+    { id:'hummus', he:'חומוס', aliases:['חומוס'], per100:{ calories:166, protein:8, carbs:14, fat:9.6 }, units:{ gram:1, tbsp:15 } },
+    { id:'cucumber', he:'מלפפון', aliases:['מלפפון'], per100:{ calories:15, protein:0.7, carbs:3.6, fat:0.1 }, units:{ gram:1, piece:120 } },
+    { id:'tomato', he:'עגבנייה', aliases:['עגבניה'], per100:{ calories:18, protein:0.9, carbs:3.9, fat:0.2 }, units:{ gram:1, piece:120 } },
+    { id:'lettuce', he:'חסה', aliases:['חסה'], per100:{ calories:15, protein:1.4, carbs:2.9, fat:0.2 }, units:{ gram:1 } },
+    { id:'broccoli', he:'ברוקולי', aliases:['ברוקולי'], per100:{ calories:34, protein:2.8, carbs:7, fat:0.4 }, units:{ gram:1 } },
+    { id:'corn', he:'תירס', aliases:['תירס'], per100:{ calories:96, protein:3.4, carbs:21, fat:1.5 }, units:{ gram:1 } },
+    { id:'protein_bar', he:'חטיף חלבון', aliases:['חטיף','חטיףחלבון'], per100:{ calories:370, protein:30, carbs:35, fat:12 }, units:{ gram:1, piece:60 } }
+  ];
 
-      const mapped = SYNONYMS[compact] ? normalizeQuery(SYNONYMS[compact]) : '';
-      const scored = FOODS.map(food => {
-        const names = [food.he].concat(food.aliases).map(v => normalizeQuery(v));
-        const compactNames = names.map(v => v.replace(/\\s+/g,''));
-        let score = 0;
+  const state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+    items: [],
+    selectedFoodId: null,
+    externalFoods: [],
+    lastQuery: ''
+  };
 
-        if(mapped && names.includes(mapped)) score = 120;
+  const searchInput = document.getElementById('searchInput');
+  const resultsList = document.getElementById('resultsList');
+  const selectedName = document.getElementById('selectedName');
+  const selectedBase = document.getElementById('selectedBase');
+  const amountInput = document.getElementById('amountInput');
+  const unitSelect = document.getElementById('unitSelect');
+  const mealSelect = document.getElementById('mealSelect');
+  const addBtn = document.getElementById('addBtn');
+  let searchCounter = 0;
 
-        names.forEach(name => {
-          if(name === query) score = Math.max(score,100);
-          else if(name.startsWith(query)) score = Math.max(score,85);
-          else if(name.includes(query)) score = Math.max(score,65);
-        });
+  function save(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      items: state.items,
+      selectedFoodId: state.selectedFoodId,
+      externalFoods: state.externalFoods,
+      lastQuery: state.lastQuery
+    }));
+  }
 
-        compactNames.forEach(name => {
-          if(name === compact) score = Math.max(score,95);
-          else if(name.startsWith(compact)) score = Math.max(score,80);
-          else if(name.includes(compact)) score = Math.max(score,60);
-        });
+  function unitLabel(unit){
+    return { gram:'גרם', piece:'יחידה', tbsp:'כף', cup:'גביע', slice:'פרוסה', tsp:'כפית' }[unit] || unit;
+  }
 
-        return { food, score };
-      }).filter(x => x.score > 0).sort((a,b) => b.score - a.score || a.food.he.localeCompare(b.food.he,'he'));
+  function normalizeQuery(q){
+    return String(q || '')
+      .trim()
+      .toLowerCase()
+      .replace(/[׳'"`]/g,'')
+      .replace(/\s+/g,' ');
+  }
 
-      return scored.slice(0,12).map(x =>
+  function compactQuery(q){
+    return normalizeQuery(q).replace(/\s+/g,'');
+  }
+
+  function mapToExternalSearch(q){
+    const compact = compactQuery(q);
+    return HEB_TO_EN[compact] || normalizeQuery(q);
+  }
+
+  function allFoods(){
+    return LOCAL_FOODS.concat(state.externalFoods || []);
+  }
+
+  function findFood(id){
+    return allFoods().find(f => f.id === id) || null;
+  }
+
+  function scoreFood(food, query, compact, mapped){
+    const names = [food.he].concat(food.aliases || []).map(v => normalizeQuery(v));
+    const compactNames = names.map(v => v.replace(/\s+/g,''));
+    let score = 0;
+
+    if(mapped && names.includes(mapped)) score = 120;
+
+    names.forEach(name => {
+      if(name === query) score = Math.max(score, 100);
+      else if(name.startsWith(query)) score = Math.max(score, 85);
+      else if(name.includes(query)) score = Math.max(score, 65);
+    });
+
+    compactNames.forEach(name => {
+      if(name === compact) score = Math.max(score, 95);
+      else if(name.startsWith(compact)) score = Math.max(score, 80);
+      else if(name.includes(compact)) score = Math.max(score, 60);
+    });
+
+    return score;
+  }
+
+  function filterFoods(q){
+    const query = normalizeQuery(q);
+    const compact = compactQuery(q);
+    if(!query) return allFoods().slice(0,8);
+
+    const mapped = SYNONYMS[compact] ? normalizeQuery(SYNONYMS[compact]) : '';
+    const scored = allFoods()
+      .map(food => ({ food, score: scoreFood(food, query, compact, mapped) }))
+      .filter(x => x.score > 0)
+      .sort((a,b) => b.score - a.score || a.food.he.localeCompare(b.food.he, 'he'));
+
+    return scored.slice(0,12).map(x => x.food);
+  }
+
+  async function fetchExternalFoods(q){
+    const translated = mapToExternalSearch(q);
+    if(!translated || translated.length < 2) return [];
+
+    try {
+      const url = OFF_URL + '?search_terms=' + encodeURIComponent(translated) + '&search_simple=1&action=process&json=1&page_size=10';
+      const res = await fetch(url);
+      const data = await res.json();
+      const products = Array.isArray(data.products) ? data.products : [];
+
+      return products.map((p, idx) => {
+        const cals = Number(p?.nutriments?.['energy-kcal_100g'] || p?.nutriments?.energy_kcal_100g || 0);
+        const protein = Number(p?.nutriments?.proteins_100g || 0);
+        const carbs = Number(p?.nutriments?.carbohydrates_100g || 0);
+        const fat = Number(p?.nutriments?.fat_100g || 0);
+
+        if(!p?.product_name || !cals) return null;
+
+        return {
+          id: 'ext_' + (p.code || idx),
+          he: p.product_name,
+          aliases: [p.product_name, translated],
+          per100: { calories: cals, protein, carbs, fat },
+          units: { gram:1, piece:100, tbsp:15, cup:240 },
+          source: 'url'
+        };
+      }).filter(Boolean).slice(0,8);
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function gramsFor(food, amount, unit){
+    return amount * ((food.units && food.units[unit]) || 1);
+  }
+
+  function calc(food, amount, unit){
+    const grams = gramsFor(food, amount, unit);
+    const factor = grams / 100;
+    return {
+      grams,
+      calories: food.per100.calories * factor,
+      protein: food.per100.protein * factor,
+      carbs: food.per100.carbs * factor,
+      fat: food.per100.fat * factor
+    };
+  }
+
+  function setSelected(foodId){
+    state.selectedFoodId = foodId;
+    save();
+    renderSelected();
+    renderResults(searchInput.value);
+  }
+
+  function getSelectedFood(){
+    return state.selectedFoodId ? findFood(state.selectedFoodId) : null;
+  }
+
+  function renderResults(q){
+    const foods = filterFoods(q);
+    resultsList.innerHTML = foods.map((food, index) => {
+      const extra = food.source === 'url' ? ' • URL' : '';
+      return '<div class="result-item ' + (state.selectedFoodId===food.id?'active':'') + '" onclick="setSelected(\'' + food.id + '\')">'
+        + '<div><div class="result-title">' + food.he + '</div><div class="result-sub">ל־100 גרם: ' + food.per100.calories + ' קלוריות • חלבון ' + food.per100.protein + ' • פחמימות ' + food.per100.carbs + ' • שומן ' + food.per100.fat + extra + '</div></div>'
+        + '<button class="add-mini" onclick="event.stopPropagation(); setSelected(\'' + food.id + '\')">' + (index===0?'✓':'+') + '</button>'
+        + '</div>';
+    }).join('');
+
+    if(!foods.length){
+      resultsList.innerHTML = '<div class="empty">לא נמצאו תוצאות. נסה: חזה עוף, אורז, ביצה, קוטג׳, טחינה, אבוקדו</div>';
+    }
+  }
+
+  function renderSelected(){
+    const food = getSelectedFood();
+    if(!food){
+      selectedName.textContent = 'לא נבחר מזון';
+      selectedBase.textContent = 'כתוב מזון בעברית והמערכת תציע התאמה';
+      unitSelect.innerHTML = '<option value="gram">גרם</option><option value="piece">יחידה</option><option value="tbsp">כף</option><option value="cup">גביע</option>';
+      document.getElementById('previewCalories').textContent = '0';
+      document.getElementById('previewProtein').textContent = '0';
+      document.getElementById('previewCarbs').textContent = '0';
+      document.getElementById('previewFat').textContent = '0';
+      return;
+    }
+
+    selectedName.textContent = food.he;
+    selectedBase.textContent = (food.source === 'url' ? 'נשלף מ־URL • ' : 'מאגר פנימי בעברית • ') + 'ל־100 גרם: ' + food.per100.calories + ' קלוריות';
+    unitSelect.innerHTML = Object.keys(food.units || { gram:1 })
+      .map(u => '<option value="' + u + '">' + unitLabel(u) + '</option>')
+      .join('');
+    updatePreview();
+  }
+
+  function updatePreview(){
+    const food = getSelectedFood();
+    if(!food) return;
+
+    const amount = Number(amountInput.value || 0);
+    const unit = unitSelect.value;
+    const values = calc(food, amount, unit);
+
+    document.getElementById('previewCalories').textContent = Math.round(values.calories);
+    document.getElementById('previewProtein').textContent = Math.round(values.protein);
+    document.getElementById('previewCarbs').textContent = Math.round(values.carbs);
+    document.getElementById('previewFat').textContent = Math.round(values.fat);
+  }
+
+  function addItem(){
+    const food = getSelectedFood();
+    const amount = Number(amountInput.value || 0);
+    const unit = unitSelect.value;
+    const meal = mealSelect.value;
+
+    if(!food) return alert('בחר מזון');
+    if(!amount || amount <= 0) return alert('הזן כמות תקינה');
+
+    const values = calc(food, amount, unit);
+
+    state.items.push({
+      id: Date.now().toString(36),
+      foodId: food.id,
+      he: food.he,
+      meal,
+      amount,
+      unit,
+      calories: values.calories,
+      protein: values.protein,
+      carbs: values.carbs,
+      fat: values.fat
+    });
+
+    save();
+    renderAll();
+  }
+
+  function removeItem(id){
+    state.items = state.items.filter(item => item.id !== id);
+    save();
+    renderAll();
+  }
+
+  function totals(items){
+    return items.reduce((acc,item) => {
+      acc.calories += item.calories;
+      acc.protein += item.protein;
+      acc.carbs += item.carbs;
+      acc.fat += item.fat;
+      return acc;
+    }, { calories:0, protein:0, carbs:0, fat:0 });
+  }
+
+  function renderSummary(){
+    const sum = totals(state.items);
+    document.getElementById('caloriesValue').textContent = Math.round(sum.calories);
+    document.getElementById('goalValue').textContent = GOAL.calories;
+    document.getElementById('proteinValue').textContent = Math.round(sum.protein);
+    document.getElementById('carbsValue').textContent = Math.round(sum.carbs);
+    document.getElementById('fatValue').textContent = Math.round(sum.fat);
+
+    const circumference = 490.1;
+    const pct = Math.min(sum.calories / GOAL.calories, 1);
+    document.getElementById('progressRing').style.strokeDashoffset = circumference - (circumference * pct);
+  }
+
+  function renderMeal(mealKey, listId, totalId){
+    const items = state.items.filter(item => item.meal === mealKey);
+    const total = totals(items);
+    document.getElementById(totalId).textContent = Math.round(total.calories) + ' קלוריות';
+    const list = document.getElementById(listId);
+
+    if(!items.length){
+      list.innerHTML = '<div class="empty">אין פריטים בארוחה זו</div>';
+      return;
+    }
+
+    list.innerHTML = items.map(item =>
+      '<div class="meal-row"><div><div class="meal-food">' + item.he + '</div><div class="meal-sub">' + item.amount + ' ' + unitLabel(item.unit) + ' • ' + Math.round(item.calories) + ' קלוריות • חלבון ' + Math.round(item.protein) + ' • פחמימות ' + Math.round(item.carbs) + ' • שומן ' + Math.round(item.fat) + '</div></div><button class="remove-btn" onclick="removeItem(\'' + item.id + '\')">מחק</button></div>'
+    ).join('');
+  }
+
+  function renderAll(){
+    renderSummary();
+    renderResults(searchInput.value);
+    renderSelected();
+    renderMeal('breakfast','breakfastList','breakfastTotal');
+    renderMeal('lunch','lunchList','lunchTotal');
+    renderMeal('dinner','dinnerList','dinnerTotal');
+    renderMeal('snack','snackList','snackTotal');
+  }
+
+  async function runSearch(q){
+    state.lastQuery = q;
+    const localBest = filterFoods(q)[0];
+
+    if(localBest){
+      state.selectedFoodId = localBest.id;
+      save();
+      renderAll();
+    } else {
+      renderResults(q);
+    }
+
+    if(q && q.trim().length >= 2){
+      const ticket = ++searchCounter;
+      const external = await fetchExternalFoods(q);
+      if(ticket !== searchCounter) return;
+
+      state.externalFoods = external;
+      const bestAfter = filterFoods(q)[0];
+      if(bestAfter) state.selectedFoodId = bestAfter.id;
+      save();
+      renderAll();
+    }
+  }
+
+  searchInput.addEventListener('input', e => runSearch(e.target.value));
+  searchInput.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      runSearch(searchInput.value);
+      amountInput.focus();
+      amountInput.select();
+    }
+  });
+
+  amountInput.addEventListener('input', updatePreview);
+  unitSelect.addEventListener('change', updatePreview);
+  addBtn.addEventListener('click', addItem);
+
+  window.setSelected = setSelected;
+  window.removeItem = removeItem;
+  window.quickSearch = function(v){
+    searchInput.value = v;
+    runSearch(v);
+  };
+
+  renderAll();
+</script>
