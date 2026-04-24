@@ -286,7 +286,34 @@
       }catch(e){}
       return 0;
     }
+function getTodayWorkoutCalories(){
+  const today = new Date().toISOString().slice(0,10);
 
+  const sources = [
+    'workouts',
+    'fitness_workouts',
+    'workoutHistory',
+    'trainingHistory'
+  ];
+
+  let total = 0;
+
+  sources.forEach(key=>{
+    try{
+      const data = JSON.parse(localStorage.getItem(key) || '[]');
+
+      data.forEach(w=>{
+        if(w.date === today){
+          total += Number(w.calories || 0);
+        }
+      });
+
+    }catch(e){}
+  });
+
+  return Math.round(total);
+}
+    
     function openFullStats(){
       const sum=totals(state.items);
       const eaten=Math.round(sum.calories);
@@ -295,6 +322,8 @@
       const totalDeficit=foodDeficit+workoutBurn;
       const avg=Math.round(state.week.reduce((a,b)=>a+b,0)/state.week.length);
 
+
+    const workoutBurn = getTodayWorkoutCalories();
       document.getElementById('statsEaten').textContent=eaten;
       document.getElementById('statsFoodDeficit').textContent=foodDeficit;
       document.getElementById('statsWorkoutBurn').textContent=workoutBurn;
