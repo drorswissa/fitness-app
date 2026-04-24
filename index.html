@@ -783,25 +783,76 @@
       save();
     }
 
-    function finishWorkout(){
-      const day = selectedDay();
-      const completedExercises = day.exercises.filter(ex => ex.done).length;
-      state.history.push({
-        id: uid(),
-        day: `${day.name} - ${day.label}`,
-        date: new Date().toLocaleDateString('he-IL'),
-        completedExercises,
-        duration: state.timers.workoutSeconds
-      });
-      day.exercises.forEach(ex => { ex.done = false; ex.sets.forEach(s => s.done = false); });
-      state.activeExerciseIndex = 0;
-      state.timers.workoutSeconds = 0;
-      state.timers.restSecondsLeft = 0;
-      clearInterval(workoutTimerInterval); workoutTimerInterval = null; state.timers.workoutRunning = false;
-      clearInterval(restTimerInterval); restTimerInterval = null; state.timers.restRunning = false;
-      render();
-      alert('האימון נשמר');
-    }
+   function calculateWorkoutCalories(){
+  let weight = 80;
+
+  try{
+    const nutrition = JSON.parse(localStorage.getItem('nutrition_final_clean_v1') || '{}');
+    weight = Number(nutrition?.profile?.weight || 80);
+  }catch(e){}
+
+  const minutes = Math.max(1, state.timers.workoutSeconds / 60);
+
+  let completedSets = 0;
+  let volume = 0;
+
+  selectedDay().exercises.forEach(ex=>{
+    ex.sets.forEach(s=>{
+      if(s.done){
+        const kg = Number(s.kg) || 0;
+        const reps = Number(s.reps) || 0;
+        completedSets++;
+        volume += kg * reps;
+      }
+    });
+  });
+
+  let factor = 0.075;
+  if(completedSets >= 15) factor = 0.09;
+  if(completedSets >= 21) factor = 0.10;
+
+  const calories = Math.round(minutes * weight * factor);
+  return Math.max(0, calories);
+}
+
+function finishWorkout(){
+  const day = selectedDay();
+  const completedExercises = day.exercises.filter(ex => ex.done).length;
+  const caloriesBurned = calculateWorkoutCalories();
+
+  const today = new Date().toISOString().slice(0,10);
+  const workouts = JSON.parse(localStorage.getItem('workouts') || '[]');
+
+  workouts.push({
+    id: uid(),
+    date: today,
+    calories: caloriesBurned,
+    duration: state.timers.workoutSeconds,
+    day: `${day.name} - ${day.label}`
+  });
+
+  localStorage.setItem('workouts', JSON.stringify(workouts));
+
+  state.history.push({
+    id: uid(),
+    day: `${day.name} - ${day.label}`,
+    date: new Date().toLocaleDateString('he-IL'),
+    completedExercises,
+    duration: state.timers.workoutSeconds,
+    calories: caloriesBurned
+  });
+
+  day.exercises.forEach(ex => { ex.done = false; ex.sets.forEach(s => s.done = false); });
+  state.activeExerciseIndex = 0;
+  state.timers.workoutSeconds = 0;
+  state.timers.restSecondsLeft = 0;
+
+  clearInterval(workoutTimerInterval); workoutTimerInterval = null; state.timers.workoutRunning = false;
+  clearInterval(restTimerInterval); restTimerInterval = null; state.timers.restRunning = false;
+
+  render();
+  alert(`האימון נשמר 🔥 שרפת בערך ${caloriesBurned} קלוריות`);
+}
 
     function saveSpotify(){
       const value = document.getElementById('spotifyInput').value.trim();
