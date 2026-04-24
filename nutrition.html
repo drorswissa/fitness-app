@@ -92,6 +92,63 @@
       .macro-grid,.preview-box,.selected-grid{grid-template-columns:1fr}
       .ghost{width:88px}
     }
+  
+
+    /* ===== PRO HERO — same functionality, improved app-style frame ===== */
+    .hero{
+      padding:18px 16px 16px;
+      overflow:hidden;
+      border-radius:28px;
+      background:
+        radial-gradient(circle at 22% 45%, rgba(255,158,61,.08), transparent 30%),
+        radial-gradient(circle at 78% 28%, rgba(115,92,255,.07), transparent 34%),
+        linear-gradient(180deg,rgba(12,21,38,.98),rgba(7,12,23,.98));
+    }
+    .hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .hero-title{font-size:18px;font-weight:900}
+    .goal-pill{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:16px;padding:10px 14px;font-size:14px;font-weight:900;color:#edf4ff}
+    .hero-grid{display:grid;grid-template-columns:1.18fr 1fr 1fr 1fr;gap:10px;align-items:stretch;direction:ltr}
+    .calorie-panel{position:relative;min-height:188px;display:flex;align-items:center;justify-content:center;direction:rtl}
+    .calorie-panel .ring-wrap{margin:0;min-height:180px;width:100%;overflow:hidden}
+    .calorie-panel .ring-wrap svg{transform:rotate(-90deg) scale(.84);transform-origin:center}
+    .calorie-panel .ring-text .main{font-size:31px;text-shadow:0 2px 0 rgba(255,158,61,.35)}
+    .calorie-panel .ring-text .sub{font-size:14px;color:#dce7fb;line-height:1.45;margin-top:9px}
+    .macro-grid{display:contents}
+    .macro{
+      min-height:188px;
+      border-radius:22px;
+      padding:13px 8px;
+      background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018)) !important;
+      border:1px solid rgba(255,255,255,.09);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 12px 28px rgba(0,0,0,.22);
+      align-items:center !important;
+      justify-content:space-between;
+      text-align:center !important;
+      direction:rtl;
+    }
+    .macro .label,.macro .value,.macro .unit{text-align:center !important;width:100%}
+    .macro .label{font-size:14px;font-weight:900;color:#fff}
+    .macro .icon{font-size:28px;line-height:1;filter:drop-shadow(0 8px 12px rgba(0,0,0,.28))}
+    .macro .value{font-size:25px;font-weight:950;margin:0;text-shadow:0 2px 0 rgba(255,158,61,.3)}
+    .macro .unit{font-size:13px;color:#dce7fb;line-height:1.35;margin:0}
+    .macro-progress{width:100%;height:9px;border-radius:999px;background:rgba(255,255,255,.11);overflow:hidden;margin-top:2px}
+    .macro-progress span{display:block;height:100%;width:0%;border-radius:999px;transition:width .25s ease}
+    .macro.protein{border-color:rgba(255,190,62,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 26px rgba(255,190,62,.06)}
+    .macro.carbs{border-color:rgba(83,214,159,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 26px rgba(83,214,159,.055)}
+    .macro.fat{border-color:rgba(71,149,255,.24);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 26px rgba(71,149,255,.055)}
+    .protein .macro-progress span{background:linear-gradient(90deg,#ffb83f,#ffe08a)}
+    .carbs .macro-progress span{background:linear-gradient(90deg,#54d66a,#b9f56b)}
+    .fat .macro-progress span{background:linear-gradient(90deg,#4f9cff,#77d9ff)}
+    .goal-row{margin-top:14px;color:#aebbd5;text-align:center;font-size:14px}
+
+    @media (max-width:390px){
+      .hero-grid{grid-template-columns:1.12fr 1fr 1fr 1fr;gap:7px}
+      .calorie-panel,.macro{min-height:162px}
+      .calorie-panel .ring-wrap{min-height:158px}
+      .calorie-panel .ring-wrap svg{transform:rotate(-90deg) scale(.68);transform-origin:center}
+      .macro{border-radius:20px;padding:11px 6px}
+      .macro .label{font-size:12px}.macro .icon{font-size:24px}.macro .value{font-size:22px}.macro .unit{font-size:12px}
+    }
   </style>
 </head>
 <body>
@@ -102,22 +159,51 @@
   </div>
 
   <div class="card hero">
-    <div class="ring-wrap">
-      <svg width="196" height="196" viewBox="0 0 196 196">
-        <circle cx="98" cy="98" r="78" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="16"></circle>
-        <circle id="progressRing" cx="98" cy="98" r="78" fill="none" stroke="var(--orange)" stroke-width="16" stroke-linecap="round" stroke-dasharray="490.1" stroke-dashoffset="490.1"></circle>
-      </svg>
-      <div class="ring-text">
-        <div class="main" id="caloriesValue">0</div>
-        <div class="sub">מתוך <span id="goalValue">1758</span></div>
+    <div class="hero-top">
+      <button class="goal-pill">🎯 יעדים</button>
+      <div class="hero-title">סיכום יומי</div>
+    </div>
+
+    <div class="hero-grid">
+      <div class="calorie-panel">
+        <div class="ring-wrap">
+          <svg width="196" height="196" viewBox="0 0 196 196">
+            <circle cx="98" cy="98" r="78" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="16"></circle>
+            <circle id="progressRing" cx="98" cy="98" r="78" fill="none" stroke="var(--orange)" stroke-width="16" stroke-linecap="round" stroke-dasharray="490.1" stroke-dashoffset="490.1"></circle>
+          </svg>
+          <div class="ring-text">
+            <div class="main" id="caloriesValue">0</div>
+            <div class="sub"><span id="goalValue">1758</span> /<br>קלוריות</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="macro protein">
+        <div class="label">חלבון</div>
+        <div class="icon">💪</div>
+        <div class="value"><span id="proteinValue">0</span></div>
+        <div class="unit">גר׳ / <span id="proteinGoal">169</span></div>
+        <div class="macro-progress"><span id="proteinBar"></span></div>
+      </div>
+
+      <div class="macro carbs">
+        <div class="label">פחמימות</div>
+        <div class="icon">🌿</div>
+        <div class="value"><span id="carbsValue">0</span></div>
+        <div class="unit">גר׳ / <span id="carbsGoal">132</span></div>
+        <div class="macro-progress"><span id="carbsBar"></span></div>
+      </div>
+
+      <div class="macro fat">
+        <div class="label">שומן</div>
+        <div class="icon">💧</div>
+        <div class="value"><span id="fatValue">0</span></div>
+        <div class="unit">גר׳ / <span id="fatGoal">63</span></div>
+        <div class="macro-progress"><span id="fatBar"></span></div>
       </div>
     </div>
-    <div class="goal-row">יעד מותאם: גרעון יומי של 500 קלוריות לפי 178 ס״מ ו־94.1 ק״ג</div>
-    <div class="macro-grid">
-      <div class="macro protein"><div class="label">חלבון</div><div class="value"><span id="proteinValue">0</span></div><div class="unit">גרם</div></div>
-      <div class="macro carbs"><div class="label">פחמימות</div><div class="value"><span id="carbsValue">0</span></div><div class="unit">גרם</div></div>
-      <div class="macro fat"><div class="label">שומן</div><div class="value"><span id="fatValue">0</span></div><div class="unit">גרם</div></div>
-    </div>
+
+    <div class="goal-row">🔥 יעד קלורי יומי: <span id="goalLineValue">1758</span> קל׳ — הכל בתוך מסגרת אחת</div>
   </div>
 
   <div class="card search-card">
@@ -307,9 +393,27 @@
       const sum = totals(state.items);
       document.getElementById('caloriesValue').textContent = Math.round(sum.calories);
       document.getElementById('goalValue').textContent = GOAL.calories;
+      const goalLine = document.getElementById('goalLineValue');
+      if(goalLine) goalLine.textContent = GOAL.calories;
+
       document.getElementById('proteinValue').textContent = Math.round(sum.protein);
       document.getElementById('carbsValue').textContent = Math.round(sum.carbs);
       document.getElementById('fatValue').textContent = Math.round(sum.fat);
+
+      const pg = document.getElementById('proteinGoal');
+      const cg = document.getElementById('carbsGoal');
+      const fg = document.getElementById('fatGoal');
+      if(pg) pg.textContent = GOAL.protein;
+      if(cg) cg.textContent = GOAL.carbs;
+      if(fg) fg.textContent = GOAL.fat;
+
+      const pb = document.getElementById('proteinBar');
+      const cb = document.getElementById('carbsBar');
+      const fb = document.getElementById('fatBar');
+      if(pb) pb.style.width = Math.min(100, (sum.protein / GOAL.protein) * 100) + '%';
+      if(cb) cb.style.width = Math.min(100, (sum.carbs / GOAL.carbs) * 100) + '%';
+      if(fb) fb.style.width = Math.min(100, (sum.fat / GOAL.fat) * 100) + '%';
+
       const pct = Math.min(sum.calories / GOAL.calories, 1);
       document.getElementById('progressRing').style.strokeDashoffset = 490.1 - (490.1 * pct);
     }
