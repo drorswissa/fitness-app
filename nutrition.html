@@ -3,453 +3,89 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>מעקב תזונה PRO</title>
+  <title>מעקב גרעון קלורי</title>
   <style>
-    :root{
-      --bg:#060b16;
-      --panel:#0c1526;
-      --panel-2:#101b31;
-      --line:rgba(255,255,255,.08);
-      --text:#f7f9fd;
-      --muted:#9aa6c0;
-      --orange:#ff9e3d;
-      --purple:#735cff;
-      --green:#19b27d;
-      --yellow:#c87a11;
-      --shadow:0 20px 46px rgba(0,0,0,.35);
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:radial-gradient(circle at top,#0a1426 0%,#060b16 48%,#04070f 100%);color:var(--text);font-family:Inter,Arial,Helvetica,sans-serif}
-    body{max-width:430px;margin:0 auto;min-height:100vh;padding:16px 14px 110px}
-    .topbar{display:grid;grid-template-columns:96px 1fr 96px;align-items:center;margin-bottom:14px}
-    .title{text-align:center;font-size:19px;font-weight:900;letter-spacing:.2px}
-    .back-btn{justify-self:start;border:none;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);padding:14px 18px;border-radius:18px;font-weight:900;cursor:pointer;box-shadow:var(--shadow)}
-    .ghost{width:96px}
+    :root{--bg:#050b16;--panel:#0d1626;--line:rgba(255,255,255,.08);--text:#f4f8ff;--muted:#9aa8c0;--orange:#f7a536;--purple:#9a63ff;--green:#53d69f;--blue:#62a8ff;--shadow:0 22px 44px rgba(0,0,0,.34)}
+    *{box-sizing:border-box} html,body{margin:0;background:radial-gradient(circle at top,#0a1425 0%,#050b16 48%,#04070f 100%);color:var(--text);font-family:Inter,Arial,Helvetica,sans-serif} body{max-width:430px;margin:0 auto;min-height:100vh;padding:14px 12px 100px} button,input,select{font:inherit}
+    .topbar{display:grid;grid-template-columns:52px 52px 1fr 52px;gap:10px;align-items:center;margin-bottom:12px}.round-btn{width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow)}.title{font-size:18px;font-weight:900;text-align:center}.date-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px;color:#dce6f8}.date-row .chev{font-size:28px;cursor:pointer}.date-row .date{font-size:14px;color:#d3deef;display:flex;align-items:center;gap:8px}
+    .card{background:linear-gradient(180deg,rgba(13,22,38,.98),rgba(10,15,27,.98));border:1px solid var(--line);border-radius:24px;padding:14px;box-shadow:var(--shadow);margin-bottom:14px}.summary-head,.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.section-title{font-size:18px;font-weight:900}.chip-btn{border:1px solid var(--line);background:rgba(255,255,255,.045);color:#fff;padding:10px 14px;border-radius:16px;font-weight:900}
 
-    .card{background:linear-gradient(180deg,rgba(11,19,36,.98),rgba(8,13,24,.98));border:1px solid var(--line);border-radius:28px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
-    .hero{padding:18px 18px 24px}
-    .ring-wrap{display:flex;justify-content:center;position:relative;margin:6px 0 16px}
-    .ring-wrap svg{transform:rotate(-90deg) scale(.88);transform-origin:center}
-    .ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-    .ring-text .main{font-size:32px;font-weight:900;line-height:1}
-    .ring-text .sub{margin-top:12px;color:#a7b4ce;font-size:14px}
-    .goal-row{text-align:center;color:var(--muted);font-size:14px;line-height:1.5;margin-top:8px}
+    /* TOP HERO */
+    .hero{padding:18px 16px 16px;overflow:hidden;border-radius:28px;background:radial-gradient(circle at 22% 45%,rgba(255,158,61,.08),transparent 30%),radial-gradient(circle at 78% 28%,rgba(115,92,255,.07),transparent 34%),linear-gradient(180deg,rgba(12,21,38,.98),rgba(7,12,23,.98))}.hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.hero-title{font-size:18px;font-weight:900}.hero-grid{display:grid;grid-template-columns:1.05fr .9fr .9fr .9fr;gap:8px;align-items:stretch;direction:ltr;margin-left:-10px;margin-right:10px}.calorie-panel{position:relative;min-width:0;min-height:188px;display:flex;align-items:center;justify-content:center;direction:rtl}.ring-wrap{position:relative;display:flex;align-items:center;justify-content:center;min-height:180px;width:100%;overflow:hidden}.calorie-panel .ring-wrap svg{transform:rotate(-90deg) scale(.78);transform-origin:center}.ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.ring-text .main{font-size:31px;font-weight:950;text-shadow:0 2px 0 rgba(255,158,61,.35)}.ring-text .sub{font-size:14px;color:#dce7fb;line-height:1.45;margin-top:9px}.macro{min-width:0;min-height:188px;border-radius:22px;padding:13px 7px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));border:1px solid rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 12px 28px rgba(0,0,0,.22);display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;direction:rtl}.macro .label{font-size:14px;font-weight:900}.macro .icon{font-size:28px;line-height:1;filter:drop-shadow(0 8px 12px rgba(0,0,0,.28))}.macro .value{font-size:25px;font-weight:950;text-shadow:0 2px 0 rgba(255,158,61,.3)}.macro .unit{font-size:13px;color:#dce7fb;line-height:1.35}.macro-progress{width:100%;height:9px;border-radius:999px;background:rgba(255,255,255,.11);overflow:hidden}.macro-progress span{display:block;height:100%;width:0%;border-radius:999px;transition:width .25s ease}.macro.protein{border-color:rgba(255,190,62,.2)}.macro.carbs{border-color:rgba(83,214,159,.22)}.macro.fat{border-color:rgba(71,149,255,.24)}.protein .macro-progress span{background:linear-gradient(90deg,#ffb83f,#ffe08a)}.carbs .macro-progress span{background:linear-gradient(90deg,#54d66a,#b9f56b)}.fat .macro-progress span{background:linear-gradient(90deg,#4f9cff,#77d9ff)}.goal-row{margin-top:14px;color:#c2cce0;text-align:center;font-size:14px}
 
-    .macro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
-    .macro{padding:18px 10px;border-radius:22px;text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:flex-end;justify-content:center}
-    .macro .label{font-size:14px;font-weight:800;width:100%;text-align:right}
-    .macro .value{font-size:19px;font-weight:900;margin-top:10px;width:100%;text-align:right}
-    .macro .unit{font-size:13px;margin-top:3px;color:rgba(255,255,255,.92);width:100%;text-align:right}
-    .macro .label{font-size:14px;font-weight:800}
-    .macro .value{font-size:19px;font-weight:900;margin-top:10px}
-    .macro .unit{font-size:13px;margin-top:3px;color:rgba(255,255,255,.92)}
-    .protein{background:linear-gradient(180deg,#7d69ff,#5646d8)}
-    .carbs{background:linear-gradient(180deg,#19bf87,#129166)}
-    .fat{background:linear-gradient(180deg,#d98b18,#b86f0b)}
-
-    .search-card{padding:16px}
-    .search-shell{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03));border:1px solid var(--line);border-radius:28px;padding:16px 18px}
-    .search-shell input{width:100%;border:none;outline:none;background:transparent;color:var(--text);font-size:20px;font-weight:800}
-    .search-shell input::placeholder{color:#7c89a3}
-    .quick-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px}
-    .chip{border:none;background:rgba(255,255,255,.05);border:1px solid var(--line);color:#eaf0fb;padding:11px 14px;border-radius:999px;font-size:14px;cursor:pointer}
-
-    .section-title{font-size:18px;font-weight:900;margin:0 0 12px 4px}
-    .results-card{background:transparent;border:none;box-shadow:none;padding:0;margin-bottom:16px}
-    .result-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;background:linear-gradient(180deg,rgba(12,18,34,.98),rgba(8,13,24,.98));border:1px solid var(--line);border-radius:22px;margin-bottom:10px;cursor:pointer}
-    .result-item.active{border-color:rgba(115,92,255,.55);box-shadow:0 0 0 1px rgba(115,92,255,.15) inset}
-    .result-title{font-size:16px;font-weight:900}
-    .result-sub{font-size:12px;color:var(--muted);margin-top:5px}
-    .add-mini{border:none;background:linear-gradient(180deg,#8d69ff,#6e57ff);color:#fff;width:42px;height:42px;border-radius:14px;font-size:22px;font-weight:900;cursor:pointer}
-
-    .details-card{padding:18px}
-    .selected-name{font-size:20px;font-weight:900;margin-top:10px}
-    .selected-sub{font-size:13px;color:var(--muted);margin-top:6px}
-    .selected-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-    .field{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:20px;padding:14px}
-    .field.full{grid-column:1/-1}
-    .field label{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}
-    .field input,.field select{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-size:18px;font-weight:900}
-
-    .preview-box{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
-    .preview-metric{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;padding:12px 8px;text-align:center}
-    .preview-metric .n{font-size:17px;font-weight:900}
-    .preview-metric .t{font-size:11px;color:var(--muted);margin-top:4px}
-    .primary-btn{width:100%;margin-top:16px;border:none;border-radius:22px;padding:16px 18px;font-size:18px;font-weight:900;background:linear-gradient(180deg,#825fff,#694bff);color:#fff;cursor:pointer;box-shadow:0 12px 28px rgba(105,75,255,.32)}
-
-    .meal-card{padding:18px 16px 10px}
-    .meal-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px}
-    .meal-name{font-size:18px;font-weight:900}
-    .meal-kcal{font-size:14px;color:var(--muted)}
-    .meal-row{display:grid;grid-template-columns:1fr auto;gap:10px;padding:12px 0;border-top:1px solid rgba(255,255,255,.05)}
-    .meal-food{font-size:15px;font-weight:800}
-    .meal-sub{font-size:12px;color:var(--muted);margin-top:4px}
-    .remove-btn{border:none;background:rgba(255,255,255,.05);border:1px solid var(--line);color:#dbe2f0;border-radius:12px;padding:8px 10px;cursor:pointer;height:max-content}
-    .empty{padding:16px;text-align:center;color:var(--muted);font-size:14px;border:1px dashed rgba(255,255,255,.09);border-radius:18px;background:rgba(255,255,255,.02)}
-
-    @media (max-width:390px){
-      .topbar{grid-template-columns:88px 1fr 88px}
-      .macro-grid,.preview-box,.selected-grid{grid-template-columns:1fr}
-      .ghost{width:88px}
-    }
-  
-
-    /* ===== PRO HERO — same functionality, improved app-style frame ===== */
-    .hero{
-      padding:18px 16px 16px;
-      overflow:hidden;
-      border-radius:28px;
-      background:
-        radial-gradient(circle at 22% 45%, rgba(255,158,61,.08), transparent 30%),
-        radial-gradient(circle at 78% 28%, rgba(115,92,255,.07), transparent 34%),
-        linear-gradient(180deg,rgba(12,21,38,.98),rgba(7,12,23,.98));
-    }
-    .hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-    .hero-title{font-size:18px;font-weight:900}
-    .goal-pill{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:16px;padding:10px 14px;font-size:14px;font-weight:900;color:#edf4ff}
-    .hero-grid{display:grid;grid-template-columns:1.18fr 1fr 1fr 1fr;gap:10px;align-items:stretch;direction:ltr}
-    .calorie-panel{position:relative;min-height:188px;display:flex;align-items:center;justify-content:center;direction:rtl}
-    .calorie-panel .ring-wrap{margin:0;min-height:180px;width:100%;overflow:hidden}
-    .calorie-panel .ring-wrap svg{transform:rotate(-90deg) scale(.84);transform-origin:center}
-    .calorie-panel .ring-text .main{font-size:31px;text-shadow:0 2px 0 rgba(255,158,61,.35)}
-    .calorie-panel .ring-text .sub{font-size:14px;color:#dce7fb;line-height:1.45;margin-top:9px}
-    .macro-grid{display:contents}
-    .macro{
-      min-height:188px;
-      border-radius:22px;
-      padding:13px 8px;
-      background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018)) !important;
-      border:1px solid rgba(255,255,255,.09);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 12px 28px rgba(0,0,0,.22);
-      align-items:center !important;
-      justify-content:space-between;
-      text-align:center !important;
-      direction:rtl;
-    }
-    .macro .label,.macro .value,.macro .unit{text-align:center !important;width:100%}
-    .macro .label{font-size:14px;font-weight:900;color:#fff}
-    .macro .icon{font-size:28px;line-height:1;filter:drop-shadow(0 8px 12px rgba(0,0,0,.28))}
-    .macro .value{font-size:25px;font-weight:950;margin:0;text-shadow:0 2px 0 rgba(255,158,61,.3)}
-    .macro .unit{font-size:13px;color:#dce7fb;line-height:1.35;margin:0}
-    .macro-progress{width:100%;height:9px;border-radius:999px;background:rgba(255,255,255,.11);overflow:hidden;margin-top:2px}
-    .macro-progress span{display:block;height:100%;width:0%;border-radius:999px;transition:width .25s ease}
-    .macro.protein{border-color:rgba(255,190,62,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 26px rgba(255,190,62,.06)}
-    .macro.carbs{border-color:rgba(83,214,159,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 26px rgba(83,214,159,.055)}
-    .macro.fat{border-color:rgba(71,149,255,.24);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 26px rgba(71,149,255,.055)}
-    .protein .macro-progress span{background:linear-gradient(90deg,#ffb83f,#ffe08a)}
-    .carbs .macro-progress span{background:linear-gradient(90deg,#54d66a,#b9f56b)}
-    .fat .macro-progress span{background:linear-gradient(90deg,#4f9cff,#77d9ff)}
-    .goal-row{margin-top:14px;color:#aebbd5;text-align:center;font-size:14px}
-
-    @media (max-width:390px){
-      .hero-grid{grid-template-columns:1.12fr 1fr 1fr 1fr;gap:7px}
-      .calorie-panel,.macro{min-height:162px}
-      .calorie-panel .ring-wrap{min-height:158px}
-      .calorie-panel .ring-wrap svg{transform:rotate(-90deg) scale(.68);transform-origin:center}
-      .macro{border-radius:20px;padding:11px 6px}
-      .macro .label{font-size:12px}.macro .icon{font-size:24px}.macro .value{font-size:22px}.macro .unit{font-size:12px}
-    }
+    /* LOWER UI */
+    .search-card{padding:16px}.search-input{width:100%;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px;font-size:16px;color:#fff;outline:none;text-align:right}.search-input::placeholder{color:#8fa3c7}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.chip{padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#dbe7ff;font-size:13px;font-weight:800;cursor:pointer}.results-title{font-size:18px;font-weight:900;margin:20px 4px 10px}.result-card{padding:16px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow);margin-bottom:14px}.result-name{font-size:20px;font-weight:900}.result-sub{color:var(--muted);font-size:13px;margin-top:6px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.field{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px}.field.full{grid-column:1/-1}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px}.field input,.field select{width:100%;border:none;outline:none;background:transparent;color:#fff;font-size:18px;font-weight:900}.preview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}.preview{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:10px;text-align:center}.preview b{display:block;font-size:18px}.preview span{font-size:11px;color:var(--muted)}.add-btn{margin-top:16px;width:100%;padding:16px;border:none;border-radius:18px;background:linear-gradient(135deg,#7a5cff,#a86bff);color:#fff;font-size:17px;font-weight:900;cursor:pointer}.meal-card{padding:14px}.meal-block{border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:12px;background:rgba(255,255,255,.015)}.meal-row-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.meal-total,.meal-label{font-weight:900}.food-table{width:100%;border-collapse:collapse;font-size:12px}.food-table th,.food-table td{padding:8px 6px;border-bottom:1px solid rgba(255,255,255,.05);text-align:right;vertical-align:top}.food-table th{color:var(--muted)}.food-table td strong{display:block;font-size:14px}.food-table td span{color:var(--muted);display:block;margin-top:3px}.meal-add-btn{width:100%;margin-top:12px;border:none;border-radius:16px;padding:15px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);color:#b671ff;font-size:15px;font-weight:900;cursor:pointer}.accordion{margin-top:12px;display:grid;gap:10px}.acc-item{border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;background:rgba(255,255,255,.015)}.acc-head{display:flex;align-items:center;justify-content:space-between;cursor:pointer}.acc-body{display:none;padding-top:10px}.acc-item.open .acc-body{display:block}.food-item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid rgba(255,255,255,.05)}.food-item .meta{font-size:12px;color:var(--muted);margin-top:4px}.remove{border:none;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#fff;padding:8px 10px;border-radius:12px;cursor:pointer}.bottom-grid{display:grid;grid-template-columns:1.35fr .9fr;gap:14px}.chart-card,.side-card{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:12px}.chart-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.mini-btn{border:1px solid rgba(154,99,255,.35);background:rgba(154,99,255,.08);color:#c58cff;padding:8px 12px;border-radius:12px;font-weight:800}#deficitChart{width:100%;height:220px;display:block}.success{margin-top:12px;border:1px solid rgba(83,214,159,.28);background:rgba(83,214,159,.08);color:#8ff0c1;border-radius:16px;padding:14px;font-weight:800;text-align:center}.side-card .h{font-size:18px;font-weight:900}.side-card .s{font-size:13px;color:var(--muted);margin-top:4px}.side-card .big{font-size:58px;font-weight:900;line-height:1;color:#59db91;margin-top:18px}.side-card .unit{font-size:24px;font-weight:900;color:#59db91}.status{margin-top:18px;border-radius:16px;background:rgba(83,214,159,.14);color:#86efb2;text-align:center;padding:14px;font-size:24px;font-weight:900}.fullstats{margin-top:12px;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;color:#dde7fa;display:flex;justify-content:space-between;align-items:center}
+    @media(max-width:390px){.hero-grid{grid-template-columns:1fr .88fr .88fr .88fr;gap:6px;margin-left:-8px;margin-right:8px}.calorie-panel,.macro{min-height:162px}.calorie-panel .ring-wrap{min-height:158px}.calorie-panel .ring-wrap svg{transform:rotate(-90deg) scale(.64);transform-origin:center}.macro{border-radius:20px;padding:11px 5px}.macro .label{font-size:12px}.macro .icon{font-size:24px}.macro .value{font-size:22px}.macro .unit{font-size:12px}.bottom-grid,.preview-grid,.fields{grid-template-columns:1fr}.topbar{grid-template-columns:46px 46px 1fr 46px}.round-btn{width:46px;height:46px}}
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <button class="back-btn" onclick="location.href='index.html'">אימונים ←</button>
-    <div class="title">מעקב תזונה</div>
-    <div class="ghost"></div>
-  </div>
+  <div class="topbar"><button class="round-btn" onclick="location.href='index.html'">✕</button><button class="round-btn">↓</button><div class="title">מעקב גרעון קלורי</div><button class="round-btn">⋮</button></div>
+  <div class="date-row"><div class="chev" id="prevDay">‹</div><div class="date">📅 <span id="currentDateLabel"></span></div><div class="chev" id="nextDay">›</div></div>
 
   <div class="card hero">
-    <div class="hero-top">
-      <button class="goal-pill">🎯 יעדים</button>
-      <div class="hero-title">סיכום יומי</div>
-    </div>
-
+    <div class="hero-top"><button class="chip-btn">🎯 יעדים</button><div class="hero-title">סיכום יומי</div></div>
     <div class="hero-grid">
-      <div class="calorie-panel">
-        <div class="ring-wrap">
-          <svg width="196" height="196" viewBox="0 0 196 196">
-            <circle cx="98" cy="98" r="78" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="16"></circle>
-            <circle id="progressRing" cx="98" cy="98" r="78" fill="none" stroke="var(--orange)" stroke-width="16" stroke-linecap="round" stroke-dasharray="490.1" stroke-dashoffset="490.1"></circle>
-          </svg>
-          <div class="ring-text">
-            <div class="main" id="caloriesValue">0</div>
-            <div class="sub"><span id="goalValue">1758</span> /<br>קלוריות</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="macro protein">
-        <div class="label">חלבון</div>
-        <div class="icon">💪</div>
-        <div class="value"><span id="proteinValue">0</span></div>
-        <div class="unit">גר׳ / <span id="proteinGoal">169</span></div>
-        <div class="macro-progress"><span id="proteinBar"></span></div>
-      </div>
-
-      <div class="macro carbs">
-        <div class="label">פחמימות</div>
-        <div class="icon">🌿</div>
-        <div class="value"><span id="carbsValue">0</span></div>
-        <div class="unit">גר׳ / <span id="carbsGoal">132</span></div>
-        <div class="macro-progress"><span id="carbsBar"></span></div>
-      </div>
-
-      <div class="macro fat">
-        <div class="label">שומן</div>
-        <div class="icon">💧</div>
-        <div class="value"><span id="fatValue">0</span></div>
-        <div class="unit">גר׳ / <span id="fatGoal">63</span></div>
-        <div class="macro-progress"><span id="fatBar"></span></div>
-      </div>
+      <div class="calorie-panel"><div class="ring-wrap"><svg width="196" height="196" viewBox="0 0 196 196"><circle cx="98" cy="98" r="78" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="16"></circle><circle id="progressRing" cx="98" cy="98" r="78" fill="none" stroke="var(--orange)" stroke-width="16" stroke-linecap="round" stroke-dasharray="490.1" stroke-dashoffset="490.1"></circle></svg><div class="ring-text"><div class="main" id="caloriesValue">0</div><div class="sub"><span id="goalValue">1758</span> /<br>קלוריות</div></div></div></div>
+      <div class="macro protein"><div class="label">חלבון</div><div class="icon">💪</div><div class="value"><span id="proteinValue">0</span></div><div class="unit">גר׳ / <span id="proteinGoal">169</span></div><div class="macro-progress"><span id="proteinBar"></span></div></div>
+      <div class="macro carbs"><div class="label">פחמימות</div><div class="icon">🌿</div><div class="value"><span id="carbsValue">0</span></div><div class="unit">גר׳ / <span id="carbsGoal">132</span></div><div class="macro-progress"><span id="carbsBar"></span></div></div>
+      <div class="macro fat"><div class="label">שומן</div><div class="icon">💧</div><div class="value"><span id="fatValue">0</span></div><div class="unit">גר׳ / <span id="fatGoal">63</span></div><div class="macro-progress"><span id="fatBar"></span></div></div>
     </div>
-
     <div class="goal-row">🔥 יעד קלורי יומי: <span id="goalLineValue">1758</span> קל׳ — הכל בתוך מסגרת אחת</div>
   </div>
 
   <div class="card search-card">
-    <div class="search-shell">
-      <input id="searchInput" type="text" placeholder="חפש מזון בעברית..." autocomplete="off" />
-    </div>
-    <div class="quick-row">
-      <button class="chip" onclick="quickSearch('אבוקדו')">אבוקדו</button>
-      <button class="chip" onclick="quickSearch('קוטג׳')">קוטג׳</button>
-      <button class="chip" onclick="quickSearch('ביצה')">ביצה</button>
-      <button class="chip" onclick="quickSearch('אורז')">אורז</button>
-      <button class="chip" onclick="quickSearch('חזה עוף')">חזה עוף</button>
-    </div>
+    <input id="foodSearch" class="search-input" type="text" placeholder="חפש מזון בעברית..." />
+    <div class="chips"><button class="chip" onclick="quick('אבקת חלבון')">אבקת חלבון</button><button class="chip" onclick="quick('חטיף חלבון')">חטיף חלבון</button><button class="chip" onclick="quick('חזה עוף')">חזה עוף</button><button class="chip" onclick="quick('ביצה')">ביצה</button><button class="chip" onclick="quick('אורז')">אורז</button></div>
   </div>
+  <div class="results-title">תוצאות חיפוש</div>
+  <div id="resultArea"></div>
 
-  <div class="results-card">
-    <div class="section-title">תוצאות חיפוש</div>
-    <div id="resultsList"></div>
-  </div>
+  <div class="card meal-card"><div class="section-head"><div class="section-title">יומן אוכל</div><div class="meal-label">ארוחת בוקר ☀️</div></div><div class="meal-block"><div class="meal-row-head"><div class="meal-total" id="breakfastTotal">0 קל׳</div><div class="meal-label">ארוחת בוקר ☀️</div></div><table class="food-table" id="breakfastTable"></table></div><div class="accordion"><div class="acc-item" data-meal="lunch"><div class="acc-head" onclick="toggleMeal('lunch')"><div><span>⌄</span> <span id="lunchTotal">0 קל׳</span></div><div class="meal-label">ארוחת צהריים ☀️</div></div><div class="acc-body" id="lunchBody"></div></div><div class="acc-item" data-meal="dinner"><div class="acc-head" onclick="toggleMeal('dinner')"><div><span>⌄</span> <span id="dinnerTotal">0 קל׳</span></div><div class="meal-label">ארוחת ערב 🌙</div></div><div class="acc-body" id="dinnerBody"></div></div><div class="acc-item" data-meal="snack"><div class="acc-head" onclick="toggleMeal('snack')"><div><span>⌄</span> <span id="snackTotal">0 קל׳</span></div><div class="meal-label">ביניים 🍇</div></div><div class="acc-body" id="snackBody"></div></div></div></div>
 
-  <div class="card details-card">
-    <div class="section-title" style="margin:0">פרטי מנה</div>
-    <div id="selectedName" class="selected-name">לא נבחר מזון</div>
-    <div id="selectedBase" class="selected-sub">כתוב מזון בעברית והמערכת תציע התאמה</div>
-
-    <div class="selected-grid">
-      <div class="field"><label>כמות</label><input id="amountInput" type="number" min="0" step="0.5" value="100" /></div>
-      <div class="field"><label>יחידה</label><select id="unitSelect"><option value="gram">גרם</option><option value="piece">יחידה</option><option value="tbsp">כף</option><option value="cup">גביע</option></select></div>
-      <div class="field full"><label>ארוחה</label><select id="mealSelect"><option value="breakfast">ארוחת בוקר</option><option value="lunch">ארוחת צהריים</option><option value="dinner">ארוחת ערב</option><option value="snack">ביניים</option></select></div>
-    </div>
-
-    <div class="preview-box">
-      <div class="preview-metric"><div class="n" id="previewCalories">0</div><div class="t">קלוריות</div></div>
-      <div class="preview-metric"><div class="n" id="previewProtein">0</div><div class="t">חלבון</div></div>
-      <div class="preview-metric"><div class="n" id="previewCarbs">0</div><div class="t">פחמימות</div></div>
-      <div class="preview-metric"><div class="n" id="previewFat">0</div><div class="t">שומן</div></div>
-    </div>
-
-    <button class="primary-btn" id="addBtn">הוסף ליומן</button>
-  </div>
-
-  <div class="card meal-card"><div class="meal-head"><div class="meal-name">ארוחת בוקר</div><div class="meal-kcal" id="breakfastTotal">0 קלוריות</div></div><div id="breakfastList"></div></div>
-  <div class="card meal-card"><div class="meal-head"><div class="meal-name">ארוחת צהריים</div><div class="meal-kcal" id="lunchTotal">0 קלוריות</div></div><div id="lunchList"></div></div>
-  <div class="card meal-card"><div class="meal-head"><div class="meal-name">ארוחת ערב</div><div class="meal-kcal" id="dinnerTotal">0 קלוריות</div></div><div id="dinnerList"></div></div>
-  <div class="card meal-card"><div class="meal-head"><div class="meal-name">ביניים</div><div class="meal-kcal" id="snackTotal">0 קלוריות</div></div><div id="snackList"></div></div>
+  <div class="card"><div class="bottom-grid"><div class="chart-card"><div class="chart-title"><button class="mini-btn" onclick="resetWeek()">איפוס שבוע</button><div><div>גרעון קלורי (קל׳)</div><div class="chart-sub">ממוצע יומי: <span id="avgDeficit">0</span> קל׳</div></div></div><svg id="deficitChart" viewBox="0 0 360 220"></svg><div class="success" id="successBox"></div></div><div class="side-card"><div><div class="h">מעקב גרעון קלורי</div><div class="s">גרעון קלורי היום</div><div class="big" id="todayDeficit">0</div><div class="unit">קל׳</div><div class="s">מתוך יעד יומי: 500 קל׳</div></div><div class="status" id="statusBadge">בהתאמה</div><div class="fullstats">סטטיסטיקה מלאה <span>📈</span></div></div></div></div>
 
   <script>
-    const STORAGE_KEY = 'nutrition_design_fixed';
-    const GOAL = { calories: 1758, protein: 169, carbs: 132, fat: 63 };
-
-    const FOODS = [
-      { id:'chicken_breast', he:'חזה עוף', aliases:['עוף','חזה עוף','חזהעוף','chicken breast'], per100:{ calories:165, protein:31, carbs:0, fat:3.6 }, units:{ gram:1, piece:120, tbsp:15, cup:140 } },
-      { id:'chicken_thigh', he:'פרגית', aliases:['פרגית','ירך עוף','סטייק פרגית'], per100:{ calories:209, protein:26, carbs:0, fat:10.9 }, units:{ gram:1, piece:130 } },
-      { id:'turkey_breast', he:'חזה הודו', aliases:['הודו','חזה הודו','פסטרמה הודו'], per100:{ calories:135, protein:29, carbs:0, fat:1.2 }, units:{ gram:1, slice:25, piece:120 } },
-      { id:'lean_beef', he:'בקר רזה', aliases:['בשר בקר','בקר','סטייק','בקר רזה'], per100:{ calories:217, protein:26, carbs:0, fat:12 }, units:{ gram:1, piece:150 } },
-      { id:'ground_beef', he:'בשר טחון', aliases:['בשר טחון','בשר בקר טחון','בשרטחון'], per100:{ calories:250, protein:26, carbs:0, fat:17 }, units:{ gram:1, tbsp:20 } },
-      { id:'salmon', he:'סלמון', aliases:['סלמון','דג סלמון'], per100:{ calories:208, protein:20, carbs:0, fat:13 }, units:{ gram:1, piece:150 } },
-      { id:'tuna_water', he:'טונה במים', aliases:['טונה','טונה במים','שימורי טונה'], per100:{ calories:116, protein:26, carbs:0, fat:1 }, units:{ gram:1, cup:100 } },
-      { id:'egg', he:'ביצה', aliases:['ביצה','ביצים'], per100:{ calories:155, protein:13, carbs:1.1, fat:11 }, units:{ gram:1, piece:50 } },
-      { id:'egg_white', he:'חלבון ביצה', aliases:['חלבון ביצה','לבן ביצה'], per100:{ calories:52, protein:11, carbs:0.7, fat:0.2 }, units:{ gram:1, piece:33 } },
-      { id:'protein_powder', he:'אבקת חלבון', aliases:['אבקת חלבון','אבקתחלבון','חלבון מי גבינה','whey','whey protein','protein powder'], per100:{ calories:390, protein:78, carbs:8, fat:6 }, units:{ gram:1, scoop:30, tbsp:10 } },
-      { id:'protein_powder_isolate', he:'אבקת חלבון איזולט', aliases:['איזולט','אבקת איזולט','אבקת חלבון איזולט','isolate'], per100:{ calories:365, protein:85, carbs:3, fat:2 }, units:{ gram:1, scoop:30, tbsp:10 } },
-      { id:'protein_yogurt', he:'יוגורט חלבון', aliases:['יוגורט חלבון','יוגורטחלבון','מעדן חלבון','מעדן פרו','pro yogurt'], per100:{ calories:73, protein:10, carbs:4, fat:1.7 }, units:{ gram:1, cup:200, piece:200 } },
-      { id:'go_pro_yogurt', he:'GO יוגורט חלבון', aliases:['גו','גו פרו','go','go pro','יוגורט go','מעדן go'], per100:{ calories:78, protein:10, carbs:5, fat:1.8 }, units:{ gram:1, cup:200, piece:200 } },
-      { id:'yopro_yogurt', he:'YoPRO יוגורט חלבון', aliases:['יופרו','יו פרו','yopro','yo pro'], per100:{ calories:74, protein:10, carbs:4.5, fat:1.6 }, units:{ gram:1, cup:160, piece:160 } },
-      { id:'protein_pudding', he:'פודינג חלבון', aliases:['פודינג חלבון','מעדן חלבון פודינג','protein pudding'], per100:{ calories:82, protein:10, carbs:6, fat:1.5 }, units:{ gram:1, cup:200, piece:200 } },
-      { id:'protein_bar', he:'חטיף חלבון', aliases:['חטיף חלבון','חטיףחלבון','חלבון בר','protein bar'], per100:{ calories:360, protein:32, carbs:34, fat:12 }, units:{ gram:1, piece:60 } },
-      { id:'quest_bar', he:'חטיף חלבון Quest', aliases:['קווסט','quest','quest bar','חטיף קווסט'], per100:{ calories:333, protein:33, carbs:35, fat:10 }, units:{ gram:1, piece:60 } },
-      { id:'barebells_bar', he:'חטיף חלבון Barebells', aliases:['ברבלס','barebells','חטיף ברבלס'], per100:{ calories:365, protein:33, carbs:30, fat:15 }, units:{ gram:1, piece:55 } },
-      { id:'protein_drink', he:'משקה חלבון', aliases:['משקה חלבון','שייק חלבון','protein shake','protein drink'], per100:{ calories:62, protein:10, carbs:4, fat:1 }, units:{ gram:1, cup:250, piece:250 } },
-      { id:'cottage', he:'קוטג׳', aliases:['קוטג','קוטג׳','קוטג 5'], per100:{ calories:98, protein:11, carbs:3.4, fat:4.3 }, units:{ gram:1, tbsp:15, cup:250 } },
-      { id:'lowfat_cottage', he:'קוטג׳ 3%', aliases:['קוטג 3','קוטג׳ 3%','קוטג דל שומן'], per100:{ calories:80, protein:11, carbs:3.5, fat:2.8 }, units:{ gram:1, tbsp:15, cup:250 } },
-      { id:'white_cheese', he:'גבינה לבנה', aliases:['גבינהלבנה','גבינה לבנה 5'], per100:{ calories:95, protein:10, carbs:4, fat:5 }, units:{ gram:1, tbsp:15, cup:250 } },
-      { id:'lowfat_white_cheese', he:'גבינה לבנה 3%', aliases:['גבינה 3','גבינה לבנה דלת שומן'], per100:{ calories:76, protein:10, carbs:4, fat:3 }, units:{ gram:1, tbsp:15, cup:250 } },
-      { id:'greek_yogurt', he:'יוגורט יווני', aliases:['יוגורט יווני','יוגורטיווני','greek yogurt'], per100:{ calories:97, protein:9, carbs:3.9, fat:5 }, units:{ gram:1, cup:200 } },
-      { id:'skyr', he:'סקיר', aliases:['סקיר','skyr','יוגורט סקיר'], per100:{ calories:63, protein:11, carbs:4, fat:0.2 }, units:{ gram:1, cup:150, piece:150 } },
-      { id:'yellow_cheese', he:'גבינה צהובה', aliases:['גבינה צהובה','גבינהצהובה'], per100:{ calories:356, protein:25, carbs:2.2, fat:27 }, units:{ gram:1, slice:28 } },
-      { id:'milk', he:'חלב 3%', aliases:['חלב','חלב רגיל'], per100:{ calories:61, protein:3.3, carbs:4.8, fat:3.2 }, units:{ gram:1, cup:240 } },
-      { id:'rice', he:'אורז מבושל', aliases:['אורז','אורזלבן'], per100:{ calories:130, protein:2.7, carbs:28, fat:0.3 }, units:{ gram:1, cup:150 } },
-      { id:'brown_rice', he:'אורז מלא', aliases:['אורז מלא','אורזמלא'], per100:{ calories:123, protein:2.7, carbs:25.6, fat:1 }, units:{ gram:1, cup:150 } },
-      { id:'pasta', he:'פסטה מבושלת', aliases:['פסטה'], per100:{ calories:157, protein:5.8, carbs:30.9, fat:0.9 }, units:{ gram:1, cup:140 } },
-      { id:'potato', he:'תפוח אדמה', aliases:['תפוא','תפוחאדמה','תפוח אדמה'], per100:{ calories:77, protein:2, carbs:17, fat:0.1 }, units:{ gram:1, piece:150 } },
-      { id:'sweet_potato', he:'בטטה', aliases:['בטטה'], per100:{ calories:90, protein:2, carbs:21, fat:0.1 }, units:{ gram:1, piece:130 } },
-      { id:'oats', he:'שיבולת שועל', aliases:['קוואקר','שיבולתשועל','שיבולת שועל'], per100:{ calories:389, protein:16.9, carbs:66.3, fat:6.9 }, units:{ gram:1, tbsp:10, cup:80 } },
-      { id:'bread_whole', he:'לחם מלא', aliases:['לחם','לחם מלא','פרוסת לחם'], per100:{ calories:247, protein:13, carbs:41, fat:4.2 }, units:{ gram:1, slice:32 } },
-      { id:'pita', he:'פיתה', aliases:['פיתה'], per100:{ calories:275, protein:9, carbs:55, fat:1.2 }, units:{ gram:1, piece:60 } },
-      { id:'tortilla', he:'טורטיה', aliases:['טורטיה'], per100:{ calories:310, protein:8, carbs:52, fat:8 }, units:{ gram:1, piece:50 } },
-      { id:'avocado', he:'אבוקדו', aliases:['אבוקדו'], per100:{ calories:160, protein:2, carbs:8.5, fat:14.7 }, units:{ gram:1, piece:170, tbsp:15 } },
-      { id:'banana', he:'בננה', aliases:['בננה'], per100:{ calories:89, protein:1.1, carbs:23, fat:0.3 }, units:{ gram:1, piece:120 } },
-      { id:'apple', he:'תפוח', aliases:['תפוח','תפוח עץ'], per100:{ calories:52, protein:0.3, carbs:14, fat:0.2 }, units:{ gram:1, piece:150 } },
-      { id:'dates', he:'תמרים', aliases:['תמר','תמרים'], per100:{ calories:282, protein:2.5, carbs:75, fat:0.4 }, units:{ gram:1, piece:24 } },
-      { id:'tahini', he:'טחינה', aliases:['טחינה'], per100:{ calories:595, protein:17, carbs:21, fat:53 }, units:{ gram:1, tbsp:15 } },
-      { id:'peanut_butter', he:'חמאת בוטנים', aliases:['חמאתבוטנים','חמאת בוטנים'], per100:{ calories:588, protein:25, carbs:20, fat:50 }, units:{ gram:1, tbsp:16 } },
-      { id:'almonds', he:'שקדים', aliases:['שקדים'], per100:{ calories:579, protein:21, carbs:22, fat:50 }, units:{ gram:1, tbsp:10 } },
-      { id:'hummus', he:'חומוס', aliases:['חומוס'], per100:{ calories:166, protein:8, carbs:14, fat:9.6 }, units:{ gram:1, tbsp:15 } },
-      { id:'olive_oil', he:'שמן זית', aliases:['שמן זית','שמןזית'], per100:{ calories:884, protein:0, carbs:0, fat:100 }, units:{ gram:1, tbsp:13 } }
+    const GOAL={calories:1758,protein:169,carbs:132,fat:63,deficitGoal:500};
+    const KEY='nutrition_final_clean_v1';
+    const state=JSON.parse(localStorage.getItem(KEY)||'{}'); state.items=state.items||[]; state.week=state.week||[350,520,610,700,680,640,740]; state.currentDate=state.currentDate||todayKey(); state.selected=null;
+    const FOODS=[
+      {id:'protein_powder',he:'אבקת חלבון',aliases:['אבקת חלבון','אבקתחלבון','whey','protein powder'],per100:{calories:390,protein:78,carbs:8,fat:6},units:{gram:1,scoop:30,tbsp:10}},
+      {id:'isolate',he:'אבקת חלבון איזולט',aliases:['איזולט','אבקת איזולט','isolate'],per100:{calories:365,protein:85,carbs:3,fat:2},units:{gram:1,scoop:30}},
+      {id:'protein_yogurt',he:'יוגורט חלבון',aliases:['יוגורט חלבון','יוגורטחלבון','מעדן חלבון'],per100:{calories:73,protein:10,carbs:4,fat:1.7},units:{gram:1,piece:200,cup:200}},
+      {id:'go_pro',he:'GO יוגורט חלבון',aliases:['גו','גו פרו','go','go pro','יוגורט go'],per100:{calories:78,protein:10,carbs:5,fat:1.8},units:{gram:1,piece:200}},
+      {id:'yopro',he:'YoPRO יוגורט חלבון',aliases:['יופרו','יו פרו','yopro','yo pro'],per100:{calories:74,protein:10,carbs:4.5,fat:1.6},units:{gram:1,piece:160}},
+      {id:'protein_pudding',he:'פודינג חלבון',aliases:['פודינג חלבון','מעדן חלבון פודינג'],per100:{calories:82,protein:10,carbs:6,fat:1.5},units:{gram:1,piece:200}},
+      {id:'protein_bar',he:'חטיף חלבון',aliases:['חטיף חלבון','חטיףחלבון','protein bar'],per100:{calories:360,protein:32,carbs:34,fat:12},units:{gram:1,piece:60}},
+      {id:'protein_drink',he:'משקה חלבון',aliases:['משקה חלבון','שייק חלבון','protein shake'],per100:{calories:62,protein:10,carbs:4,fat:1},units:{gram:1,piece:250,cup:250}},
+      {id:'chicken_breast',he:'חזה עוף',aliases:['עוף','חזה עוף','חזהעוף','chicken breast'],per100:{calories:165,protein:31,carbs:0,fat:3.6},units:{gram:1,piece:120}},
+      {id:'chicken_thigh',he:'פרגית',aliases:['פרגית','ירך עוף'],per100:{calories:209,protein:26,carbs:0,fat:10.9},units:{gram:1,piece:130}},
+      {id:'tuna',he:'טונה במים',aliases:['טונה','שימורי טונה'],per100:{calories:116,protein:26,carbs:0,fat:1},units:{gram:1,cup:100}},
+      {id:'egg',he:'ביצה',aliases:['ביצה','ביצים'],per100:{calories:155,protein:13,carbs:1.1,fat:11},units:{gram:1,piece:50}},
+      {id:'egg_white',he:'חלבון ביצה',aliases:['חלבון ביצה','לבן ביצה'],per100:{calories:52,protein:11,carbs:0.7,fat:0.2},units:{gram:1,piece:33}},
+      {id:'cottage',he:'קוטג׳',aliases:['קוטג','קוטג׳'],per100:{calories:98,protein:11,carbs:3.4,fat:4.3},units:{gram:1,cup:250,tbsp:15}},
+      {id:'white_cheese',he:'גבינה לבנה',aliases:['גבינה לבנה','גבינהלבנה'],per100:{calories:95,protein:10,carbs:4,fat:5},units:{gram:1,cup:250,tbsp:15}},
+      {id:'skyr',he:'סקיר',aliases:['סקיר','skyr'],per100:{calories:63,protein:11,carbs:4,fat:.2},units:{gram:1,piece:150}},
+      {id:'rice',he:'אורז מבושל',aliases:['אורז','אורזלבן'],per100:{calories:130,protein:2.7,carbs:28,fat:.3},units:{gram:1,cup:150}},
+      {id:'oats',he:'שיבולת שועל',aliases:['קוואקר','שיבולתשועל','שיבולת שועל'],per100:{calories:389,protein:16.9,carbs:66.3,fat:6.9},units:{gram:1,cup:80,tbsp:10}},
+      {id:'avocado',he:'אבוקדו',aliases:['אבוקדו'],per100:{calories:160,protein:2,carbs:8.5,fat:14.7},units:{gram:1,piece:170}},
+      {id:'banana',he:'בננה',aliases:['בננה'],per100:{calories:89,protein:1.1,carbs:23,fat:.3},units:{gram:1,piece:120}},
+      {id:'tahini',he:'טחינה',aliases:['טחינה'],per100:{calories:595,protein:17,carbs:21,fat:53},units:{gram:1,tbsp:15}},
+      {id:'peanut_butter',he:'חמאת בוטנים',aliases:['חמאתבוטנים','חמאת בוטנים'],per100:{calories:588,protein:25,carbs:20,fat:50},units:{gram:1,tbsp:16}}
     ];
-
-    const state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { items: [], selectedFoodId: null };
-    const searchInput = document.getElementById('searchInput');
-    const resultsList = document.getElementById('resultsList');
-    const selectedName = document.getElementById('selectedName');
-    const selectedBase = document.getElementById('selectedBase');
-    const amountInput = document.getElementById('amountInput');
-    const unitSelect = document.getElementById('unitSelect');
-    const mealSelect = document.getElementById('mealSelect');
-    const addBtn = document.getElementById('addBtn');
-
-    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-    function unitLabel(unit){ return { gram:'גרם', piece:'יחידה', tbsp:'כף', cup:'גביע' }[unit] || unit; }
-    function findFood(id){ return FOODS.find(f => f.id === id); }
-    function normalize(q){ return String(q || '').trim().toLowerCase(); }
-
-    function filterFoods(q){
-      const query = normalize(q);
-      if(!query) return [];
-      return FOODS.filter(food => {
-        const names = [food.he].concat(food.aliases).map(x => normalize(x));
-        return names.some(name => name.indexOf(query) !== -1);
-      }).slice(0,8);
-    }
-
-    function gramsFor(food, amount, unit){ return amount * (food.units[unit] || 1); }
-    function calc(food, amount, unit){
-      const grams = gramsFor(food, amount, unit);
-      const factor = grams / 100;
-      return { calories: food.per100.calories * factor, protein: food.per100.protein * factor, carbs: food.per100.carbs * factor, fat: food.per100.fat * factor };
-    }
-
-    function setSelected(foodId){ state.selectedFoodId = foodId; save(); renderSelected(); renderResults(searchInput.value); }
-    function getSelectedFood(){ return state.selectedFoodId ? findFood(state.selectedFoodId) : null; }
-
-    function renderResults(q){
-      const foods = filterFoods(q);
-      if(!q){ resultsList.innerHTML = ''; return; }
-      resultsList.innerHTML = foods.map(food =>
-        '<div class="result-item ' + (state.selectedFoodId===food.id?'active':'') + '" onclick="setSelected(\'' + food.id + '\')">'
-        + '<div><div class="result-title">' + food.he + '</div><div class="result-sub">ל־100 גרם: ' + food.per100.calories + ' קלוריות • חלבון ' + food.per100.protein + ' • פחמימות ' + food.per100.carbs + ' • שומן ' + food.per100.fat + '</div></div>'
-        + '<button class="add-mini" onclick="event.stopPropagation(); setSelected(\'' + food.id + '\')">+</button>'
-        + '</div>'
-      ).join('');
-      if(!foods.length){ resultsList.innerHTML = '<div class="empty">לא נמצאו תוצאות</div>'; }
-    }
-
-    function renderSelected(){
-      const food = getSelectedFood();
-      if(!food){
-        selectedName.textContent = 'לא נבחר מזון';
-        selectedBase.textContent = 'כתוב מזון בעברית והמערכת תציע התאמה';
-        document.getElementById('previewCalories').textContent = '0';
-        document.getElementById('previewProtein').textContent = '0';
-        document.getElementById('previewCarbs').textContent = '0';
-        document.getElementById('previewFat').textContent = '0';
-        return;
-      }
-      selectedName.textContent = food.he;
-      selectedBase.textContent = 'מאגר פנימי בעברית • ל־100 גרם: ' + food.per100.calories + ' קלוריות';
-      unitSelect.innerHTML = Object.keys(food.units).map(u => '<option value="' + u + '">' + unitLabel(u) + '</option>').join('');
-      updatePreview();
-    }
-
-    function updatePreview(){
-      const food = getSelectedFood();
-      if(!food) return;
-      const values = calc(food, Number(amountInput.value || 0), unitSelect.value);
-      document.getElementById('previewCalories').textContent = Math.round(values.calories);
-      document.getElementById('previewProtein').textContent = Math.round(values.protein);
-      document.getElementById('previewCarbs').textContent = Math.round(values.carbs);
-      document.getElementById('previewFat').textContent = Math.round(values.fat);
-    }
-
-    function addItem(){
-      const food = getSelectedFood();
-      if(!food) return;
-      const amount = Number(amountInput.value || 0);
-      const unit = unitSelect.value;
-      const values = calc(food, amount, unit);
-      state.items.push({ id: Date.now().toString(36), he: food.he, meal: mealSelect.value, amount, unit, calories: values.calories, protein: values.protein, carbs: values.carbs, fat: values.fat });
-      save();
-      renderAll();
-    }
-
-    function removeItem(id){ state.items = state.items.filter(item => item.id !== id); save(); renderAll(); }
-    function totals(items){ return items.reduce((a,i) => ({ calories:a.calories+i.calories, protein:a.protein+i.protein, carbs:a.carbs+i.carbs, fat:a.fat+i.fat }), { calories:0, protein:0, carbs:0, fat:0 }); }
-
-    function renderSummary(){
-      const sum = totals(state.items);
-      document.getElementById('caloriesValue').textContent = Math.round(sum.calories);
-      document.getElementById('goalValue').textContent = GOAL.calories;
-      const goalLine = document.getElementById('goalLineValue');
-      if(goalLine) goalLine.textContent = GOAL.calories;
-
-      document.getElementById('proteinValue').textContent = Math.round(sum.protein);
-      document.getElementById('carbsValue').textContent = Math.round(sum.carbs);
-      document.getElementById('fatValue').textContent = Math.round(sum.fat);
-
-      const pg = document.getElementById('proteinGoal');
-      const cg = document.getElementById('carbsGoal');
-      const fg = document.getElementById('fatGoal');
-      if(pg) pg.textContent = GOAL.protein;
-      if(cg) cg.textContent = GOAL.carbs;
-      if(fg) fg.textContent = GOAL.fat;
-
-      const pb = document.getElementById('proteinBar');
-      const cb = document.getElementById('carbsBar');
-      const fb = document.getElementById('fatBar');
-      if(pb) pb.style.width = Math.min(100, (sum.protein / GOAL.protein) * 100) + '%';
-      if(cb) cb.style.width = Math.min(100, (sum.carbs / GOAL.carbs) * 100) + '%';
-      if(fb) fb.style.width = Math.min(100, (sum.fat / GOAL.fat) * 100) + '%';
-
-      const pct = Math.min(sum.calories / GOAL.calories, 1);
-      document.getElementById('progressRing').style.strokeDashoffset = 490.1 - (490.1 * pct);
-    }
-
-    function renderMeal(mealKey, listId, totalId){
-      const items = state.items.filter(item => item.meal === mealKey);
-      const total = totals(items);
-      document.getElementById(totalId).textContent = Math.round(total.calories) + ' קלוריות';
-      const list = document.getElementById(listId);
-      if(!items.length){ list.innerHTML = '<div class="empty">אין פריטים בארוחה זו</div>'; return; }
-      list.innerHTML = items.map(item => '<div class="meal-row"><div><div class="meal-food">' + item.he + '</div><div class="meal-sub">' + item.amount + ' ' + unitLabel(item.unit) + ' • ' + Math.round(item.calories) + ' קלוריות</div></div><button class="remove-btn" onclick="removeItem(\'' + item.id + '\')">מחק</button></div>').join('');
-    }
-
-    function renderAll(){
-      renderSummary();
-      renderResults(searchInput.value);
-      renderSelected();
-      renderMeal('breakfast','breakfastList','breakfastTotal');
-      renderMeal('lunch','lunchList','lunchTotal');
-      renderMeal('dinner','dinnerList','dinnerTotal');
-      renderMeal('snack','snackList','snackTotal');
-    }
-
-    searchInput.addEventListener('input', e => {
-      const best = filterFoods(e.target.value)[0];
-      if(best){ state.selectedFoodId = best.id; save(); }
-      renderAll();
-    });
-    amountInput.addEventListener('input', updatePreview);
-    unitSelect.addEventListener('change', updatePreview);
-    addBtn.addEventListener('click', addItem);
-    window.setSelected = setSelected;
-    window.removeItem = removeItem;
-    window.quickSearch = function(v){ searchInput.value = v; const best = filterFoods(v)[0]; if(best) setSelected(best.id); else renderResults(v); };
-
-    renderAll();
+    function todayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+    function save(){localStorage.setItem(KEY,JSON.stringify(state))} function norm(q){return String(q||'').trim().toLowerCase().replace(/[׳'"`]/g,'').replace(/\s+/g,' ')} function compact(q){return norm(q).replace(/\s+/g,'')} function unitLabel(u){return({gram:'גרם',piece:'יחידה',tbsp:'כף',cup:'גביע',slice:'פרוסה',scoop:'סקופ'})[u]||u} function food(id){return FOODS.find(f=>f.id===id)}
+    function dateLabel(){const d=new Date();return ['יום ראשון','יום שני','יום שלישי','יום רביעי','יום חמישי','יום שישי','יום שבת'][d.getDay()]+', '+d.getDate()+' '+['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'][d.getMonth()]+' '+d.getFullYear()}
+    function searchFoods(q){const nq=norm(q),cq=compact(q);if(!nq)return FOODS.slice(0,8);return FOODS.map(f=>{const names=[f.he,...f.aliases].map(norm),cn=names.map(x=>x.replace(/\s+/g,''));let s=0;names.forEach(n=>{if(n===nq)s=120;else if(n.startsWith(nq))s=Math.max(s,100);else if(n.includes(nq))s=Math.max(s,80)});cn.forEach(n=>{if(n===cq)s=Math.max(s,115);else if(n.startsWith(cq))s=Math.max(s,95);else if(n.includes(cq))s=Math.max(s,75)});return{f,s}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,8).map(x=>x.f)}
+    function calc(f,a,u){const g=a*(f.units[u]||1),m=g/100;return{calories:f.per100.calories*m,protein:f.per100.protein*m,carbs:f.per100.carbs*m,fat:f.per100.fat*m}}
+    function totals(arr){return arr.reduce((a,i)=>({calories:a.calories+i.calories,protein:a.protein+i.protein,carbs:a.carbs+i.carbs,fat:a.fat+i.fat}),{calories:0,protein:0,carbs:0,fat:0})}
+    function renderSummary(){const sum=totals(state.items);document.getElementById('currentDateLabel').textContent=dateLabel();document.getElementById('caloriesValue').textContent=Math.round(sum.calories);document.getElementById('goalValue').textContent=GOAL.calories;document.getElementById('goalLineValue').textContent=GOAL.calories;document.getElementById('proteinValue').textContent=Math.round(sum.protein);document.getElementById('carbsValue').textContent=Math.round(sum.carbs);document.getElementById('fatValue').textContent=Math.round(sum.fat);document.getElementById('proteinGoal').textContent=GOAL.protein;document.getElementById('carbsGoal').textContent=GOAL.carbs;document.getElementById('fatGoal').textContent=GOAL.fat;document.getElementById('proteinBar').style.width=Math.min(100,sum.protein/GOAL.protein*100)+'%';document.getElementById('carbsBar').style.width=Math.min(100,sum.carbs/GOAL.carbs*100)+'%';document.getElementById('fatBar').style.width=Math.min(100,sum.fat/GOAL.fat*100)+'%';document.getElementById('progressRing').style.strokeDashoffset=490.1-(490.1*Math.min(sum.calories/GOAL.calories,1));const d=Math.max(0,GOAL.calories-sum.calories);document.getElementById('todayDeficit').textContent=Math.round(d);document.getElementById('statusBadge').textContent=d>=GOAL.deficitGoal?'בגרעון':'מתחת ליעד'}
+    function renderSearch(list){const box=document.getElementById('resultArea');box.innerHTML=list.map((f,i)=>{const v=calc(f,100,'gram');return `<div class="result-card"><div class="result-name">${f.he}</div><div class="result-sub">מאגר פנימי בעברית • ל־100 גרם: ${Math.round(v.calories)} קלוריות</div><div class="fields"><div class="field"><label>כמות</label><input id="amount_${i}" type="number" value="100"></div><div class="field"><label>יחידה</label><select id="unit_${i}">${Object.keys(f.units).map(u=>`<option value="${u}">${unitLabel(u)}</option>`).join('')}</select></div><div class="field full"><label>ארוחה</label><select id="meal_${i}"><option value="breakfast">ארוחת בוקר</option><option value="lunch">ארוחת צהריים</option><option value="dinner">ארוחת ערב</option><option value="snack">ביניים</option></select></div></div><div class="preview-grid"><div class="preview"><b>${Math.round(v.calories)}</b><span>קלוריות</span></div><div class="preview"><b>${Math.round(v.protein)}</b><span>חלבון</span></div><div class="preview"><b>${Math.round(v.carbs)}</b><span>פחמימות</span></div><div class="preview"><b>${Math.round(v.fat)}</b><span>שומן</span></div></div><button class="add-btn" onclick="addFood('${f.id}',${i})">הוסף ליומן</button></div>`}).join('')||'<div class="result-card">לא נמצאו תוצאות</div>'}
+    function addFood(id,i){const f=food(id),a=Number(document.getElementById('amount_'+i).value||0),u=document.getElementById('unit_'+i).value,meal=document.getElementById('meal_'+i).value;if(!a)return;const v=calc(f,a,u);state.items.push({id:Date.now().toString(36),meal,he:f.he,amount:a,unit:u,...v});state.week[state.week.length-1]=Math.max(0,Math.round(GOAL.calories-totals(state.items).calories));save();renderAll()}
+    function removeFood(id){state.items=state.items.filter(x=>x.id!==id);save();renderAll()} function mealItems(m){return state.items.filter(i=>i.meal===m)}
+    function renderMeals(){['breakfast','lunch','dinner','snack'].forEach(m=>{const arr=mealItems(m),t=totals(arr);if(m==='breakfast'){document.getElementById('breakfastTotal').textContent=Math.round(t.calories)+' קל׳';document.getElementById('breakfastTable').innerHTML=arr.length?'<thead><tr><th>מזון</th><th>קל׳</th><th>חלבון</th><th>פחמ׳</th><th>שומן</th></tr></thead><tbody>'+arr.map(i=>`<tr><td><strong>${i.he}</strong><span>${i.amount} ${unitLabel(i.unit)}</span></td><td>${Math.round(i.calories)}</td><td>${Math.round(i.protein)}</td><td>${Math.round(i.carbs)}</td><td>${Math.round(i.fat)}</td></tr>`).join('')+'</tbody>':'<tr><td colspan="5">אין פריטים בארוחה זו</td></tr>'}else{document.getElementById(m+'Total').textContent=Math.round(t.calories)+' קל׳';document.getElementById(m+'Body').innerHTML=arr.length?arr.map(i=>`<div class="food-item"><div><strong>${i.he}</strong><div class="meta">${i.amount} ${unitLabel(i.unit)} • ${Math.round(i.calories)} קל׳</div></div><button class="remove" onclick="removeFood('${i.id}')">מחק</button></div>`).join(''):'אין פריטים בארוחה זו'}})}
+    function toggleMeal(id){document.querySelector('[data-meal="'+id+'"]').classList.toggle('open')} function resetWeek(){state.week=[0,0,0,0,0,0,0];save();renderChart()}
+    function renderChart(){const svg=document.getElementById('deficitChart'),arr=state.week,max=Math.max(...arr,800),pts=arr.map((v,i)=>({x:26+i*48,y:170-(v/max)*120,label:(23+i)+'/5'})),poly=pts.map(p=>p.x+','+p.y).join(' ');svg.innerHTML='<polyline fill="rgba(83,214,159,.08)" stroke="none" points="24,170 '+poly+' 340,170"/><polyline fill="none" stroke="#53d69f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" points="'+poly+'"/>'+pts.map((p,i)=>'<circle cx="'+p.x+'" cy="'+p.y+'" r="5" fill="#0f1829" stroke="#53d69f" stroke-width="3"/><text x="'+p.x+'" y="194" fill="'+(i===6?'#53d69f':'#9aa8c0')+'" font-size="12" text-anchor="middle">'+p.label+'</text>').join('');const avg=Math.round(arr.reduce((a,b)=>a+b,0)/arr.length);document.getElementById('avgDeficit').textContent=avg;document.getElementById('successBox').textContent=avg>=GOAL.deficitGoal?'כל הכבוד! נשמר גרעון יומי ממוצע':'כוון לממוצע של 500 קל׳ ביום'}
+    function quick(q){document.getElementById('foodSearch').value=q;renderSearch(searchFoods(q))} document.getElementById('foodSearch').addEventListener('input',e=>renderSearch(searchFoods(e.target.value)));function renderAll(){renderSummary();renderSearch(searchFoods(document.getElementById('foodSearch').value));renderMeals();renderChart()} window.addFood=addFood;window.removeFood=removeFood;window.toggleMeal=toggleMeal;window.resetWeek=resetWeek;window.quick=quick;renderAll();
   </script>
 </body>
 </html>
