@@ -20,6 +20,7 @@
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
@@ -35,6 +36,7 @@
     }
 
     .stack { display: grid; gap: 12px; }
+
     .card {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -164,6 +166,7 @@
     }
 
     button, input, select, a.linkbtn { font: inherit; }
+
     button, a.linkbtn {
       border: none;
       border-radius: 16px;
@@ -185,6 +188,12 @@
       background: var(--panel-2);
       color: var(--text);
       border: 1px solid var(--line);
+    }
+
+    .danger {
+      background: rgba(255,111,111,.13);
+      color: #ffb1b1;
+      border: 1px solid rgba(255,111,111,.25);
     }
 
     .full { width: 100%; }
@@ -296,15 +305,23 @@
       cursor: pointer;
     }
 
-    .footer-btn.done { background: linear-gradient(180deg, var(--accent), var(--accent-2)); color: #062117; }
-    .footer-btn.rest { background: #05080d; color: #d7dfef; border: 1px solid var(--line); }
+    .footer-btn.done {
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      color: #062117;
+    }
+
+    .footer-btn.rest {
+      background: #05080d;
+      color: #d7dfef;
+      border: 1px solid var(--line);
+    }
 
     .section.hidden { display: none; }
     .section-title { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
     }
 
@@ -312,12 +329,21 @@
       background: var(--panel-3);
       border: 1px solid var(--line);
       border-radius: 18px;
-      padding: 12px;
+      padding: 12px 6px;
       text-align: center;
     }
 
-    .stat-box span { display: block; font-size: 12px; color: var(--muted); }
-    .stat-box strong { display: block; font-size: 22px; margin-top: 4px; }
+    .stat-box span {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .stat-box strong {
+      display: block;
+      font-size: 20px;
+      margin-top: 4px;
+    }
 
     .history-item {
       background: var(--panel-3);
@@ -335,6 +361,20 @@
       border-radius: 16px;
     }
 
+    .walk-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .walk-note {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
     .sheet-backdrop {
       position: fixed;
       inset: 0;
@@ -342,6 +382,7 @@
       display: none;
       z-index: 19;
     }
+
     .sheet-backdrop.open { display: block; }
 
     .sheet {
@@ -361,6 +402,7 @@
       z-index: 20;
       box-shadow: var(--shadow);
     }
+
     .sheet.open { display: block; }
 
     input, select {
@@ -371,6 +413,7 @@
       border-radius: 13px;
       padding: 10px 11px;
       outline: none;
+      margin-top: 8px;
     }
 
     .library-item {
@@ -423,6 +466,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="app">
     <div class="stack">
@@ -443,6 +487,7 @@
         <div class="action-row">
           <a class="linkbtn secondary" id="youtubeLink" href="#" target="_blank" rel="noopener">יוטיוב</a>
           <a class="linkbtn secondary" id="animationLink" href="#" target="_blank" rel="noopener">אנימציה</a>
+          <button class="secondary" id="quickWalkBtn">הליכה יומית</button>
         </div>
 
         <div class="sets-card" id="setsList"></div>
@@ -457,12 +502,43 @@
         </div>
       </div>
 
+      <div class="card section hidden" id="dailyWalkSection">
+        <div class="section-title">הליכה יומית</div>
+
+        <div class="walk-grid">
+          <div>
+            <span class="unit">מרחק בק״מ</span>
+            <input id="dailyWalkDistance" value="3" inputmode="decimal" />
+          </div>
+          <div>
+            <span class="unit">משך בדקות</span>
+            <input id="dailyWalkDuration" value="30" inputmode="numeric" />
+          </div>
+          <div>
+            <span class="unit">שיפוע %</span>
+            <input id="dailyWalkIncline" value="0" inputmode="decimal" />
+          </div>
+          <div>
+            <span class="unit">מהירות קמ״ש</span>
+            <input id="dailyWalkSpeed" value="5.5" inputmode="decimal" />
+          </div>
+        </div>
+
+        <div class="walk-note" id="dailyWalkCaloriesPreview">חישוב משוער: 0 קלוריות</div>
+
+        <div class="action-row">
+          <button class="primary full" id="saveDailyWalkBtn">שמור הליכה יומית</button>
+          <button class="secondary full" id="closeDailyWalkBtn">חזרה לאימון</button>
+        </div>
+      </div>
+
       <div class="card section" id="statsSection">
         <div class="section-title">סטטיסטיקה</div>
         <div class="stats-grid">
           <div class="stat-box"><span>אימונים</span><strong id="totalWorkouts">0</strong></div>
           <div class="stat-box"><span>תרגילים</span><strong id="totalExercises">0</strong></div>
           <div class="stat-box"><span>רצף</span><strong id="streak">0</strong></div>
+          <div class="stat-box"><span>קלוריות</span><strong id="totalCalories">0</strong></div>
         </div>
       </div>
 
@@ -477,19 +553,19 @@
         <button class="primary full" id="saveSpotifyBtn" style="margin-top:10px;">שמור פלייליסט</button>
       </div>
 
-     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
-  <button class="secondary" id="navWorkout">אימון</button>
-  <button class="secondary" id="navHistory">היסטוריה</button>
-  <button class="secondary" id="navMusic">מוזיקה</button>
-  <button onclick="window.location.href='nutrition.html'">תזונה</button>
-</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <button class="secondary" id="navWorkout">אימון</button>
+        <button class="secondary" id="navHistory">היסטוריה</button>
+        <button class="secondary" id="navMusic">מוזיקה</button>
+        <button onclick="window.location.href='nutrition.html'">תזונה</button>
       </div>
     </div>
   </div>
 
   <div class="sheet-backdrop" id="sheetBackdrop"></div>
+
   <div class="sheet" id="librarySheet">
-    <div class="section-title">הוסף תרגיל</div>
+    <div class="section-title">הוסף תרגיל / הליכה לאימון הנוכחי</div>
     <input id="searchInput" placeholder="חפש תרגיל" />
     <select id="muscleFilter"></select>
     <select id="equipmentFilter"></select>
@@ -498,15 +574,30 @@
 
   <div class="fixed-spotify">
     <div class="spotify-mini-label">Spotify</div>
-    <iframe class="spotify-bar" id="spotifyBar" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator&theme=0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+    <iframe
+      class="spotify-bar"
+      id="spotifyBar"
+      src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator&theme=0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+    </iframe>
   </div>
 
   <script>
-    const STORAGE_KEY = 'workout_app_v2_clean_new';
+    const STORAGE_KEY = 'workout_app_v2_clean';
+
+    const OLD_STORAGE_KEYS = [
+      'workout_app_v2_clean',
+      'workout_app_v2_clean_new',
+      'workout_app',
+      'fitness_app'
+    ];
+
     let workoutTimerInterval = null;
     let restTimerInterval = null;
 
     const LIBRARY = [
+      { id:'walk1', type:'cardio', name:'הליכה / אירובי', muscle:'אירובי', equipment:'הליכון / חוץ', reps:'30', kg:'0', distance:'3', incline:'0', speed:'5.5', image:'https://cdn-icons-png.flaticon.com/512/384/384276.png', video:'https://www.youtube.com/results?search_query=walking+treadmill+workout' },
+
       { id:'ex1', name:'Dumbbell Bench Press', muscle:'חזה', equipment:'משקולות', reps:'8', kg:'20', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Bench-Press.gif', video:'https://www.youtube.com/results?search_query=dumbbell+bench+press' },
       { id:'ex2', name:'Machine Chest Press', muscle:'חזה', equipment:'מכונה', reps:'10', kg:'25', image:'https://fitnessprogramer.com/wp-content/uploads/2022/11/Lever-Chest-Press.gif', video:'https://www.youtube.com/results?search_query=machine+chest+press' },
       { id:'ex3', name:'Cable Fly', muscle:'חזה', equipment:'כבלים', reps:'12', kg:'15', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Crossover.gif', video:'https://www.youtube.com/results?search_query=cable+fly' },
@@ -527,13 +618,47 @@
       { id:'ex18', name:'Goblet Squat', muscle:'רגליים', equipment:'משקולות', reps:'10', kg:'18', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Goblet-Squat.gif', video:'https://www.youtube.com/results?search_query=goblet+squat' }
     ];
 
-    function uid(){ return 'id-' + Math.random().toString(36).slice(2,10); }
-    function makeSet(ex, i){ return { id: uid(), index: i + 1, reps: ex.reps, kg: ex.kg, done: false }; }
+    function uid(){
+      return 'id-' + Math.random().toString(36).slice(2,10);
+    }
+
+    function makeSet(ex, i){
+      return {
+        id: uid(),
+        index: i + 1,
+        reps: ex.reps || '10',
+        kg: ex.kg || '0',
+        done: false
+      };
+    }
+
     function cloneExercise(id){
       const ex = LIBRARY.find(x => x.id === id);
+
+      if (ex.type === 'cardio') {
+        return {
+          instanceId: uid(),
+          libraryId: ex.id,
+          type: 'cardio',
+          name: ex.name,
+          muscle: ex.muscle,
+          equipment: ex.equipment,
+          image: ex.image,
+          video: ex.video,
+          done: false,
+          distance: ex.distance || '3',
+          incline: ex.incline || '0',
+          durationMinutes: ex.reps || '30',
+          speed: ex.speed || '5.5',
+          calories: 0,
+          sets: []
+        };
+      }
+
       return {
         instanceId: uid(),
         libraryId: ex.id,
+        type: 'strength',
         name: ex.name,
         muscle: ex.muscle,
         equipment: ex.equipment,
@@ -547,12 +672,45 @@
 
     function createDefaultDays(){
       const wedId = uid();
+
       return {
         days: [
-          { id: uid(), name: 'שני', label: 'חזה + יד קדמית', exercises: [cloneExercise('ex1'), cloneExercise('ex2'), cloneExercise('ex3'), cloneExercise('ex4'), cloneExercise('ex5'), cloneExercise('ex1')] },
-          { id: wedId, name: 'רביעי', label: 'גב + יד אחורית', exercises: [cloneExercise('ex6'), cloneExercise('ex7'), cloneExercise('ex8'), cloneExercise('ex9'), cloneExercise('ex10'), cloneExercise('ex11'), cloneExercise('ex12')] },
-          { id: uid(), name: 'שישי', label: 'כתפיים + רגליים', exercises: [cloneExercise('ex13'), cloneExercise('ex14'), cloneExercise('ex15'), cloneExercise('ex16'), cloneExercise('ex17'), cloneExercise('ex18')] },
-          { id: uid(), name: 'שבת', label: 'אימון משולב', exercises: [cloneExercise('ex1'), cloneExercise('ex6'), cloneExercise('ex13'), cloneExercise('ex16'), cloneExercise('ex4'), cloneExercise('ex10')] }
+          {
+            id: uid(),
+            name: 'שני',
+            label: 'חזה + יד קדמית',
+            exercises: [
+              cloneExercise('ex1'), cloneExercise('ex2'), cloneExercise('ex3'),
+              cloneExercise('ex4'), cloneExercise('ex5'), cloneExercise('ex1')
+            ]
+          },
+          {
+            id: wedId,
+            name: 'רביעי',
+            label: 'גב + יד אחורית',
+            exercises: [
+              cloneExercise('ex6'), cloneExercise('ex7'), cloneExercise('ex8'),
+              cloneExercise('ex9'), cloneExercise('ex10'), cloneExercise('ex11'), cloneExercise('ex12')
+            ]
+          },
+          {
+            id: uid(),
+            name: 'שישי',
+            label: 'כתפיים + רגליים',
+            exercises: [
+              cloneExercise('ex13'), cloneExercise('ex14'), cloneExercise('ex15'),
+              cloneExercise('ex16'), cloneExercise('ex17'), cloneExercise('ex18')
+            ]
+          },
+          {
+            id: uid(),
+            name: 'שבת',
+            label: 'אימון משולב',
+            exercises: [
+              cloneExercise('ex1'), cloneExercise('ex6'), cloneExercise('ex13'),
+              cloneExercise('ex16'), cloneExercise('ex4'), cloneExercise('ex10')
+            ]
+          }
         ],
         selectedDayId: wedId
       };
@@ -560,38 +718,170 @@
 
     function defaultState(){
       const d = createDefaultDays();
+
       return {
         days: d.days,
         selectedDayId: d.selectedDayId,
         activeExerciseIndex: 0,
         history: [],
+        dailyWalks: [],
         spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP',
         filters: { search: '', muscle: 'הכל', equipment: 'הכל' },
-        timers: { workoutSeconds: 0, workoutRunning: false, restSecondsLeft: 0, restRunning: false }
+        timers: {
+          workoutSeconds: 0,
+          workoutRunning: false,
+          restSecondsLeft: 0,
+          restRunning: false
+        }
       };
+    }
+
+    function normalizeState(result){
+      if (!result || typeof result !== 'object') return defaultState();
+
+      if (!Array.isArray(result.days) || result.days.length === 0) {
+        return defaultState();
+      }
+
+      if (!result.selectedDayId || !result.days.some(d => d.id === result.selectedDayId)) {
+        result.selectedDayId = result.days[0].id;
+      }
+
+      if (typeof result.activeExerciseIndex !== 'number') {
+        result.activeExerciseIndex = 0;
+      }
+
+      if (!Array.isArray(result.history)) result.history = [];
+      if (!Array.isArray(result.dailyWalks)) result.dailyWalks = [];
+
+      if (!result.filters) {
+        result.filters = { search: '', muscle: 'הכל', equipment: 'הכל' };
+      }
+
+      if (!result.timers) {
+        result.timers = {
+          workoutSeconds: 0,
+          workoutRunning: false,
+          restSecondsLeft: 0,
+          restRunning: false
+        };
+      }
+
+      if (!result.spotifyUrl) {
+        result.spotifyUrl = 'https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP';
+      }
+
+      result.days.forEach(day => {
+        if (!Array.isArray(day.exercises)) day.exercises = [];
+
+        day.exercises.forEach(ex => {
+          if (!ex.instanceId) ex.instanceId = uid();
+          if (!ex.type) ex.type = ex.libraryId === 'walk1' || ex.name?.includes('הליכה') ? 'cardio' : 'strength';
+
+          if (ex.type === 'cardio') {
+            if (!ex.distance) ex.distance = '3';
+            if (!ex.incline) ex.incline = '0';
+            if (!ex.durationMinutes) ex.durationMinutes = ex.reps || '30';
+            if (!ex.speed) ex.speed = '5.5';
+            if (!Array.isArray(ex.sets)) ex.sets = [];
+          } else {
+            if (!Array.isArray(ex.sets) || ex.sets.length === 0) {
+              ex.sets = [
+                { id: uid(), index: 1, reps: '10', kg: '0', done: false },
+                { id: uid(), index: 2, reps: '10', kg: '0', done: false },
+                { id: uid(), index: 3, reps: '10', kg: '0', done: false }
+              ];
+            }
+          }
+        });
+      });
+
+      return result;
     }
 
     function load(){
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        const parsed = raw ? JSON.parse(raw) : null;
-        const result = parsed || defaultState();
-        if (!result.timers) result.timers = { workoutSeconds: 0, workoutRunning: false, restSecondsLeft: 0, restRunning: false };
-        if (typeof result.activeExerciseIndex !== 'number') result.activeExerciseIndex = 0;
-        if (!Array.isArray(result.days) || result.days.length !== 4) {
-          return defaultState();
+        for (const key of OLD_STORAGE_KEYS) {
+          const raw = localStorage.getItem(key);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            const result = normalizeState(parsed);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(result));
+            return result;
+          }
         }
-        return result;
+
+        return defaultState();
       } catch {
         return defaultState();
       }
     }
 
     let state = load();
-    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-    function selectedDay(){ return state.days.find(d => d.id === state.selectedDayId) || state.days[0]; }
-    function activeExercise(){ return selectedDay().exercises[state.activeExerciseIndex] || selectedDay().exercises[0]; }
-    function formatTime(s){ const m = String(Math.floor((s || 0) / 60)).padStart(2,'0'); const ss = String((s || 0) % 60).padStart(2,'0'); return `${m}:${ss}`; }
+
+    function save(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function selectedDay(){
+      return state.days.find(d => d.id === state.selectedDayId) || state.days[0];
+    }
+
+    function activeExercise(){
+      const day = selectedDay();
+      return day.exercises[state.activeExerciseIndex] || day.exercises[0];
+    }
+
+    function formatTime(s){
+      const m = String(Math.floor((s || 0) / 60)).padStart(2,'0');
+      const ss = String((s || 0) % 60).padStart(2,'0');
+      return `${m}:${ss}`;
+    }
+
+    function estimateStrengthCalories(){
+      const minutes = Math.max(1, Math.round((state.timers.workoutSeconds || 0) / 60));
+
+      const completedSets = selectedDay().exercises
+        .filter(ex => ex.type !== 'cardio')
+        .reduce((sum, ex) => sum + ex.sets.filter(s => s.done).length, 0);
+
+      return Math.round((minutes * 4.5) + (completedSets * 3));
+    }
+
+    function estimateWalkingCaloriesFromValues(durationMinutes, speed, incline){
+      const minutes = Number(durationMinutes || 0);
+      const speedNum = Number(speed || 5.5);
+      const inclineNum = Number(incline || 0);
+
+      let met = 3.5;
+      if (speedNum >= 5) met = 4.3;
+      if (speedNum >= 6) met = 5.0;
+      if (inclineNum >= 3) met += 0.7;
+      if (inclineNum >= 6) met += 1.2;
+
+      const assumedWeight = 80;
+      return Math.round((met * assumedWeight * 3.5 / 200) * minutes);
+    }
+
+    function estimateWalkingCalories(ex){
+      return estimateWalkingCaloriesFromValues(ex.durationMinutes, ex.speed, ex.incline);
+    }
+
+    function calculateWorkoutCalories(){
+      const strengthCalories = estimateStrengthCalories();
+
+      const cardioCalories = selectedDay().exercises
+        .filter(ex => ex.type === 'cardio' && ex.done)
+        .reduce((sum, ex) => sum + estimateWalkingCalories(ex), 0);
+
+      return strengthCalories + cardioCalories;
+    }
+
+    function getTotalCalories(){
+      const historyCalories = state.history.reduce((s, h) => s + (h.calories || 0), 0);
+      const dailyWalkCalories = state.dailyWalks.reduce((s, w) => s + (w.calories || 0), 0);
+      return historyCalories + dailyWalkCalories;
+    }
 
     function render(){
       renderDays();
@@ -602,24 +892,40 @@
       renderMusic();
       renderLibrary();
       renderTimers();
+      updateDailyWalkPreview();
       save();
     }
 
     function renderDays(){
       const day = selectedDay();
-      document.getElementById('dayTabs').innerHTML = state.days.map(d => `<button class="day-card ${d.id===state.selectedDayId?'active':''}" onclick="selectDay('${d.id}')">${d.name}<small>${d.label}</small></button>`).join('');
-      if (state.activeExerciseIndex >= day.exercises.length) state.activeExerciseIndex = Math.max(0, day.exercises.length - 1);
+
+      document.getElementById('dayTabs').innerHTML = state.days.map(d => `
+        <button class="day-card ${d.id===state.selectedDayId?'active':''}" onclick="selectDay('${d.id}')">
+          ${escapeHtml(d.name)}
+          <small>${escapeHtml(d.label)}</small>
+        </button>
+      `).join('');
+
+      if (state.activeExerciseIndex >= day.exercises.length) {
+        state.activeExerciseIndex = Math.max(0, day.exercises.length - 1);
+      }
     }
 
     function renderExerciseProgress(){
       const day = selectedDay();
       const items = day.exercises.slice(0, 6);
-      document.getElementById('exerciseProgress').innerHTML = items.map((_, i) => `<div class="progress-step ${i===state.activeExerciseIndex?'active':''}" onclick="setActiveExercise(${i})">${i+1}</div>`).join('');
+
+      document.getElementById('exerciseProgress').innerHTML = items.map((_, i) => `
+        <div class="progress-step ${i===state.activeExerciseIndex?'active':''}" onclick="setActiveExercise(${i})">
+          ${i+1}
+        </div>
+      `).join('');
     }
 
     function renderActiveExercise(){
       const ex = activeExercise();
       const img = document.getElementById('activeExerciseImage');
+
       if (!ex) {
         document.getElementById('activeExerciseName').textContent = 'אין תרגילים';
         document.getElementById('activeExerciseDesc').textContent = 'הוסף תרגיל מהמאגר';
@@ -629,12 +935,56 @@
         img.src = '';
         return;
       }
-      img.onerror = () => { img.onerror = null; img.src = 'https://via.placeholder.com/600x300?text=Exercise'; };
+
+      img.onerror = () => {
+        img.onerror = null;
+        img.src = 'https://via.placeholder.com/600x300?text=Exercise';
+      };
+
       img.src = ex.image;
       document.getElementById('activeExerciseName').textContent = ex.name;
-      document.getElementById('activeExerciseDesc').textContent = `${ex.muscle} • מנוחה עולה • 3 סטים`;
-      document.getElementById('youtubeLink').href = ex.video;
-      document.getElementById('animationLink').href = `https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' exercise animation')}`;
+      document.getElementById('youtubeLink').href = ex.video || '#';
+      document.getElementById('animationLink').href =
+        `https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' exercise animation')}`;
+
+      if (ex.type === 'cardio') {
+        const calories = estimateWalkingCalories(ex);
+
+        document.getElementById('activeExerciseDesc').textContent =
+          `${ex.muscle} • ${ex.durationMinutes} דקות • ${ex.distance} ק"מ • שיפוע ${ex.incline}% • כ-${calories} קל׳`;
+
+        document.getElementById('setsList').innerHTML = `
+          <div class="set-row active" style="grid-template-columns:1fr 1fr;">
+            <div class="input-wrap">
+              <input class="tiny-input" value="${escapeHtml(ex.distance)}" onchange="updateCardioField('${ex.instanceId}','distance',this.value)" />
+              <span class="unit">ק״מ</span>
+            </div>
+            <div class="input-wrap">
+              <input class="tiny-input" value="${escapeHtml(ex.durationMinutes)}" onchange="updateCardioField('${ex.instanceId}','durationMinutes',this.value)" />
+              <span class="unit">דקות</span>
+            </div>
+          </div>
+
+          <div class="set-row active" style="grid-template-columns:1fr 1fr auto;">
+            <div class="input-wrap">
+              <input class="tiny-input" value="${escapeHtml(ex.incline)}" onchange="updateCardioField('${ex.instanceId}','incline',this.value)" />
+              <span class="unit">שיפוע</span>
+            </div>
+            <div class="input-wrap">
+              <input class="tiny-input" value="${escapeHtml(ex.speed)}" onchange="updateCardioField('${ex.instanceId}','speed',this.value)" />
+              <span class="unit">קמ״ש</span>
+            </div>
+            <button class="icon-btn ${ex.done?'done':''}" onclick="toggleCardioDone('${ex.instanceId}')">
+              ${ex.done?'✓':'○'}
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      document.getElementById('activeExerciseDesc').textContent =
+        `${ex.muscle} • מנוחה עולה • 3 סטים`;
+
       document.getElementById('setsList').innerHTML = ex.sets.map((set, idx) => `
         <div class="set-row ${!set.done && idx===ex.sets.findIndex(s=>!s.done)?'active':''}">
           <div class="set-index">${set.index}</div>
@@ -646,7 +996,9 @@
             <input class="tiny-input" value="${escapeHtml(set.kg)}" onchange="updateSetField('${ex.instanceId}','${set.id}','kg',this.value)" />
             <span class="unit">Kg</span>
           </div>
-          <button class="icon-btn ${set.done?'done':''}" onclick="toggleSetDone('${ex.instanceId}','${set.id}')">${set.done?'✓':'○'}</button>
+          <button class="icon-btn ${set.done?'done':''}" onclick="toggleSetDone('${ex.instanceId}','${set.id}')">
+            ${set.done?'✓':'○'}
+          </button>
         </div>
       `).join('');
     }
@@ -654,79 +1006,180 @@
     function renderTimers(){
       document.getElementById('workoutTimerDisplay').textContent = formatTime(state.timers.workoutSeconds);
       document.getElementById('restTimerDisplay').textContent = formatTime(state.timers.restSecondsLeft);
-      document.getElementById('toggleWorkoutBtn').textContent = state.timers.workoutRunning ? 'עצור אימון' : 'התחל אימון';
-      document.getElementById('toggleRestBtn').textContent = state.timers.restRunning ? 'עצור מנוחה' : 'התחל מנוחה';
+      document.getElementById('toggleWorkoutBtn').textContent =
+        state.timers.workoutRunning ? 'עצור אימון' : 'התחל אימון';
+      document.getElementById('toggleRestBtn').textContent =
+        state.timers.restRunning ? 'עצור מנוחה' : 'התחל מנוחה';
     }
 
     function renderStats(){
-      document.getElementById('totalWorkouts').textContent = state.history.length;
-      document.getElementById('totalExercises').textContent = state.history.reduce((s, h) => s + h.completedExercises, 0);
-      document.getElementById('streak').textContent = [...new Set(state.history.map(h => h.date))].length;
+      const allSessionsCount = state.history.length + state.dailyWalks.length;
+
+      document.getElementById('totalWorkouts').textContent = allSessionsCount;
+
+      document.getElementById('totalExercises').textContent =
+        state.history.reduce((s, h) => s + (h.completedExercises || 0), 0);
+
+      const allDates = [
+        ...state.history.map(h => h.date),
+        ...state.dailyWalks.map(w => w.date)
+      ];
+
+      document.getElementById('streak').textContent = [...new Set(allDates)].length;
+      document.getElementById('totalCalories').textContent = getTotalCalories();
     }
 
     function renderHistory(){
       const el = document.getElementById('historyList');
-      if (!state.history.length) { el.innerHTML = '<div class="empty">עדיין אין היסטוריה</div>'; return; }
-      el.innerHTML = state.history.slice().reverse().map(h => `<div class="history-item"><strong>${escapeHtml(h.day)}</strong><div style="margin-top:6px;color:var(--muted);font-size:12px;">${h.date} • ${h.completedExercises} תרגילים • זמן ${formatTime(h.duration)}</div></div>`).join('');
+
+      const workouts = state.history.map(h => ({
+        type: 'workout',
+        title: h.day,
+        date: h.date,
+        text: `${h.completedExercises || 0} תרגילים • זמן ${formatTime(h.duration || 0)} • ${h.calories || 0} קל׳`
+      }));
+
+      const walks = state.dailyWalks.map(w => ({
+        type: 'walk',
+        title: 'הליכה יומית',
+        date: w.date,
+        text: `${w.distance} ק״מ • ${w.durationMinutes} דקות • שיפוע ${w.incline}% • ${w.speed} קמ״ש • ${w.calories} קל׳`
+      }));
+
+      const items = [...workouts, ...walks].reverse();
+
+      if (!items.length) {
+        el.innerHTML = '<div class="empty">עדיין אין היסטוריה</div>';
+        return;
+      }
+
+      el.innerHTML = items.map(h => `
+        <div class="history-item">
+          <strong>${escapeHtml(h.title)}</strong>
+          <div style="margin-top:6px;color:var(--muted);font-size:12px;">
+            ${escapeHtml(h.date)} • ${escapeHtml(h.text)}
+          </div>
+        </div>
+      `).join('');
     }
 
     function renderMusic(){
       document.getElementById('spotifyInput').value = state.spotifyUrl || '';
-      const embed = spotifyEmbedUrl(state.spotifyUrl);
-      document.getElementById('spotifyBar').src = embed + '&theme=0';
+      document.getElementById('spotifyBar').src = spotifyEmbedUrl(state.spotifyUrl);
     }
 
     function spotifyEmbedUrl(url){
-      const fallback = 'https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator';
+      const fallback =
+        'https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator&theme=0';
+
       const m = url && url.match(/open\.spotify\.com\/(playlist|album|track)\/([A-Za-z0-9]+)/);
-      return m ? `https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator` : fallback;
+
+      if (!m) return fallback;
+
+      return `https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator&theme=0`;
     }
 
     function renderLibrary(){
       const muscles = ['הכל', ...new Set(LIBRARY.map(x => x.muscle))];
       const equipment = ['הכל', ...new Set(LIBRARY.map(x => x.equipment))];
-      document.getElementById('muscleFilter').innerHTML = muscles.map(x => `<option value="${x}">${x}</option>`).join('');
-      document.getElementById('equipmentFilter').innerHTML = equipment.map(x => `<option value="${x}">${x}</option>`).join('');
+
+      document.getElementById('muscleFilter').innerHTML =
+        muscles.map(x => `<option value="${x}">${x}</option>`).join('');
+
+      document.getElementById('equipmentFilter').innerHTML =
+        equipment.map(x => `<option value="${x}">${x}</option>`).join('');
+
       document.getElementById('muscleFilter').value = state.filters.muscle;
       document.getElementById('equipmentFilter').value = state.filters.equipment;
 
       let items = [...LIBRARY];
       const q = state.filters.search.trim().toLowerCase();
-      if (q) items = items.filter(x => `${x.name} ${x.muscle} ${x.equipment}`.toLowerCase().includes(q));
-      if (state.filters.muscle !== 'הכל') items = items.filter(x => x.muscle === state.filters.muscle);
-      if (state.filters.equipment !== 'הכל') items = items.filter(x => x.equipment === state.filters.equipment);
+
+      if (q) {
+        items = items.filter(x =>
+          `${x.name} ${x.muscle} ${x.equipment}`.toLowerCase().includes(q)
+        );
+      }
+
+      if (state.filters.muscle !== 'הכל') {
+        items = items.filter(x => x.muscle === state.filters.muscle);
+      }
+
+      if (state.filters.equipment !== 'הכל') {
+        items = items.filter(x => x.equipment === state.filters.equipment);
+      }
 
       document.getElementById('libraryList').innerHTML = items.map(item => `
         <div class="library-item">
           <img src="${item.image}" alt="${escapeHtml(item.name)}" />
           <div>
             <div style="font-weight:700;">${escapeHtml(item.name)}</div>
-            <div style="font-size:12px;color:var(--muted);">${escapeHtml(item.muscle)} • ${escapeHtml(item.equipment)}</div>
+            <div style="font-size:12px;color:var(--muted);">
+              ${escapeHtml(item.muscle)} • ${escapeHtml(item.equipment)}
+            </div>
           </div>
           <button class="primary" style="padding:10px 12px;" onclick="addExercise('${item.id}')">הוסף</button>
         </div>
       `).join('') || '<div class="empty">לא נמצאו תרגילים</div>';
     }
 
-    function selectDay(id){ state.selectedDayId = id; state.activeExerciseIndex = 0; render(); }
-    function setActiveExercise(i){ state.activeExerciseIndex = i; render(); }
+    function selectDay(id){
+      state.selectedDayId = id;
+      state.activeExerciseIndex = 0;
+      render();
+    }
+
+    function setActiveExercise(i){
+      state.activeExerciseIndex = i;
+      render();
+    }
 
     function updateSetField(exerciseId, setId, field, value){
       const ex = selectedDay().exercises.find(e => e.instanceId === exerciseId);
       const set = ex?.sets.find(s => s.id === setId);
       if (!set) return;
+
       set[field] = value;
       save();
+    }
+
+    function updateCardioField(exerciseId, field, value){
+      const ex = selectedDay().exercises.find(e => e.instanceId === exerciseId);
+      if (!ex) return;
+
+      ex[field] = value;
+      ex.calories = estimateWalkingCalories(ex);
+      render();
     }
 
     function toggleSetDone(exerciseId, setId){
       const ex = selectedDay().exercises.find(e => e.instanceId === exerciseId);
       const set = ex?.sets.find(s => s.id === setId);
       if (!set) return;
+
       set.done = !set.done;
       ex.done = ex.sets.every(s => s.done);
+
       if (set.done) startRestTimer(true);
-      if (ex.done && state.activeExerciseIndex < selectedDay().exercises.length - 1) state.activeExerciseIndex += 1;
+
+      if (ex.done && state.activeExerciseIndex < selectedDay().exercises.length - 1) {
+        state.activeExerciseIndex += 1;
+      }
+
+      render();
+    }
+
+    function toggleCardioDone(exerciseId){
+      const ex = selectedDay().exercises.find(e => e.instanceId === exerciseId);
+      if (!ex) return;
+
+      ex.done = !ex.done;
+      ex.calories = estimateWalkingCalories(ex);
+
+      if (ex.done && state.activeExerciseIndex < selectedDay().exercises.length - 1) {
+        state.activeExerciseIndex += 1;
+      }
+
       render();
     }
 
@@ -749,6 +1202,7 @@
           save();
         }, 1000);
       }
+
       renderTimers();
       save();
     }
@@ -758,14 +1212,19 @@
         clearInterval(restTimerInterval);
         restTimerInterval = null;
       }
+
       if (state.timers.restRunning && !forceRestart) return;
+
       if (forceRestart) state.timers.restSecondsLeft = 0;
+
       state.timers.restRunning = true;
+
       restTimerInterval = setInterval(() => {
         state.timers.restSecondsLeft += 1;
         renderTimers();
         save();
       }, 1000);
+
       renderTimers();
       save();
     }
@@ -779,6 +1238,7 @@
         startRestTimer(true);
         return;
       }
+
       renderTimers();
       save();
     }
@@ -786,40 +1246,120 @@
     function finishWorkout(){
       const day = selectedDay();
       const completedExercises = day.exercises.filter(ex => ex.done).length;
+      const calories = calculateWorkoutCalories();
+
       state.history.push({
         id: uid(),
         day: `${day.name} - ${day.label}`,
         date: new Date().toLocaleDateString('he-IL'),
         completedExercises,
-        duration: state.timers.workoutSeconds
+        duration: state.timers.workoutSeconds,
+        calories
       });
-      day.exercises.forEach(ex => { ex.done = false; ex.sets.forEach(s => s.done = false); });
+
+      day.exercises.forEach(ex => {
+        ex.done = false;
+        if (Array.isArray(ex.sets)) {
+          ex.sets.forEach(s => s.done = false);
+        }
+      });
+
       state.activeExerciseIndex = 0;
       state.timers.workoutSeconds = 0;
       state.timers.restSecondsLeft = 0;
-      clearInterval(workoutTimerInterval); workoutTimerInterval = null; state.timers.workoutRunning = false;
-      clearInterval(restTimerInterval); restTimerInterval = null; state.timers.restRunning = false;
+
+      clearInterval(workoutTimerInterval);
+      workoutTimerInterval = null;
+      state.timers.workoutRunning = false;
+
+      clearInterval(restTimerInterval);
+      restTimerInterval = null;
+      state.timers.restRunning = false;
+
       render();
-      alert('האימון נשמר');
+      alert(`האימון נשמר • כ-${calories} קלוריות`);
+    }
+
+    function openDailyWalk(){
+      document.getElementById('dailyWalkSection').classList.remove('hidden');
+      document.getElementById('statsSection').classList.add('hidden');
+      document.getElementById('historySection').classList.add('hidden');
+      document.getElementById('musicSection').classList.add('hidden');
+      updateDailyWalkPreview();
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function closeDailyWalk(){
+      document.getElementById('dailyWalkSection').classList.add('hidden');
+      showSection('workout');
+    }
+
+    function updateDailyWalkPreview(){
+      const duration = document.getElementById('dailyWalkDuration')?.value || 0;
+      const speed = document.getElementById('dailyWalkSpeed')?.value || 0;
+      const incline = document.getElementById('dailyWalkIncline')?.value || 0;
+
+      const calories = estimateWalkingCaloriesFromValues(duration, speed, incline);
+      const el = document.getElementById('dailyWalkCaloriesPreview');
+
+      if (el) el.textContent = `חישוב משוער: ${calories} קלוריות`;
+    }
+
+    function saveDailyWalk(){
+      const distance = document.getElementById('dailyWalkDistance').value || '0';
+      const durationMinutes = document.getElementById('dailyWalkDuration').value || '0';
+      const incline = document.getElementById('dailyWalkIncline').value || '0';
+      const speed = document.getElementById('dailyWalkSpeed').value || '0';
+
+      const calories = estimateWalkingCaloriesFromValues(durationMinutes, speed, incline);
+
+      state.dailyWalks.push({
+        id: uid(),
+        type: 'daily_walk',
+        date: new Date().toLocaleDateString('he-IL'),
+        distance,
+        durationMinutes,
+        incline,
+        speed,
+        calories
+      });
+
+      save();
+      render();
+      closeDailyWalk();
+      alert(`הליכה יומית נשמרה • כ-${calories} קלוריות`);
     }
 
     function saveSpotify(){
       const value = document.getElementById('spotifyInput').value.trim();
-      if (!value.includes('spotify.com')) return alert('הדבק קישור Spotify תקין');
+
+      if (!value.includes('spotify.com')) {
+        return alert('הדבק קישור Spotify תקין');
+      }
+
       state.spotifyUrl = value;
       render();
     }
 
-    function openSheet(){ document.getElementById('sheetBackdrop').classList.add('open'); document.getElementById('librarySheet').classList.add('open'); }
-    function closeSheet(){ document.getElementById('sheetBackdrop').classList.remove('open'); document.getElementById('librarySheet').classList.remove('open'); }
+    function openSheet(){
+      document.getElementById('sheetBackdrop').classList.add('open');
+      document.getElementById('librarySheet').classList.add('open');
+    }
+
+    function closeSheet(){
+      document.getElementById('sheetBackdrop').classList.remove('open');
+      document.getElementById('librarySheet').classList.remove('open');
+    }
+
     function showSection(name){
+      document.getElementById('dailyWalkSection').classList.add('hidden');
       document.getElementById('statsSection').classList.toggle('hidden', name !== 'workout');
       document.getElementById('historySection').classList.toggle('hidden', name !== 'history');
       document.getElementById('musicSection').classList.toggle('hidden', name !== 'music');
     }
 
     function escapeHtml(str){
-      return String(str)
+      return String(str ?? '')
         .replace(/&/g,'&amp;')
         .replace(/</g,'&lt;')
         .replace(/>/g,'&gt;')
@@ -828,6 +1368,14 @@
     }
 
     document.getElementById('openLibraryBtn').addEventListener('click', openSheet);
+    document.getElementById('quickWalkBtn').addEventListener('click', openDailyWalk);
+    document.getElementById('closeDailyWalkBtn').addEventListener('click', closeDailyWalk);
+    document.getElementById('saveDailyWalkBtn').addEventListener('click', saveDailyWalk);
+
+    ['dailyWalkDistance','dailyWalkDuration','dailyWalkIncline','dailyWalkSpeed'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateDailyWalkPreview);
+    });
+
     document.getElementById('sheetBackdrop').addEventListener('click', closeSheet);
     document.getElementById('toggleWorkoutBtn').addEventListener('click', toggleWorkoutTimer);
     document.getElementById('toggleRestBtn').addEventListener('click', () => toggleRestTimer(false));
@@ -836,14 +1384,31 @@
     document.getElementById('navWorkout').addEventListener('click', () => showSection('workout'));
     document.getElementById('navHistory').addEventListener('click', () => showSection('history'));
     document.getElementById('navMusic').addEventListener('click', () => showSection('music'));
-    document.getElementById('searchInput').addEventListener('input', e => { state.filters.search = e.target.value; renderLibrary(); save(); });
-    document.getElementById('muscleFilter').addEventListener('change', e => { state.filters.muscle = e.target.value; renderLibrary(); save(); });
-    document.getElementById('equipmentFilter').addEventListener('change', e => { state.filters.equipment = e.target.value; renderLibrary(); save(); });
+
+    document.getElementById('searchInput').addEventListener('input', e => {
+      state.filters.search = e.target.value;
+      renderLibrary();
+      save();
+    });
+
+    document.getElementById('muscleFilter').addEventListener('change', e => {
+      state.filters.muscle = e.target.value;
+      renderLibrary();
+      save();
+    });
+
+    document.getElementById('equipmentFilter').addEventListener('change', e => {
+      state.filters.equipment = e.target.value;
+      renderLibrary();
+      save();
+    });
 
     window.selectDay = selectDay;
     window.setActiveExercise = setActiveExercise;
     window.updateSetField = updateSetField;
+    window.updateCardioField = updateCardioField;
     window.toggleSetDone = toggleSetDone;
+    window.toggleCardioDone = toggleCardioDone;
     window.addExercise = addExercise;
 
     showSection('workout');
