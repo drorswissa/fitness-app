@@ -6,18 +6,19 @@
   <title>Workout App V2 Clean</title>
   <style>
     :root {
-      --bg: #0b1017;
-      --panel: #111827;
-      --panel-2: #162033;
-      --panel-3: #0c1320;
-      --text: #f5f7fb;
-      --muted: #9eabc3;
-      --line: rgba(255,255,255,0.08);
-      --accent: #2bd3a0;
-      --accent-2: #1eb885;
-      --danger: #ff6f6f;
-      --shadow: 0 10px 28px rgba(0,0,0,.25);
-    }
+  --bg: #060b14;
+  --panel: #0f1726;
+  --panel-2: #121c2f;
+  --panel-3: #0c1320;
+  --text: #f1f5ff;
+  --muted: #8ea0c2;
+
+  --accent: #4ade80;
+  --accent-2: #22c55e;
+
+  --line: rgba(255,255,255,0.06);
+  --shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
 
     * { box-sizing: border-box; }
 
@@ -37,13 +38,14 @@
 
     .stack { display: grid; gap: 12px; }
 
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      padding: 14px;
-    }
+   .card {
+  background: rgba(15, 23, 38, 0.7);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  padding: 14px;
+}
 
     .topbar {
       display: flex;
@@ -438,18 +440,18 @@
       padding: 4px;
     }
 
-    .fixed-spotify {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 0;
-      width: min(430px, 100vw);
-      background: rgba(10,14,20,.96);
-      border-top: 1px solid var(--line);
-      padding: 8px 10px 10px;
-      z-index: 30;
-      backdrop-filter: blur(10px);
-    }
+   .fixed-spotify {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  width: min(430px, 100vw);
+  background: rgba(10,14,20,.7);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+  padding: 8px 10px 10px;
+  z-index: 30;
+}
 
     .spotify-mini-label {
       color: var(--muted);
@@ -464,6 +466,26 @@
       border: none;
       border-radius: 16px;
     }
+    iframe.spotify-bar {
+  width: 100%;
+  height: 80px;
+  border: none;
+  border-radius: 16px;
+}
+
+/* 👇 תדביק כאן */
+.card:first-child {
+  position: relative;
+}
+
+.card:first-child::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(74,222,128,0.15), transparent 60%);
+  pointer-events: none;
+}
+
   </style>
 </head>
 
