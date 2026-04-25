@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout App V2 Clean</title>
+  <title>Workout App V3 Data Pro</title>
   <style>
     :root {
-      --bg: #070b12;
-      --panel: #101722;
-      --panel-2: #151f2e;
-      --panel-3: #0c121d;
-      --text: #f5f7fb;
-      --muted: #93a4bb;
+      --bg: #05070c;
+      --panel: #0b111a;
+      --panel-2: #101823;
+      --panel-3: #070c12;
+      --text: #f6f8fb;
+      --muted: #8c9bad;
       --line: rgba(255,255,255,0.08);
-      --accent: #2bd39f;
-      --accent-2: #20b985;
-      --danger: #ff6f6f;
-      --shadow: 0 14px 32px rgba(0,0,0,.35);
+      --accent: #00f5a0;
+      --accent-2: #00c2ff;
+      --warning: #ffb020;
+      --danger: #ff5c7a;
+      --shadow: 0 18px 44px rgba(0,0,0,.45);
     }
 
     * { box-sizing: border-box; }
@@ -25,8 +26,9 @@
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
       background:
-        radial-gradient(circle at top, rgba(43,211,159,0.08), transparent 32%),
-        linear-gradient(180deg, #0a1019 0%, #060a11 100%);
+        radial-gradient(circle at 50% -10%, rgba(0,245,160,0.12), transparent 34%),
+        radial-gradient(circle at 10% 12%, rgba(0,194,255,0.08), transparent 30%),
+        linear-gradient(180deg, #060910 0%, #020408 100%);
       color: var(--text);
     }
 
@@ -40,11 +42,15 @@
     .stack { display: grid; gap: 12px; }
 
     .card {
-      background: linear-gradient(180deg, rgba(16,23,34,.98), rgba(10,16,26,.98));
+      background: linear-gradient(180deg, rgba(13,19,29,.98), rgba(7,11,17,.98));
       border: 1px solid var(--line);
       border-radius: 24px;
       box-shadow: var(--shadow);
       padding: 14px;
+    }
+
+    .card:first-child {
+      border-color: rgba(0,245,160,0.16);
     }
 
     .topbar {
@@ -63,18 +69,19 @@
       align-items: center;
       justify-content: center;
       border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.035);
       color: var(--text);
       font-size: 16px;
       cursor: pointer;
     }
 
     .screen-timer {
-      font-size: 28px;
-      font-weight: 900;
+      font-size: 30px;
+      font-weight: 950;
       text-align: center;
       flex: 1;
-      letter-spacing: .5px;
+      letter-spacing: 1px;
+      color: var(--accent);
     }
 
     .days-grid {
@@ -85,14 +92,14 @@
     }
 
     .day-card {
-      background: rgba(255,255,255,0.045);
+      background: rgba(255,255,255,0.035);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 16px;
       padding: 12px 10px;
       text-align: center;
       cursor: pointer;
       color: var(--text);
-      font-weight: 800;
+      font-weight: 900;
     }
 
     .day-card small {
@@ -104,9 +111,9 @@
     }
 
     .day-card.active {
-      border-color: rgba(43,211,159,0.65);
-      background: rgba(43,211,159,0.13);
-      box-shadow: inset 0 0 0 1px rgba(43,211,159,0.18);
+      border-color: rgba(0,245,160,0.65);
+      background: rgba(0,245,160,0.10);
+      box-shadow: inset 0 0 0 1px rgba(0,245,160,0.16);
       outline: none;
     }
 
@@ -122,37 +129,37 @@
       width: 100%;
       aspect-ratio: 1;
       border-radius: 999px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.035);
       border: 1px solid rgba(255,255,255,0.08);
       color: var(--text);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
+      font-weight: 900;
       font-size: 14px;
       cursor: pointer;
     }
 
     .progress-step.active {
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #041b13;
-      border-color: rgba(43,211,159,0.7);
-      box-shadow: 0 8px 18px rgba(43,211,159,0.22);
+      color: #03100c;
+      border-color: rgba(0,245,160,0.7);
+      box-shadow: 0 8px 18px rgba(0,245,160,0.18);
     }
 
     .hero-image {
       width: 100%;
-      height: 176px;
+      height: 154px;
       object-fit: contain;
       border-radius: 18px;
-      background: #fff;
+      background: #f8fafc;
       border: 1px solid rgba(255,255,255,0.08);
       padding: 8px;
     }
 
     .exercise-title {
-      font-size: 18px;
-      font-weight: 900;
+      font-size: 19px;
+      font-weight: 950;
       margin-top: 14px;
       line-height: 1.2;
     }
@@ -186,22 +193,22 @@
 
     .primary {
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #062117;
-      font-weight: 900;
-      box-shadow: 0 8px 20px rgba(43,211,159,0.22);
+      color: #03100c;
+      font-weight: 950;
+      box-shadow: 0 8px 20px rgba(0,245,160,0.20);
     }
 
     .secondary {
-      background: rgba(255,255,255,0.045);
+      background: rgba(255,255,255,0.035);
       color: var(--text);
       border: 1px solid rgba(255,255,255,0.08);
-      font-weight: 800;
+      font-weight: 850;
     }
 
     .danger {
-      background: rgba(255,111,111,.13);
-      color: #ffb1b1;
-      border: 1px solid rgba(255,111,111,.25);
+      background: rgba(255,92,122,.13);
+      color: #ffc0cb;
+      border: 1px solid rgba(255,92,122,.25);
     }
 
     .full { width: 100%; }
@@ -213,7 +220,7 @@
     }
 
     .set-row {
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.035);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 18px;
       padding: 12px;
@@ -224,9 +231,9 @@
     }
 
     .set-row.active {
-      border-color: rgba(43,211,159,0.65);
-      background: rgba(43,211,159,0.09);
-      box-shadow: inset 0 0 0 1px rgba(43,211,159,0.18);
+      border-color: rgba(0,245,160,0.55);
+      background: rgba(0,245,160,0.08);
+      box-shadow: inset 0 0 0 1px rgba(0,245,160,0.16);
     }
 
     .set-index {
@@ -236,10 +243,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.08);
-      font-weight: 900;
-      color: var(--text);
+      font-weight: 950;
+      color: var(--accent);
     }
 
     .input-wrap {
@@ -251,14 +258,14 @@
 
     .tiny-input {
       width: 100%;
-      background: rgba(0,0,0,0.34);
+      background: rgba(0,0,0,0.36);
       border: 1px solid rgba(255,255,255,0.07);
       color: var(--text);
       border-radius: 10px;
       padding: 10px 8px;
       text-align: center;
       font-size: 15px;
-      font-weight: 900;
+      font-weight: 950;
     }
 
     .unit {
@@ -269,12 +276,11 @@
     .icon-btn {
       min-width: 42px;
       height: 42px;
-      border: none;
       border-radius: 14px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0,0,0,0.32);
+      background: rgba(0,0,0,0.34);
       color: var(--text);
       cursor: pointer;
       border: 1px solid rgba(255,255,255,0.08);
@@ -282,15 +288,15 @@
     }
 
     .icon-btn.done {
-      background: rgba(43,211,159,.16);
-      color: #8ff3cb;
-      border-color: rgba(43,211,159,.35);
+      background: rgba(0,245,160,.14);
+      color: var(--accent);
+      border-color: rgba(0,245,160,.35);
     }
 
     .timer-footer {
       position: sticky;
       bottom: 92px;
-      background: rgba(8,14,22,.92);
+      background: rgba(5,8,13,.92);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 22px;
       padding: 10px;
@@ -306,30 +312,30 @@
 
     .footer-block { text-align: center; }
     .footer-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
-    .footer-time { font-size: 20px; font-weight: 900; }
+    .footer-time { font-size: 20px; font-weight: 950; color: var(--accent); }
 
     .footer-btn {
       border: none;
       border-radius: 16px;
       padding: 14px 12px;
-      font-weight: 900;
+      font-weight: 950;
       cursor: pointer;
     }
 
     .footer-btn.done {
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #062117;
-      box-shadow: 0 8px 20px rgba(43,211,159,0.22);
+      color: #03100c;
+      box-shadow: 0 8px 20px rgba(0,245,160,0.20);
     }
 
     .footer-btn.rest {
-      background: rgba(0,0,0,0.32);
+      background: rgba(0,0,0,0.34);
       color: #d7dfef;
       border: 1px solid rgba(255,255,255,0.08);
     }
 
     .section.hidden { display: none; }
-    .section-title { font-size: 18px; font-weight: 900; margin-bottom: 10px; }
+    .section-title { font-size: 18px; font-weight: 950; margin-bottom: 10px; }
 
     .stats-grid {
       display: grid;
@@ -338,7 +344,7 @@
     }
 
     .stat-box {
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.035);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 16px;
       padding: 12px 6px;
@@ -355,10 +361,11 @@
       display: block;
       font-size: 20px;
       margin-top: 4px;
+      color: var(--accent);
     }
 
     .history-item {
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.035);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 16px;
       padding: 11px;
@@ -381,16 +388,17 @@
     }
 
     .walk-note {
-      color: var(--muted);
+      color: var(--accent);
       font-size: 12px;
       margin-top: 8px;
       line-height: 1.4;
+      font-weight: 900;
     }
 
     .sheet-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.5);
+      background: rgba(0,0,0,.58);
       display: none;
       z-index: 19;
     }
@@ -404,8 +412,8 @@
       bottom: 82px;
       max-width: 430px;
       margin: 0 auto;
-      background: linear-gradient(180deg, rgba(16,23,34,.98), rgba(10,16,26,.98));
-      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(13,19,29,.98), rgba(7,11,17,.98));
+      border: 1px solid rgba(255,255,255,0.10);
       border-radius: 24px;
       padding: 14px;
       max-height: 62vh;
@@ -419,7 +427,7 @@
 
     input, select {
       width: 100%;
-      background: rgba(255,255,255,0.045);
+      background: rgba(255,255,255,0.035);
       color: var(--text);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 13px;
@@ -429,7 +437,7 @@
     }
 
     .library-item {
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.035);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 18px;
       padding: 10px;
@@ -456,12 +464,12 @@
       transform: translateX(-50%);
       bottom: 0;
       width: min(430px, 100vw);
-      background: rgba(5,10,17,.90);
+      background: rgba(2,4,8,.92);
       border-top: 1px solid rgba(255,255,255,0.08);
       padding: 8px 10px 10px;
       z-index: 30;
       backdrop-filter: blur(12px);
-      box-shadow: 0 -12px 28px rgba(0,0,0,0.35);
+      box-shadow: 0 -12px 28px rgba(0,0,0,0.38);
     }
 
     .spotify-mini-label {
@@ -631,36 +639,78 @@
     ];
 
     function uid(){ return 'id-' + Math.random().toString(36).slice(2,10); }
-    function makeSet(ex, i){ return { id: uid(), index: i + 1, reps: ex.reps || '10', kg: ex.kg || '0', done: false }; }
+
+    function makeSet(ex, i){
+      return { id: uid(), index: i + 1, reps: ex.reps || '10', kg: ex.kg || '0', done: false };
+    }
 
     function cloneExercise(id){
       const ex = LIBRARY.find(x => x.id === id);
+
       if (ex.type === 'cardio') {
         return {
-          instanceId: uid(), libraryId: ex.id, type: 'cardio',
-          name: ex.name, muscle: ex.muscle, equipment: ex.equipment,
-          image: ex.image, video: ex.video, done: false,
-          distance: ex.distance || '3', incline: ex.incline || '0',
-          durationMinutes: ex.reps || '30', speed: ex.speed || '5.5',
-          calories: 0, sets: []
+          instanceId: uid(),
+          libraryId: ex.id,
+          type: 'cardio',
+          name: ex.name,
+          muscle: ex.muscle,
+          equipment: ex.equipment,
+          image: ex.image,
+          video: ex.video,
+          done: false,
+          distance: ex.distance || '3',
+          incline: ex.incline || '0',
+          durationMinutes: ex.reps || '30',
+          speed: ex.speed || '5.5',
+          calories: 0,
+          sets: []
         };
       }
+
       return {
-        instanceId: uid(), libraryId: ex.id, type: 'strength',
-        name: ex.name, muscle: ex.muscle, equipment: ex.equipment,
-        image: ex.image, video: ex.video, restSeconds: 90, done: false,
+        instanceId: uid(),
+        libraryId: ex.id,
+        type: 'strength',
+        name: ex.name,
+        muscle: ex.muscle,
+        equipment: ex.equipment,
+        image: ex.image,
+        video: ex.video,
+        restSeconds: 90,
+        done: false,
         sets: [makeSet(ex,0), makeSet(ex,1), makeSet(ex,2)]
       };
     }
 
     function createDefaultDays(){
       const wedId = uid();
+
       return {
         days: [
-          { id: uid(), name: 'שני', label: 'חזה + יד קדמית', exercises: [cloneExercise('ex1'), cloneExercise('ex2'), cloneExercise('ex3'), cloneExercise('ex4'), cloneExercise('ex5'), cloneExercise('ex1')] },
-          { id: wedId, name: 'רביעי', label: 'גב + יד אחורית', exercises: [cloneExercise('ex6'), cloneExercise('ex7'), cloneExercise('ex8'), cloneExercise('ex9'), cloneExercise('ex10'), cloneExercise('ex11'), cloneExercise('ex12')] },
-          { id: uid(), name: 'שישי', label: 'כתפיים + רגליים', exercises: [cloneExercise('ex13'), cloneExercise('ex14'), cloneExercise('ex15'), cloneExercise('ex16'), cloneExercise('ex17'), cloneExercise('ex18')] },
-          { id: uid(), name: 'שבת', label: 'אימון משולב', exercises: [cloneExercise('ex1'), cloneExercise('ex6'), cloneExercise('ex13'), cloneExercise('ex16'), cloneExercise('ex4'), cloneExercise('ex10')] }
+          {
+            id: uid(),
+            name: 'שני',
+            label: 'חזה + יד קדמית',
+            exercises: [cloneExercise('ex1'), cloneExercise('ex2'), cloneExercise('ex3'), cloneExercise('ex4'), cloneExercise('ex5'), cloneExercise('ex1')]
+          },
+          {
+            id: wedId,
+            name: 'רביעי',
+            label: 'גב + יד אחורית',
+            exercises: [cloneExercise('ex6'), cloneExercise('ex7'), cloneExercise('ex8'), cloneExercise('ex9'), cloneExercise('ex10'), cloneExercise('ex11'), cloneExercise('ex12')]
+          },
+          {
+            id: uid(),
+            name: 'שישי',
+            label: 'כתפיים + רגליים',
+            exercises: [cloneExercise('ex13'), cloneExercise('ex14'), cloneExercise('ex15'), cloneExercise('ex16'), cloneExercise('ex17'), cloneExercise('ex18')]
+          },
+          {
+            id: uid(),
+            name: 'שבת',
+            label: 'אימון משולב',
+            exercises: [cloneExercise('ex1'), cloneExercise('ex6'), cloneExercise('ex13'), cloneExercise('ex16'), cloneExercise('ex4'), cloneExercise('ex10')]
+          }
         ],
         selectedDayId: wedId
       };
@@ -668,6 +718,7 @@
 
     function defaultState(){
       const d = createDefaultDays();
+
       return {
         days: d.days,
         selectedDayId: d.selectedDayId,
@@ -694,6 +745,7 @@
 
       result.days.forEach(day => {
         if (!Array.isArray(day.exercises)) day.exercises = [];
+
         day.exercises.forEach(ex => {
           if (!ex.instanceId) ex.instanceId = uid();
           if (!ex.type) ex.type = ex.libraryId === 'walk1' || ex.name?.includes('הליכה') ? 'cardio' : 'strength';
@@ -760,11 +812,13 @@
       const minutes = Number(durationMinutes || 0);
       const speedNum = Number(speed || 5.5);
       const inclineNum = Number(incline || 0);
+
       let met = 3.5;
       if (speedNum >= 5) met = 4.3;
       if (speedNum >= 6) met = 5.0;
       if (inclineNum >= 3) met += 0.7;
       if (inclineNum >= 6) met += 1.2;
+
       const assumedWeight = 80;
       return Math.round((met * assumedWeight * 3.5 / 200) * minutes);
     }
@@ -800,18 +854,21 @@
 
     function renderDays(){
       const day = selectedDay();
+
       document.getElementById('dayTabs').innerHTML = state.days.map(d => `
         <button class="day-card ${d.id===state.selectedDayId?'active':''}" onclick="selectDay('${d.id}')">
           ${escapeHtml(d.name)}
           <small>${escapeHtml(d.label)}</small>
         </button>
       `).join('');
+
       if (state.activeExerciseIndex >= day.exercises.length) state.activeExerciseIndex = Math.max(0, day.exercises.length - 1);
     }
 
     function renderExerciseProgress(){
       const day = selectedDay();
       const items = day.exercises.slice(0, 6);
+
       document.getElementById('exerciseProgress').innerHTML = items.map((_, i) => `
         <div class="progress-step ${i===state.activeExerciseIndex?'active':''}" onclick="setActiveExercise(${i})">${i+1}</div>
       `).join('');
@@ -831,14 +888,20 @@
         return;
       }
 
-      img.onerror = () => { img.onerror = null; img.src = 'https://via.placeholder.com/600x300?text=Exercise'; };
+      img.onerror = () => {
+        img.onerror = null;
+        img.src = 'https://via.placeholder.com/600x300?text=Exercise';
+      };
+
       img.src = ex.image;
       document.getElementById('activeExerciseName').textContent = ex.name;
       document.getElementById('youtubeLink').href = ex.video || '#';
-      document.getElementById('animationLink').href = `https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' exercise animation')}`;
+      document.getElementById('animationLink').href =
+        `https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' exercise animation')}`;
 
       if (ex.type === 'cardio') {
         const calories = estimateWalkingCalories(ex);
+
         document.getElementById('activeExerciseDesc').textContent =
           `${ex.muscle} • ${ex.durationMinutes} דקות • ${ex.distance} ק"מ • שיפוע ${ex.incline}% • כ-${calories} קל׳`;
 
@@ -863,13 +926,16 @@
               <input class="tiny-input" value="${escapeHtml(ex.speed)}" onchange="updateCardioField('${ex.instanceId}','speed',this.value)" />
               <span class="unit">קמ״ש</span>
             </div>
-            <button class="icon-btn ${ex.done?'done':''}" onclick="toggleCardioDone('${ex.instanceId}')">${ex.done?'✓':'○'}</button>
+            <button class="icon-btn ${ex.done?'done':''}" onclick="toggleCardioDone('${ex.instanceId}')">
+              ${ex.done?'✓':'○'}
+            </button>
           </div>
         `;
         return;
       }
 
-      document.getElementById('activeExerciseDesc').textContent = `${ex.muscle} • מנוחה עולה • 3 סטים`;
+      document.getElementById('activeExerciseDesc').textContent =
+        `${ex.muscle} • מנוחה עולה • 3 סטים`;
 
       document.getElementById('setsList').innerHTML = ex.sets.map((set, idx) => `
         <div class="set-row ${!set.done && idx===ex.sets.findIndex(s=>!s.done)?'active':''}">
@@ -882,7 +948,9 @@
             <input class="tiny-input" value="${escapeHtml(set.kg)}" onchange="updateSetField('${ex.instanceId}','${set.id}','kg',this.value)" />
             <span class="unit">Kg</span>
           </div>
-          <button class="icon-btn ${set.done?'done':''}" onclick="toggleSetDone('${ex.instanceId}','${set.id}')">${set.done?'✓':'○'}</button>
+          <button class="icon-btn ${set.done?'done':''}" onclick="toggleSetDone('${ex.instanceId}','${set.id}')">
+            ${set.done?'✓':'○'}
+          </button>
         </div>
       `).join('');
     }
@@ -896,9 +964,13 @@
 
     function renderStats(){
       const allSessionsCount = state.history.length + state.dailyWalks.length;
+
       document.getElementById('totalWorkouts').textContent = allSessionsCount;
-      document.getElementById('totalExercises').textContent = state.history.reduce((s, h) => s + (h.completedExercises || 0), 0);
+      document.getElementById('totalExercises').textContent =
+        state.history.reduce((s, h) => s + (h.completedExercises || 0), 0);
+
       const allDates = [...state.history.map(h => h.date), ...state.dailyWalks.map(w => w.date)];
+
       document.getElementById('streak').textContent = [...new Set(allDates)].length;
       document.getElementById('totalCalories').textContent = getTotalCalories();
     }
@@ -953,15 +1025,24 @@
       const muscles = ['הכל', ...new Set(LIBRARY.map(x => x.muscle))];
       const equipment = ['הכל', ...new Set(LIBRARY.map(x => x.equipment))];
 
-      document.getElementById('muscleFilter').innerHTML = muscles.map(x => `<option value="${x}">${x}</option>`).join('');
-      document.getElementById('equipmentFilter').innerHTML = equipment.map(x => `<option value="${x}">${x}</option>`).join('');
+      document.getElementById('muscleFilter').innerHTML =
+        muscles.map(x => `<option value="${x}">${x}</option>`).join('');
+
+      document.getElementById('equipmentFilter').innerHTML =
+        equipment.map(x => `<option value="${x}">${x}</option>`).join('');
+
       document.getElementById('muscleFilter').value = state.filters.muscle;
       document.getElementById('equipmentFilter').value = state.filters.equipment;
 
       let items = [...LIBRARY];
       const q = state.filters.search.trim().toLowerCase();
 
-      if (q) items = items.filter(x => `${x.name} ${x.muscle} ${x.equipment}`.toLowerCase().includes(q));
+      if (q) {
+        items = items.filter(x =>
+          `${x.name} ${x.muscle} ${x.equipment}`.toLowerCase().includes(q)
+        );
+      }
+
       if (state.filters.muscle !== 'הכל') items = items.filter(x => x.muscle === state.filters.muscle);
       if (state.filters.equipment !== 'הכל') items = items.filter(x => x.equipment === state.filters.equipment);
 
@@ -970,15 +1051,25 @@
           <img src="${item.image}" alt="${escapeHtml(item.name)}" />
           <div>
             <div style="font-weight:700;">${escapeHtml(item.name)}</div>
-            <div style="font-size:12px;color:var(--muted);">${escapeHtml(item.muscle)} • ${escapeHtml(item.equipment)}</div>
+            <div style="font-size:12px;color:var(--muted);">
+              ${escapeHtml(item.muscle)} • ${escapeHtml(item.equipment)}
+            </div>
           </div>
           <button class="primary" style="padding:10px 12px;" onclick="addExercise('${item.id}')">הוסף</button>
         </div>
       `).join('') || '<div class="empty">לא נמצאו תרגילים</div>';
     }
 
-    function selectDay(id){ state.selectedDayId = id; state.activeExerciseIndex = 0; render(); }
-    function setActiveExercise(i){ state.activeExerciseIndex = i; render(); }
+    function selectDay(id){
+      state.selectedDayId = id;
+      state.activeExerciseIndex = 0;
+      render();
+    }
+
+    function setActiveExercise(i){
+      state.activeExerciseIndex = i;
+      render();
+    }
 
     function updateSetField(exerciseId, setId, field, value){
       const ex = selectedDay().exercises.find(e => e.instanceId === exerciseId);
@@ -1005,6 +1096,7 @@
       ex.done = ex.sets.every(s => s.done);
 
       if (set.done) startRestTimer(true);
+
       if (ex.done && state.activeExerciseIndex < selectedDay().exercises.length - 1) state.activeExerciseIndex += 1;
 
       render();
@@ -1041,6 +1133,7 @@
           save();
         }, 1000);
       }
+
       renderTimers();
       save();
     }
@@ -1075,6 +1168,7 @@
         startRestTimer(true);
         return;
       }
+
       renderTimers();
       save();
     }
