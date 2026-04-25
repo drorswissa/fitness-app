@@ -446,20 +446,6 @@
         </div>
 
         <div class="sets-card" id="setsList"></div>
-        <div class="card" style="margin-top:12px;">
-  <div class="section-title">🚶 הליכה / אירובי</div>
-
-  <div style="display:grid;gap:8px;">
-    <input id="walkDistance" placeholder="מרחק (ק״מ)" type="number" />
-    <input id="walkTime" placeholder="זמן (דקות)" type="number" />
-    <input id="walkIncline" placeholder="שיפוע (%)" type="number" />
-    <input id="walkSpeed" placeholder="מהירות (קמ״ש)" type="number" />
-
-    <button class="primary full" onclick="saveWalkingWorkout()">
-      שמור הליכה 🔥
-    </button>
-  </div>
-</div>
 
         <div class="timer-footer">
           <button class="footer-btn rest" id="toggleWorkoutBtn">התחל אימון</button>
@@ -797,165 +783,25 @@
       save();
     }
 
-   function calculateWorkoutCalories(){
-  let weight = 80;
-
-  try{
-    const nutrition = JSON.parse(localStorage.getItem('nutrition_final_clean_v1') || '{}');
-    weight = Number(nutrition?.profile?.weight || 80);
-  }catch(e){}
-
-  const minutes = Math.max(1, state.timers.workoutSeconds / 60);
-
-  let completedSets = 0;
-
-  selectedDay().exercises.forEach(ex=>{
-    ex.sets.forEach(s=>{
-      if(s.done){
-        completedSets++;
-      }
-    });
-  });
-
-  let factor = 0.075;
-  if(completedSets >= 15) factor = 0.09;
-  if(completedSets >= 21) factor = 0.10;
-
-  const calories = Math.round(minutes * weight * factor);
-  return Math.max(0, calories);
-}
-     function calculateWalkingCalories(distance, time, incline, weight){
-  const speed = distance / (time / 60);
-
-  let met = 3.5;
-
-  if (speed >= 5) met = 5;
-  if (speed >= 6) met = 6;
-  if (incline >= 5) met += 1.5;
-
-  return Math.round((met * weight * time) / 60);
-}
-  let weight = 80;
-
-  try{
-    const nutrition = JSON.parse(localStorage.getItem('nutrition_final_clean_v1') || '{}');
-    weight = Number(nutrition?.profile?.weight || 80);
-  }catch(e){}
-
-  const minutes = Math.max(1, state.timers.workoutSeconds / 60);
-
-  let completedSets = 0;
-  let volume = 0;
-
-  selectedDay().exercises.forEach(ex=>{
-    ex.sets.forEach(s=>{
-      if(s.done){
-        const kg = Number(s.kg) || 0;
-        const reps = Number(s.reps) || 0;
-        completedSets++;
-        volume += kg * reps;
-      }
-    });
-  });
-
-  let factor = 0.075;
-  if(completedSets >= 15) factor = 0.09;
-  if(completedSets >= 21) factor = 0.10;
-
-  const calories = Math.round(minutes * weight * factor);
-  return Math.max(0, calories);
-}
-function saveWalkingWorkout(){
-  const distance = Number(document.getElementById("walkDistance").value);
-  const time = Number(document.getElementById("walkTime").value);
-  const incline = Number(document.getElementById("walkIncline").value || 0);
-
-  if (!distance || !time) {
-    return alert("תמלא מרחק וזמן");
-  }
-
-  let weight = 80;
-
-  try{
-    const nutrition = JSON.parse(localStorage.getItem('nutrition_final_clean_v2') || '{}');
-    weight = Number(nutrition?.profile?.weight || 80);
-  }catch(e){}
-
-  const calories = calculateWalkingCalories(distance, time, incline, weight);
-
-  const today = new Date().toISOString().slice(0,10);
-  const workouts = JSON.parse(localStorage.getItem('workouts') || '[]');
-
-  workouts.push({
-    id: uid(),
-    date: today,
-    calories,
-    duration: time * 60,
-    day: "הליכה",
-    type: "walking",
-    distance,
-    incline
-  });
-
-  localStorage.setItem('workouts', JSON.stringify(workouts));
-
-  state.history.push({
-    id: uid(),
-    day: `הליכה - ${distance} ק״מ`,
-    date: new Date().toLocaleDateString('he-IL'),
-    completedExercises: 1,
-    duration: time * 60,
-    calories
-  });
-
-  save();
-  render();
-
-  alert(`הליכה נשמרה 🔥 שרפת כ-${calories} קלוריות`);
-
-  document.getElementById("walkDistance").value = "";
-  document.getElementById("walkTime").value = "";
-  document.getElementById("walkIncline").value = "";
-  document.getElementById("walkSpeed").value = "";
-}
-function finishWorkout(){
-  const day = selectedDay();
-  const completedExercises = day.exercises.filter(ex => ex.done).length;
-  const caloriesBurned = calculateWorkoutCalories();
-
-  const today = new Date().toISOString().slice(0,10);
-  const workouts = JSON.parse(localStorage.getItem('workouts') || '[]');
-
-  workouts.push({
-    id: uid(),
-    date: today,
-    calories: caloriesBurned,
-    duration: state.timers.workoutSeconds,
-    day: `${day.name} - ${day.label}`
-  });
-
-  localStorage.setItem('workouts', JSON.stringify(workouts));
-
-  state.history.push({
-    id: uid(),
-    day: `${day.name} - ${day.label}`,
-    date: new Date().toLocaleDateString('he-IL'),
-    completedExercises,
-    duration: state.timers.workoutSeconds,
-    calories: caloriesBurned
-  });
-
-  day.exercises.forEach(ex => { ex.done = false; ex.sets.forEach(s => s.done = false); });
-  state.activeExerciseIndex = 0;
-  state.timers.workoutSeconds = 0;
-  state.timers.restSecondsLeft = 0;
-
-  clearInterval(workoutTimerInterval); workoutTimerInterval = null; state.timers.workoutRunning = false;
-  clearInterval(restTimerInterval); restTimerInterval = null; state.timers.restRunning = false;
-
-  render();
-  alert(`האימון נשמר 🔥 שרפת בערך ${caloriesBurned} קלוריות`);
-}
+    function finishWorkout(){
+      const day = selectedDay();
+      const completedExercises = day.exercises.filter(ex => ex.done).length;
+      state.history.push({
+        id: uid(),
+        day: `${day.name} - ${day.label}`,
+        date: new Date().toLocaleDateString('he-IL'),
+        completedExercises,
+        duration: state.timers.workoutSeconds
+      });
+      day.exercises.forEach(ex => { ex.done = false; ex.sets.forEach(s => s.done = false); });
+      state.activeExerciseIndex = 0;
+      state.timers.workoutSeconds = 0;
+      state.timers.restSecondsLeft = 0;
+      clearInterval(workoutTimerInterval); workoutTimerInterval = null; state.timers.workoutRunning = false;
+      clearInterval(restTimerInterval); restTimerInterval = null; state.timers.restRunning = false;
+      render();
+      alert('האימון נשמר');
+    }
 
     function saveSpotify(){
       const value = document.getElementById('spotifyInput').value.trim();
