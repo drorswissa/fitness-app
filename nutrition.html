@@ -58,6 +58,20 @@
 
   <div class="card search-card">
     <input id="foodSearch" class="search-input" type="text" placeholder="חפש מזון בעברית..." />
+<div style="margin-top:14px;margin-bottom:8px;font-weight:900;color:#fff">
+  ⭐ מועדפים מהירים
+</div>
+
+<div class="chips">
+  <button class="chip" onclick="quickAddFavorite('protein_powder')">אבקת חלבון</button>
+  <button class="chip" onclick="quickAddFavorite('protein_bar')">חטיף חלבון</button>
+  <button class="chip" onclick="quickAddFavorite('protein_yogurt')">יוגורט חלבון</button>
+  <button class="chip" onclick="quickAddFavorite('chicken_breast')">חזה עוף</button>
+  <button class="chip" onclick="quickAddFavorite('rice')">אורז</button>
+  <button class="chip" onclick="quickAddFavorite('egg')">ביצה</button>
+  <button class="chip" onclick="quickAddFavorite('tuna')">טונה</button>
+  <button class="chip" onclick="quickAddFavorite('cottage')">קוטג׳</button>
+</div>
     <div class="chips"><button class="chip" onclick="quick('אבקת חלבון')">אבקת חלבון</button><button class="chip" onclick="quick('חטיף חלבון')">חטיף חלבון</button><button class="chip" onclick="quick('חזה עוף')">חזה עוף</button><button class="chip" onclick="quick('ביצה')">ביצה</button><button class="chip" onclick="quick('אורז')">אורז</button></div>
   </div>
   <div class="results-title">תוצאות חיפוש</div>
@@ -221,6 +235,67 @@
     window.applyProfile=applyProfile;
     window.openFullStats=openFullStats;
     window.closeFullStats=closeFullStats;
+    function quickAddFavorite(foodId) {
+  const f = food(foodId);
+  if (!f) return;
+
+  let amount = 100;
+  let unit = "gram";
+  let meal = "snack";
+
+  if (foodId === "protein_powder") {
+    amount = 30;
+    unit = "scoop";
+  }
+
+  if (foodId === "chicken_breast") {
+    amount = 150;
+    unit = "gram";
+    meal = "lunch";
+  }
+
+  if (foodId === "rice") {
+    amount = 150;
+    unit = "gram";
+    meal = "lunch";
+  }
+
+  if (foodId === "egg") {
+    amount = 2;
+    unit = "piece";
+    meal = "breakfast";
+  }
+
+  if (foodId === "tuna") {
+    amount = 100;
+    unit = "gram";
+    meal = "dinner";
+  }
+
+  if (foodId === "cottage") {
+    amount = 150;
+    unit = "gram";
+    meal = "breakfast";
+  }
+
+  const v = calc(f, amount, unit);
+  const items = getSelectedItems();
+
+  items.push({
+    id: Date.now().toString(36),
+    meal,
+    he: f.he,
+    amount,
+    unit,
+    ...v
+  });
+
+  setSelectedItems(items);
+  save();
+  renderAll();
+}
+
+window.quickAddFavorite = quickAddFavorite;
     // ===== שדרוג מתקדם =====
 
 // מעבר להיום
