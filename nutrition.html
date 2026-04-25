@@ -20,8 +20,18 @@
 </head>
 <body>
   <div class="topbar"><button class="round-btn" onclick="location.href='index.html'">✕</button><button class="round-btn">↓</button><div class="title">מעקב גרעון קלורי</div><button class="round-btn">⋮</button></div>
-  <div class="date-row"><div class="chev" id="prevDay">‹</div><div class="date">📅 <span id="currentDateLabel"></span></div><div class="chev" id="nextDay">›</div></div>
+ <div class="date-row">
+  <div class="chev" id="prevDay">‹</div>
 
+  <div class="date">
+    📅 <span id="currentDateLabel"></span>
+    <button onclick="goToday()" style="margin-right:8px;font-size:12px">
+      היום
+    </button>
+  </div>
+
+  <div class="chev" id="nextDay">›</div>
+</div>
   <div class="card hero">
     <div class="hero-top"><div style="display:flex;gap:8px;align-items:center"><button class="chip-btn" onclick="toggleProfile()">⚙️ התאמה אישית</button><button class="chip-btn">🎯 יעדים</button></div><div class="hero-title">סיכום יומי</div></div>
     <div class="hero-grid">
@@ -56,7 +66,8 @@
   <div class="card meal-card"><div class="section-head"><div class="section-title">יומן אוכל</div><div class="meal-label">ארוחת בוקר ☀️</div></div><div class="meal-block"><div class="meal-row-head"><div class="meal-total" id="breakfastTotal">0 קל׳</div><div class="meal-label">ארוחת בוקר ☀️</div></div><table class="food-table" id="breakfastTable"></table></div><div class="accordion"><div class="acc-item" data-meal="lunch"><div class="acc-head" onclick="toggleMeal('lunch')"><div><span>⌄</span> <span id="lunchTotal">0 קל׳</span></div><div class="meal-label">ארוחת צהריים ☀️</div></div><div class="acc-body" id="lunchBody"></div></div><div class="acc-item" data-meal="dinner"><div class="acc-head" onclick="toggleMeal('dinner')"><div><span>⌄</span> <span id="dinnerTotal">0 קל׳</span></div><div class="meal-label">ארוחת ערב 🌙</div></div><div class="acc-body" id="dinnerBody"></div></div><div class="acc-item" data-meal="snack"><div class="acc-head" onclick="toggleMeal('snack')"><div><span>⌄</span> <span id="snackTotal">0 קל׳</span></div><div class="meal-label">ביניים 🍇</div></div><div class="acc-body" id="snackBody"></div></div></div></div>
 
   <div class="card"><div class="bottom-grid"><div class="chart-card"><div class="chart-title"><button class="mini-btn" onclick="resetWeek()">איפוס שבוע</button><div><div>גרעון קלורי (קל׳)</div><div class="chart-sub">ממוצע יומי: <span id="avgDeficit">0</span> קל׳</div></div></div><svg id="deficitChart" viewBox="0 0 360 220"></svg><div class="success" id="successBox"></div></div><div class="side-card"><div><div class="h">מעקב גרעון קלורי</div><div class="s">גרעון קלורי היום</div><div class="big" id="todayDeficit">0</div><div class="unit">קל׳</div><div class="s">מתוך יעד יומי: 500 קל׳</div></div><div class="status" id="statusBadge">בהתאמה</div><div class="fullstats" onclick="openFullStats()">סטטיסטיקה מלאה <span>📈</span></div></div></div></div>
-
+<div class="s">גרעון כולל (כולל אימון)</div>
+<div class="big" id="totalDeficit">0</div>
   <div class="stats-modal" id="statsModal" onclick="if(event.target.id==='statsModal') closeFullStats()">
     <div class="stats-sheet">
       <div class="stats-top"><button class="close-stats" onclick="closeFullStats()">סגור</button><div class="stats-title">📈 סטטיסטיקה מלאה</div></div>
@@ -210,6 +221,84 @@
     window.applyProfile=applyProfile;
     window.openFullStats=openFullStats;
     window.closeFullStats=closeFullStats;
+    // ===== שדרוג מתקדם =====
+
+// מעבר להיום
+function goToday() {
+  state.currentDate = todayKey();
+  save();
+  renderAll();
+}
+
+// גרעון כולל כולל אימון
+function updateTotalDeficit() {
+  const sum = totals(getSelectedItems());
+  const eaten = sum.calories;
+  const foodDeficit = Math.max(0, GOAL.calories - eaten);
+  const workout = getTodayWorkoutCalories();
+  const total = foodDeficit + workout;
+
+  const el = document.getElementById("totalDeficit");
+  if (el) el.textContent = Math.round(total);
+}
+
+// גרף לפי תאריכים אמיתיים
+function getLast7Days() {
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key =
+      d.getFullYear() + "-" +
+      String(d.getMonth() + 1).padStart(2, "0") + "-" +
+      String(d.getDate()).padStart(2, "0");
+
+    const items = state.itemsByDate?.[key] || [];
+    const t = totals(items);
+    const deficit = Math.max(0, GOAL.calories - t.calories);
+
+    days.push({
+      label: d.getDate() + "/" + (d.getMonth() + 1),
+      value: Math.round(deficit)
+    });
+  }
+  return days;
+}
+
+// דריסת גרף קיים
+renderChart = function () {
+  const svg = document.getElementById("deficitChart");
+  const data = getLast7Days();
+
+  const max = Math.max(...data.map(d => d.value), 800);
+
+  const pts = data.map((d, i) => ({
+    x: 26 + i * 48,
+    y: 170 - (d.value / max) * 120,
+    label: d.label
+  }));
+
+  const poly = pts.map(p => p.x + "," + p.y).join(" ");
+
+  svg.innerHTML =
+    '<polyline fill="rgba(83,214,159,.08)" points="24,170 ' + poly + ' 340,170"/>' +
+    '<polyline fill="none" stroke="#53d69f" stroke-width="4" points="' + poly + '"/>' +
+    pts.map(p =>
+      '<circle cx="' + p.x + '" cy="' + p.y + '" r="5" fill="#0f1829" stroke="#53d69f" stroke-width="3"/>' +
+      '<text x="' + p.x + '" y="194" fill="#9aa8c0" font-size="12" text-anchor="middle">' + p.label + '</text>'
+    ).join("");
+
+  const avg = Math.round(data.reduce((a, b) => a + b.value, 0) / data.length);
+  document.getElementById("avgDeficit").textContent = avg;
+};
+
+// חיבור לגרף ולגרעון
+const originalRenderAll = renderAll;
+
+renderAll = function () {
+  originalRenderAll();
+  updateTotalDeficit();
+};
 
     renderAll();
   </script>
