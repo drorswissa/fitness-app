@@ -128,6 +128,15 @@
 </head>
 
 <body>
+
+<div style="margin:10px 0; display:flex; gap:10px;">
+  <button onclick="exportData()" style="padding:10px; border-radius:8px;">📤 ייצוא נתונים</button>
+
+  <input type="file" id="importFile" style="display:none" onchange="importData(event)" />
+  <button onclick="document.getElementById('importFile').click()" style="padding:10px; border-radius:8px;">📥 ייבוא נתונים</button>
+</div>
+
+<!-- שאר הקוד שלך ממשיך מכאן -->
   <div class="topbar">
     <button class="round-btn" onclick="location.href='index.html'">✕</button>
     <button class="round-btn">↓</button>
@@ -861,5 +870,49 @@
 
     renderAll();
   </script>
+  <script>
+function exportData() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    data[key] = localStorage.getItem(key);
+  }
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "fitness-backup.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+
+      Object.keys(data).forEach(key => {
+        localStorage.setItem(key, data[key]);
+      });
+
+      alert("הנתונים שוחזרו!");
+      location.reload();
+    } catch {
+      alert("קובץ לא תקין");
+    }
+  };
+
+  reader.readAsText(file);
+}
+</script>
+
 </body>
 </html>
