@@ -587,12 +587,17 @@
 
     return `
       <div class="result-card">
+
         <div class="result-name">${f.he}</div>
         <div class="result-sub">
-          ל־100 גרם: ${Math.round(v.calories)} קל׳ • 
-          ${Math.round(v.protein)} חלבון • 
-          ${Math.round(v.carbs)} פחמ׳ • 
-          ${Math.round(v.fat)} שומן
+          מאגר ${f.custom?'אישי':'פנימי'} • ל־100 גרם
+        </div>
+
+        <div class="preview-grid">
+          <div class="preview"><b>${Math.round(v.calories)}</b><span>קלוריות</span></div>
+          <div class="preview"><b>${Math.round(v.protein)}</b><span>חלבון</span></div>
+          <div class="preview"><b>${Math.round(v.carbs)}</b><span>פחמ׳</span></div>
+          <div class="preview"><b>${Math.round(v.fat)}</b><span>שומן</span></div>
         </div>
 
         <div class="fields">
@@ -619,7 +624,10 @@
           </div>
         </div>
 
-        <button class="add-btn" onclick="addFood('${f.id}',${i})">הוסף ליומן</button>
+        <button class="add-btn" onclick="addFood('${f.id}',${i})">
+          ➕ הוסף ליומן
+        </button>
+
       </div>
     `;
   }).join('') || customFoodCard(q);
