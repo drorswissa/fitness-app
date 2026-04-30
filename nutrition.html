@@ -573,37 +573,57 @@
       document.getElementById('statusBadge').textContent = totalDeficit >= GOAL.deficitGoal ? 'בגרעון' : 'מתחת ליעד';
     }
 
-    function renderSearch(list){
-      const box = document.getElementById('resultArea');
-      const q = document.getElementById('foodSearch').value.trim();
+  function renderSearch(list){
+  const box = document.getElementById('resultArea');
+  const q = document.getElementById('foodSearch').value.trim();
 
-      if(!q){
-        box.innerHTML = '<div class="result-card"><div class="result-name">חפש מזון</div><div class="result-sub">הקלד מזון או לחץ על אחד הקיצורים למעלה כדי להציג תוצאות.</div></div>';
-        return;
-      }
+  if(!q){
+    box.innerHTML = '<div class="result-card"><div class="result-name">חפש מזון</div><div class="result-sub">הקלד מזון או לחץ על אחד הקיצורים למעלה כדי להציג תוצאות.</div></div>';
+    return;
+  }
 
-      box.innerHTML = list.map((f,i) => {
-        const v = calc(f,100,'gram');
-        return `
-          <div class="result-card">
-            <div class="result-name">${f.he}</div>
-            <div class="result-sub">מאגר ${f.custom?'אישי':'פנימי'} בעברית • ל־100 גרם: ${Math.round(v.calories)} קלוריות</div>
-            <div class="fields">
-              <div class="field"><label>כמות</label><input id="amount_${i}" type="number" value="100"></div>
-              <div class="field"><label>יחידה</label><select id="unit_${i}">${Object.keys(f.units).map(u => `<option value="${u}">${unitLabel(u)}</option>`).join('')}</select></div>
-              <div class="field full"><label>ארוחה</label><select id="meal_${i}"><option value="breakfast">ארוחת בוקר</option><option value="lunch">ארוחת צהריים</option><option value="dinner">ארוחת ערב</option><option value="snack">ביניים</option></select></div>
-            </div>
-            <div class="preview-grid">
-              <div class="preview"><b>${Math.round(v.calories)}</b><span>קלוריות</span></div>
-              <div class="preview"><b>${Math.round(v.protein)}</b><span>חלבון</span></div>
-              <div class="preview"><b>${Math.round(v.carbs)}</b><span>פחמימות</span></div>
-              <div class="preview"><b>${Math.round(v.fat)}</b><span>שומן</span></div>
-            </div>
-            <button class="add-btn" onclick="addFood('${f.id}',${i})">הוסף ליומן</button>
+  box.innerHTML = list.map((f,i) => {
+    const v = calc(f,100,'gram');
+
+    return `
+      <div class="result-card">
+        <div class="result-name">${f.he}</div>
+        <div class="result-sub">
+          ל־100 גרם: ${Math.round(v.calories)} קל׳ • 
+          ${Math.round(v.protein)} חלבון • 
+          ${Math.round(v.carbs)} פחמ׳ • 
+          ${Math.round(v.fat)} שומן
+        </div>
+
+        <div class="fields">
+          <div class="field">
+            <label>כמות</label>
+            <input id="amount_${i}" type="number" value="100">
           </div>
-        `;
-      }).join('') || customFoodCard(q);
-    }
+
+          <div class="field">
+            <label>יחידה</label>
+            <select id="unit_${i}">
+              ${Object.keys(f.units).map(u => `<option value="${u}">${unitLabel(u)}</option>`).join('')}
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>ארוחה</label>
+            <select id="meal_${i}">
+              <option value="breakfast">ארוחת בוקר</option>
+              <option value="lunch">ארוחת צהריים</option>
+              <option value="dinner">ארוחת ערב</option>
+              <option value="snack">ביניים</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="add-btn" onclick="addFood('${f.id}',${i})">הוסף ליומן</button>
+      </div>
+    `;
+  }).join('') || customFoodCard(q);
+}
 
     function customFoodCard(name){
       return `
