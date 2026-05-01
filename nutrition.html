@@ -72,6 +72,90 @@ button,input,select{font:inherit}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat-box{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);border-radius:18px;padding:14px;text-align:center}.stat-box b{display:block;font-size:24px;color:#53d69f}.stat-box span{font-size:12px;color:#9aa8c0}
 .stats-section{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);border-radius:20px;padding:14px;margin-top:12px}.stats-row{display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06);padding:10px 0}.stats-row:last-child{border-bottom:none}.stats-row b{color:#dfffee}
 @media(max-width:390px){.hero-grid{grid-template-columns:1fr .88fr .88fr .88fr;gap:6px}.calorie-panel,.macro{min-height:162px}.ring-wrap svg{transform:rotate(-90deg) scale(.72)}.bottom-grid{grid-template-columns:1fr}.topbar{grid-template-columns:46px 46px 1fr 46px}.round-btn{width:46px;height:46px}}
+/* ===== תיקון UX סיכום יומי בנייד בלבד ===== */
+
+.hero{
+  padding:14px 10px 12px !important;
+}
+
+.hero-top{
+  margin-bottom:12px !important;
+}
+
+.hero-grid{
+  display:grid !important;
+  grid-template-columns:1.35fr 1fr 1fr 1fr !important;
+  gap:6px !important;
+  margin:0 !important;
+  direction:rtl !important;
+  align-items:stretch !important;
+}
+
+.calorie-panel,
+.macro{
+  min-height:132px !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+}
+
+.ring-wrap{
+  min-height:132px !important;
+  overflow:hidden !important;
+}
+
+.ring-wrap svg{
+  width:128px !important;
+  height:128px !important;
+  transform:rotate(-90deg) scale(.78) !important;
+  transform-origin:center !important;
+}
+
+.ring-text .main{
+  font-size:23px !important;
+}
+
+.ring-text .sub{
+  font-size:11px !important;
+  line-height:1.2 !important;
+  margin-top:4px !important;
+}
+
+.macro{
+  padding:8px 5px !important;
+  border-radius:16px !important;
+  justify-content:space-between !important;
+}
+
+.macro .label{
+  font-size:11px !important;
+  white-space:nowrap !important;
+}
+
+.macro .icon{
+  font-size:20px !important;
+}
+
+.macro .value{
+  font-size:20px !important;
+}
+
+.macro .unit{
+  font-size:10px !important;
+  line-height:1.15 !important;
+  white-space:nowrap !important;
+}
+
+.macro-progress{
+  width:82% !important;
+  height:6px !important;
+  margin:0 auto !important;
+}
+
+.goal-row,
+.burn-row{
+  font-size:12px !important;
+  line-height:1.3 !important;
+}
 </style>
 </head>
 
