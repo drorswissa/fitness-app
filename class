@@ -113,7 +113,46 @@
     .stats-row:last-child{border-bottom:none}
     .stats-row b{color:#dfffee}
     .stats-note{font-size:12px;color:#9aa8c0;line-height:1.55;margin-top:10px}
-    @media(max-width:390px){
+.food-add-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+
+.food-box{
+  min-height:92px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:12px;
+}
+
+.food-box label{
+  display:block;
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+
+.food-box input,
+.food-box select{
+  width:100%;
+  border:none;
+  outline:none;
+  background:transparent;
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+}
+
+.nutrition-box div{
+  font-size:13px;
+  color:#dce7fb;
+  line-height:1.5;
+  font-weight:800;
+}  
+@media(max-width:390px){
       .hero-grid{grid-template-columns:1fr .88fr .88fr .88fr;gap:6px;margin-left:-8px;margin-right:8px}
       .calorie-panel,.macro{min-height:162px}
       .calorie-panel .ring-wrap{min-height:158px}
@@ -573,7 +612,7 @@
       document.getElementById('statusBadge').textContent = totalDeficit >= GOAL.deficitGoal ? 'בגרעון' : 'מתחת ליעד';
     }
 
-  function renderSearch(list){
+ function renderSearch(list){
   const box = document.getElementById('resultArea');
   const q = document.getElementById('foodSearch').value.trim();
 
@@ -587,33 +626,23 @@
 
     return `
       <div class="result-card">
-
         <div class="result-name">${f.he}</div>
-        <div class="result-sub">
-          מאגר ${f.custom?'אישי':'פנימי'} • ל־100 גרם
-        </div>
+        <div class="result-sub">ל־100 גרם: ${Math.round(v.calories)} קלוריות</div>
 
-        <div class="preview-grid">
-          <div class="preview"><b>${Math.round(v.calories)}</b><span>קלוריות</span></div>
-          <div class="preview"><b>${Math.round(v.protein)}</b><span>חלבון</span></div>
-          <div class="preview"><b>${Math.round(v.carbs)}</b><span>פחמ׳</span></div>
-          <div class="preview"><b>${Math.round(v.fat)}</b><span>שומן</span></div>
-        </div>
-
-        <div class="fields">
-          <div class="field">
+        <div class="food-add-grid">
+          <div class="food-box">
             <label>כמות</label>
             <input id="amount_${i}" type="number" value="100">
           </div>
 
-          <div class="field">
+          <div class="food-box">
             <label>יחידה</label>
             <select id="unit_${i}">
               ${Object.keys(f.units).map(u => `<option value="${u}">${unitLabel(u)}</option>`).join('')}
             </select>
           </div>
 
-          <div class="field full">
+          <div class="food-box">
             <label>ארוחה</label>
             <select id="meal_${i}">
               <option value="breakfast">ארוחת בוקר</option>
@@ -622,17 +651,20 @@
               <option value="snack">ביניים</option>
             </select>
           </div>
+
+          <div class="food-box nutrition-box">
+            <label>ערכים</label>
+            <div>${Math.round(v.protein)} חלבון</div>
+            <div>${Math.round(v.carbs)} פחמ׳</div>
+            <div>${Math.round(v.fat)} שומן</div>
+          </div>
         </div>
 
-        <button class="add-btn" onclick="addFood('${f.id}',${i})">
-          ➕ הוסף ליומן
-        </button>
-
+        <button class="add-btn" onclick="addFood('${f.id}',${i})">הוסף ליומן</button>
       </div>
     `;
   }).join('') || customFoodCard(q);
 }
-
     function customFoodCard(name){
       return `
         <div class="result-card">
