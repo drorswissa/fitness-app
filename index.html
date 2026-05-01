@@ -3,863 +3,1458 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>מעקב גרעון קלורי</title>
+  <title>Workout App V2 Clean</title>
   <style>
-    :root{--bg:#050b16;--panel:#0d1626;--line:rgba(255,255,255,.08);--text:#f4f8ff;--muted:#9aa8c0;--orange:#f7a536;--purple:#9a63ff;--green:#53d69f;--blue:#62a8ff;--shadow:0 22px 44px rgba(0,0,0,.34)}
-    *{box-sizing:border-box}
-    html,body{margin:0;background:radial-gradient(circle at top,#0a1425 0%,#050b16 48%,#04070f 100%);color:var(--text);font-family:Inter,Arial,Helvetica,sans-serif}
-    body{max-width:430px;margin:0 auto;min-height:100vh;padding:14px 12px 100px}
-    button,input,select{font:inherit}
-    .topbar{display:grid;grid-template-columns:52px 52px 1fr 52px;gap:10px;align-items:center;margin-bottom:12px}
-    .round-btn{width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow)}
-    .title{font-size:18px;font-weight:900;text-align:center}
-    .date-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px;color:#dce6f8}
-    .date-row .chev{font-size:28px;cursor:pointer}
-    .date-row .date{font-size:14px;color:#d3deef;display:flex;align-items:center;gap:8px}
-    .card{background:linear-gradient(180deg,rgba(13,22,38,.98),rgba(10,15,27,.98));border:1px solid var(--line);border-radius:24px;padding:14px;box-shadow:var(--shadow);margin-bottom:14px}
-    .section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
-    .section-title{font-size:18px;font-weight:900}
-    .chip-btn{border:1px solid var(--line);background:rgba(255,255,255,.045);color:#fff;padding:10px 14px;border-radius:16px;font-weight:900}
-    .hero{padding:18px 16px 16px;overflow:hidden;border-radius:28px;background:radial-gradient(circle at 22% 45%,rgba(255,158,61,.08),transparent 30%),radial-gradient(circle at 78% 28%,rgba(115,92,255,.07),transparent 34%),linear-gradient(180deg,rgba(12,21,38,.98),rgba(7,12,23,.98))}
-    .hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-    .hero-title{font-size:18px;font-weight:900}
-    .hero-grid{display:grid;grid-template-columns:1.05fr .9fr .9fr .9fr;gap:8px;align-items:stretch;direction:ltr;margin-left:-10px;margin-right:10px}
-    .calorie-panel{position:relative;min-width:0;min-height:188px;display:flex;align-items:center;justify-content:center;direction:rtl}
-    .ring-wrap{position:relative;display:flex;align-items:center;justify-content:center;min-height:180px;width:100%;overflow:hidden}
-    .calorie-panel .ring-wrap svg{transform:rotate(-90deg) scale(1.18);transform-origin:center}
-    .ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-    .ring-text .main{font-size:31px;font-weight:950;text-shadow:0 2px 0 rgba(255,158,61,.35)}
-    .ring-text .sub{font-size:14px;color:#dce7fb;line-height:1.45;margin-top:9px}
-    .macro{min-width:0;min-height:188px;border-radius:22px;padding:13px 7px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));border:1px solid rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 12px 28px rgba(0,0,0,.22);display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;direction:rtl}
-    .macro .label{font-size:14px;font-weight:900}
-    .macro .icon{font-size:28px;line-height:1}
-    .macro .value{font-size:25px;font-weight:950}
-    .macro .unit{font-size:13px;color:#dce7fb;line-height:1.35}
-    .macro-progress{width:100%;height:9px;border-radius:999px;background:rgba(255,255,255,.11);overflow:hidden}
-    .macro-progress span{display:block;height:100%;width:0%;border-radius:999px;transition:width .25s ease}
-    .protein .macro-progress span{background:linear-gradient(90deg,#ffb83f,#ffe08a)}
-    .carbs .macro-progress span{background:linear-gradient(90deg,#54d66a,#b9f56b)}
-    .fat .macro-progress span{background:linear-gradient(90deg,#4f9cff,#77d9ff)}
-    .goal-row{margin-top:14px;color:#c2cce0;text-align:center;font-size:14px}
-    .burn-row{margin-top:10px;color:#8ff0c1;text-align:center;font-size:14px;font-weight:900}
-    .search-card{padding:16px}
-    .search-input{width:100%;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px;font-size:16px;color:#fff;outline:none;text-align:right}
-    .search-input::placeholder{color:#8fa3c7}
-    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    .chip{padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#dbe7ff;font-size:13px;font-weight:800;cursor:pointer}
-    .results-title{font-size:18px;font-weight:900;margin:20px 4px 10px}
-    .result-card{padding:16px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow);margin-bottom:14px}
-    .result-name{font-size:20px;font-weight:900}
-    .result-sub{color:var(--muted);font-size:13px;margin-top:6px}
-    .fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-    .field{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px}
-    .field.full{grid-column:1/-1}
-    .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px}
-    .field input,.field select{width:100%;border:none;outline:none;background:transparent;color:#fff;font-size:18px;font-weight:900}
-    .preview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
-    .preview{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:10px;text-align:center}
-    .preview b{display:block;font-size:18px}
-    .preview span{font-size:11px;color:var(--muted)}
-    .add-btn{margin-top:16px;width:100%;padding:16px;border:none;border-radius:18px;background:linear-gradient(135deg,#7a5cff,#a86bff);color:#fff;font-size:17px;font-weight:900;cursor:pointer}
-    .meal-card{padding:14px}
-    .meal-block{border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:12px;background:rgba(255,255,255,.015)}
-    .meal-row-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-    .meal-total,.meal-label{font-weight:900}
-    .food-table{width:100%;border-collapse:collapse;font-size:12px}
-    .food-table th,.food-table td{padding:8px 6px;border-bottom:1px solid rgba(255,255,255,.05);text-align:right;vertical-align:top}
-    .food-table th{color:var(--muted)}
-    .food-table td strong{display:block;font-size:14px}
-    .food-table td span{color:var(--muted);display:block;margin-top:3px}
-    .accordion{margin-top:12px;display:grid;gap:10px}
-    .acc-item{border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;background:rgba(255,255,255,.015)}
-    .acc-head{display:flex;align-items:center;justify-content:space-between;cursor:pointer}
-    .acc-body{display:none;padding-top:10px}
-    .acc-item.open .acc-body{display:block}
-    .food-item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid rgba(255,255,255,.05)}
-    .food-item .meta{font-size:12px;color:var(--muted);margin-top:4px}
-    .remove{border:none;background:rgba(255,80,80,.10);border:1px solid rgba(255,110,110,.22);color:#ffd6d6;padding:8px 10px;border-radius:12px;cursor:pointer;font-weight:900;font-size:12px}
-    .bottom-grid{display:grid;grid-template-columns:1.35fr .9fr;gap:14px}
-    .chart-card,.side-card{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:12px}
-    .chart-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    .mini-btn{border:1px solid rgba(154,99,255,.35);background:rgba(154,99,255,.08);color:#c58cff;padding:8px 12px;border-radius:12px;font-weight:800}
-    #deficitChart{width:100%;height:220px;display:block}
-    .success{margin-top:12px;border:1px solid rgba(83,214,159,.28);background:rgba(83,214,159,.08);color:#8ff0c1;border-radius:16px;padding:14px;font-weight:800;text-align:center}
-    .side-card .h{font-size:18px;font-weight:900}
-    .side-card .s{font-size:13px;color:var(--muted);margin-top:4px}
-    .side-card .big{font-size:48px;font-weight:900;line-height:1;color:#59db91;margin-top:14px}
-    .side-card .unit{font-size:20px;font-weight:900;color:#59db91}
-    .status{margin-top:18px;border-radius:16px;background:rgba(83,214,159,.14);color:#86efb2;text-align:center;padding:14px;font-size:24px;font-weight:900}
-    .fullstats{margin-top:12px;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;color:#dde7fa;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
-    .profile-panel{display:none}
-    .profile-panel.show{display:block}
-    .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .profile-note{color:var(--muted);font-size:12px;line-height:1.5;margin-top:10px}
-    .profile-actions{display:flex;gap:10px;margin-top:14px}
-    .profile-actions button{flex:1}
-    .secondary-btn{padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.045);color:#fff;font-weight:900}
-    .primary-btn{padding:14px;border-radius:16px;border:none;background:linear-gradient(135deg,#7a5cff,#a86bff);color:#fff;font-weight:900}
-    .stats-modal{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.68);display:none;align-items:flex-end;justify-content:center;padding:0 12px}
-    .stats-modal.show{display:flex}
-    .stats-sheet{width:100%;max-width:430px;max-height:88vh;overflow:auto;background:linear-gradient(180deg,#101b2e,#07101d);border:1px solid rgba(255,255,255,.10);border-radius:28px 28px 0 0;padding:18px;box-shadow:0 -20px 50px rgba(0,0,0,.45)}
-    .stats-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-    .stats-title{font-size:22px;font-weight:950}
-    .close-stats{border:none;border-radius:14px;padding:10px 14px;background:rgba(255,255,255,.08);color:#fff;font-weight:900;cursor:pointer}
-    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-    .stat-box{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);border-radius:18px;padding:14px;text-align:center}
-    .stat-box b{display:block;font-size:24px;color:#53d69f}
-    .stat-box span{font-size:12px;color:#9aa8c0}
-    .stats-section{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);border-radius:20px;padding:14px;margin-top:12px}
-    .stats-row{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.06);padding:10px 0;gap:10px}
-    .stats-row:last-child{border-bottom:none}
-    .stats-row b{color:#dfffee}
-    .stats-note{font-size:12px;color:#9aa8c0;line-height:1.55;margin-top:10px}
-    @media(max-width:390px){
-      .hero-grid{grid-template-columns:1fr .88fr .88fr .88fr;gap:6px;margin-left:-8px;margin-right:8px}
-      .calorie-panel,.macro{min-height:162px}
-      .calorie-panel .ring-wrap{min-height:158px}
-      .calorie-panel .ring-wrap svg{transform:rotate(-90deg) scale(.72);transform-origin:center}
-      .macro{border-radius:20px;padding:11px 5px}
-      .macro .label{font-size:12px}.macro .icon{font-size:24px}.macro .value{font-size:22px}.macro .unit{font-size:12px}
-      .bottom-grid,.preview-grid,.fields{grid-template-columns:1fr}
-      .topbar{grid-template-columns:46px 46px 1fr 46px}
-      .round-btn{width:46px;height:46px}
+    :root {
+      --bg: #0b1017;
+      --panel: #111827;
+      --panel-2: #162033;
+      --panel-3: #0c1320;
+      --text: #f5f7fb;
+      --muted: #9eabc3;
+      --line: rgba(255,255,255,0.08);
+      --accent: #2bd3a0;
+      --accent-2: #1eb885;
+      --danger: #ff6f6f;
+      --shadow: 0 10px 28px rgba(0,0,0,.25);
+    }
+ 
+    * { box-sizing: border-box; }
+ 
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #08101a 0%, #0b1017 100%);
+      color: var(--text);
+    }
+ 
+    .app {
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 12px 12px 110px;
+    }
+ 
+    .stack { display: grid; gap: 12px; }
+ 
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+ 
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+ 
+    .mini-btn {
+      min-width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+    }
+ 
+    .screen-timer {
+      font-size: 28px;
+      font-weight: 800;
+      text-align: center;
+      flex: 1;
+    }
+ 
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+ 
+    .day-card {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px 10px;
+      text-align: center;
+      cursor: pointer;
+      color: var(--text);
+      font-weight: 700;
+    }
+ 
+    .day-card small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-weight: 400;
+      font-size: 11px;
+    }
+ 
+    .day-card.active {
+      outline: 2px solid rgba(43,211,160,.35);
+      background: rgba(43,211,160,.10);
+    }
+ 
+    .progress-track {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+ 
+    .progress-step {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 999px;
+      background: #000;
+      border: 1px solid var(--line);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      opacity: .9;
+      cursor: pointer;
+    }
+ 
+    .progress-step.active {
+      background: var(--accent);
+      color: #052017;
+    }
+ 
+    .hero-image {
+      width: 100%;
+      height: 176px;
+      object-fit: contain;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 8px;
+    }
+ 
+    .exercise-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-top: 14px;
+      line-height: 1.2;
+    }
+ 
+    .exercise-sub {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      margin-top: 6px;
+    }
+ 
+    .action-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+ 
+    button, input, select, a.linkbtn { font: inherit; }
+ 
+    button, a.linkbtn {
+      border: none;
+      border-radius: 16px;
+      padding: 11px 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+ 
+    .primary {
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      color: #082217;
+      font-weight: 800;
+    }
+ 
+    .secondary {
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+ 
+    .danger {
+      background: rgba(255,111,111,.13);
+      color: #ffb1b1;
+      border: 1px solid rgba(255,111,111,.25);
+    }
+ 
+    .full { width: 100%; }
+ 
+    .sets-card {
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+ 
+    .set-row {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 40px 1fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+ 
+    .set-row.active {
+      box-shadow: inset 0 0 0 2px rgba(43,211,160,.35);
+      background: rgba(43,211,160,.08);
+    }
+ 
+    .set-index {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #2a313d;
+      font-weight: 700;
+      color: var(--text);
+    }
+ 
+    .input-wrap {
+      display: grid;
+      grid-template-columns: 54px auto;
+      gap: 8px;
+      align-items: center;
+    }
+ 
+    .tiny-input {
+      width: 100%;
+      background: #020406;
+      border: 1px solid rgba(255,255,255,.05);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+    }
+ 
+    .unit {
+      color: var(--muted);
+      font-size: 13px;
+    }
+ 
+    .icon-btn {
+      min-width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #0a0e14;
+      color: var(--text);
+      cursor: pointer;
+      border: 1px solid var(--line);
+      font-size: 16px;
+    }
+ 
+    .icon-btn.done {
+      background: rgba(43,211,160,.16);
+      color: #8ff3cb;
+      border-color: rgba(43,211,160,.26);
+    }
+ 
+    .timer-footer {
+      position: sticky;
+      bottom: 92px;
+      background: rgba(20,26,35,.96);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+      box-shadow: var(--shadow);
+      margin-top: 14px;
+      z-index: 4;
+    }
+ 
+    .footer-block { text-align: center; }
+    .footer-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .footer-time { font-size: 20px; font-weight: 800; }
+ 
+    .footer-btn {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+ 
+    .footer-btn.done {
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      color: #062117;
+    }
+ 
+    .footer-btn.rest {
+      background: #05080d;
+      color: #d7dfef;
+      border: 1px solid var(--line);
+    }
+ 
+    .section.hidden { display: none; }
+    .section-title { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+ 
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+ 
+    .stat-box {
+      background: var(--panel-3);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px 6px;
+      text-align: center;
+    }
+ 
+    .stat-box span {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+    }
+ 
+    .stat-box strong {
+      display: block;
+      font-size: 20px;
+      margin-top: 4px;
+    }
+ 
+    .history-item {
+      background: var(--panel-3);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 11px;
+      margin-bottom: 8px;
+    }
+ 
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 18px 10px;
+      border: 1px dashed var(--line);
+      border-radius: 16px;
+    }
+ 
+    .walk-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+ 
+    .walk-note {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+ 
+    .sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.5);
+      display: none;
+      z-index: 19;
+    }
+ 
+    .sheet-backdrop.open { display: block; }
+ 
+    .sheet {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 82px;
+      max-width: 430px;
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 14px;
+      max-height: 62vh;
+      overflow: auto;
+      display: none;
+      z-index: 20;
+      box-shadow: var(--shadow);
+    }
+ 
+    .sheet.open { display: block; }
+ 
+    input, select {
+      width: 100%;
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 10px 11px;
+      outline: none;
+      margin-top: 8px;
+    }
+ 
+    .library-item {
+      background: var(--panel-3);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 54px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+ 
+    .library-item img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 4px;
+    }
+ 
+    .fixed-spotify {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0;
+      width: min(430px, 100vw);
+      background: rgba(10,14,20,.96);
+      border-top: 1px solid var(--line);
+      padding: 8px 10px 10px;
+      z-index: 30;
+      backdrop-filter: blur(10px);
+    }
+ 
+    .spotify-mini-label {
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+ 
+    iframe.spotify-bar {
+      width: 100%;
+      height: 80px;
+      border: none;
+      border-radius: 16px;
+    }
+ 
+    .trash-btn {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      border-radius: 14px;
+      background: rgba(255,111,111,.13);
+      color: #ffb1b1;
+      border: 1px solid rgba(255,111,111,.28);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 17px;
+      padding: 0;
+    }
+ 
+    .trash-btn:hover {
+      background: rgba(255,111,111,.20);
+      border-color: rgba(255,111,111,.42);
     }
   </style>
 </head>
-
+ 
 <body>
-  <div class="topbar">
-    <button class="round-btn" onclick="location.href='index.html'">✕</button>
-    <button class="round-btn">↓</button>
-    <div class="title">מעקב גרעון קלורי</div>
-    <button class="round-btn">⋮</button>
-  </div>
-
-  <div class="date-row">
-    <div class="chev" id="prevDay">‹</div>
-    <div class="date">
-      📅 <span id="currentDateLabel"></span>
-      <button onclick="goToday()" style="margin-right:8px;font-size:12px">היום</button>
-    </div>
-    <div class="chev" id="nextDay">›</div>
-  </div>
-
-  <div class="card hero">
-    <div class="hero-top">
-      <div style="display:flex;gap:8px;align-items:center">
-        <button class="chip-btn" onclick="toggleProfile()">⚙️ התאמה אישית</button>
-        <button class="chip-btn">🎯 יעדים</button>
-      </div>
-      <div class="hero-title">סיכום יומי</div>
-    </div>
-
-    <div class="hero-grid">
-      <div class="calorie-panel">
-        <div class="ring-wrap">
-          <svg width="196" height="196" viewBox="0 0 196 196">
-            <circle cx="98" cy="98" r="78" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="16"></circle>
-            <circle id="progressRing" cx="98" cy="98" r="78" fill="none" stroke="var(--orange)" stroke-width="16" stroke-linecap="round" stroke-dasharray="490.1" stroke-dashoffset="490.1"></circle>
-          </svg>
-          <div class="ring-text">
-            <div class="main" id="caloriesValue">0</div>
-            <div class="sub"><span id="goalValue">1758</span> /<br>קלוריות</div>
+  <div class="app">
+    <div class="stack">
+      <div class="card">
+        <div class="topbar">
+          <button class="mini-btn" id="openLibraryBtn">＋</button>
+          <div class="screen-timer" id="workoutTimerDisplay">00:00</div>
+          <button class="mini-btn" id="finishWorkoutTopBtn">✓</button>
+        </div>
+ 
+        <div class="days-grid" id="dayTabs"></div>
+        <div class="progress-track" id="exerciseProgress"></div>
+ 
+        <img id="activeExerciseImage" class="hero-image" alt="exercise" />
+        <div class="exercise-title" id="activeExerciseName"></div>
+        <div class="exercise-sub" id="activeExerciseDesc"></div>
+ 
+        <div class="action-row">
+          <a class="linkbtn secondary" id="youtubeLink" href="#" target="_blank" rel="noopener">יוטיוב</a>
+          <a class="linkbtn secondary" id="animationLink" href="#" target="_blank" rel="noopener">אנימציה</a>
+          <button class="secondary" id="quickWalkBtn">הליכה יומית</button>
+        </div>
+ 
+        <div class="sets-card" id="setsList"></div>
+ 
+        <div class="timer-footer">
+          <button class="footer-btn rest" id="toggleWorkoutBtn">התחל אימון</button>
+          <div class="footer-block">
+            <div class="footer-label">Rest</div>
+            <div class="footer-time" id="restTimerDisplay">00:00</div>
           </div>
+          <button class="footer-btn done" id="toggleRestBtn">התחל מנוחה</button>
         </div>
       </div>
-
-      <div class="macro protein">
-        <div class="label">חלבון</div><div class="icon">💪</div>
-        <div class="value"><span id="proteinValue">0</span></div>
-        <div class="unit">גר׳ / <span id="proteinGoal">169</span></div>
-        <div class="macro-progress"><span id="proteinBar"></span></div>
-      </div>
-
-      <div class="macro carbs">
-        <div class="label">פחמימות</div><div class="icon">🌿</div>
-        <div class="value"><span id="carbsValue">0</span></div>
-        <div class="unit">גר׳ / <span id="carbsGoal">132</span></div>
-        <div class="macro-progress"><span id="carbsBar"></span></div>
-      </div>
-
-      <div class="macro fat">
-        <div class="label">שומן</div><div class="icon">💧</div>
-        <div class="value"><span id="fatValue">0</span></div>
-        <div class="unit">גר׳ / <span id="fatGoal">63</span></div>
-        <div class="macro-progress"><span id="fatBar"></span></div>
-      </div>
-    </div>
-
-    <div class="goal-row">🔥 יעד קלורי יומי: <span id="goalLineValue">1758</span> קל׳</div>
-    <div class="burn-row">🏃 שרפת היום מאימון/הליכה: <span id="burnedTodayTop">0</span> קל׳</div>
-  </div>
-
-  <div class="card profile-panel" id="profilePanel">
-    <div class="section-head">
-      <div class="section-title">התאמה אישית</div>
-      <button class="chip-btn" onclick="toggleProfile()">סגור</button>
-    </div>
-    <div class="profile-grid">
-      <div class="field"><label>גובה בס״מ</label><input id="profileHeight" type="number" value="178"></div>
-      <div class="field"><label>משקל בק״ג</label><input id="profileWeight" type="number" value="94.1" step="0.1"></div>
-      <div class="field"><label>מין</label><select id="profileSex"><option value="male">זכר</option><option value="female">נקבה</option></select></div>
-      <div class="field"><label>גיל</label><input id="profileAge" type="number" value="35"></div>
-      <div class="field full"><label>רמת פעילות</label><select id="profileActivity"><option value="1.2">נמוכה</option><option value="1.375">קלה</option><option value="1.55">בינונית</option><option value="1.725">גבוהה</option></select></div>
-    </div>
-    <div class="profile-note">החישוב הוא הערכה כללית בלבד לפי נתונים אישיים וגרעון יומי של כ־500 קל׳.</div>
-    <div class="profile-actions">
-      <button class="secondary-btn" onclick="toggleProfile()">ביטול</button>
-      <button class="primary-btn" onclick="applyProfile()">חשב ועדכן יעדים</button>
-    </div>
-  </div>
-
-  <div class="card search-card">
-    <input id="foodSearch" class="search-input" type="text" placeholder="חפש מזון בעברית..." />
-    <div class="chips">
-      <button class="chip" onclick="quick('אבקת חלבון')">אבקת חלבון</button>
-      <button class="chip" onclick="quick('חטיף חלבון')">חטיף חלבון</button>
-      <button class="chip" onclick="quick('חזה עוף')">חזה עוף</button>
-      <button class="chip" onclick="quick('ביצה')">ביצה</button>
-      <button class="chip" onclick="quick('אורז')">אורז</button>
-    </div>
-  </div>
-
-  <div class="results-title">תוצאות חיפוש</div>
-  <div id="resultArea"></div>
-
-  <div class="card meal-card">
-    <div class="section-head">
-      <div class="section-title">יומן אוכל</div>
-      <div class="meal-label">ארוחת בוקר ☀️</div>
-    </div>
-    <div class="meal-block">
-      <div class="meal-row-head">
-        <div class="meal-total" id="breakfastTotal">0 קל׳</div>
-        <div class="meal-label">ארוחת בוקר ☀️</div>
-      </div>
-      <table class="food-table" id="breakfastTable"></table>
-    </div>
-
-    <div class="accordion">
-      <div class="acc-item" data-meal="lunch">
-        <div class="acc-head" onclick="toggleMeal('lunch')">
-          <div><span>⌄</span> <span id="lunchTotal">0 קל׳</span></div>
-          <div class="meal-label">ארוחת צהריים ☀️</div>
-        </div>
-        <div class="acc-body" id="lunchBody"></div>
-      </div>
-
-      <div class="acc-item" data-meal="dinner">
-        <div class="acc-head" onclick="toggleMeal('dinner')">
-          <div><span>⌄</span> <span id="dinnerTotal">0 קל׳</span></div>
-          <div class="meal-label">ארוחת ערב 🌙</div>
-        </div>
-        <div class="acc-body" id="dinnerBody"></div>
-      </div>
-
-      <div class="acc-item" data-meal="snack">
-        <div class="acc-head" onclick="toggleMeal('snack')">
-          <div><span>⌄</span> <span id="snackTotal">0 קל׳</span></div>
-          <div class="meal-label">ביניים 🍇</div>
-        </div>
-        <div class="acc-body" id="snackBody"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="bottom-grid">
-      <div class="chart-card">
-        <div class="chart-title">
-          <button class="mini-btn" onclick="resetWeek()">איפוס שבוע</button>
+ 
+      <div class="card section hidden" id="dailyWalkSection">
+        <div class="section-title">הליכה יומית</div>
+ 
+        <div class="walk-grid">
           <div>
-            <div>גרעון קלורי כולל אימון</div>
-            <div class="chart-sub">ממוצע יומי: <span id="avgDeficit">0</span> קל׳</div>
+            <span class="unit">מרחק בק״מ</span>
+            <input id="dailyWalkDistance" value="3" inputmode="decimal" />
+          </div>
+          <div>
+            <span class="unit">משך בדקות</span>
+            <input id="dailyWalkDuration" value="30" inputmode="numeric" />
+          </div>
+          <div>
+            <span class="unit">שיפוע %</span>
+            <input id="dailyWalkIncline" value="0" inputmode="decimal" />
+          </div>
+          <div>
+            <span class="unit">מהירות קמ״ש</span>
+            <input id="dailyWalkSpeed" value="5.5" inputmode="decimal" />
           </div>
         </div>
-        <svg id="deficitChart" viewBox="0 0 360 220"></svg>
-        <div class="success" id="successBox"></div>
-      </div>
-
-      <div class="side-card">
-        <div>
-          <div class="h">מעקב גרעון קלורי</div>
-          <div class="s">גרעון מתזונה היום</div>
-          <div class="big" id="todayDeficit">0</div>
-          <div class="unit">קל׳</div>
-
-          <div class="s">גרעון כולל אימון</div>
-          <div class="big" id="totalDeficit">0</div>
-          <div class="unit">קל׳</div>
+ 
+        <div class="walk-note" id="dailyWalkCaloriesPreview">חישוב משוער: 0 קלוריות</div>
+ 
+        <div class="action-row">
+          <button class="primary full" id="saveDailyWalkBtn">שמור הליכה יומית</button>
+          <button class="secondary full" id="closeDailyWalkBtn">חזרה לאימון</button>
         </div>
-
-        <div class="status" id="statusBadge">בהתאמה</div>
-        <div class="fullstats" onclick="openFullStats()">סטטיסטיקה מלאה <span>📈</span></div>
+      </div>
+ 
+      <div class="card section" id="statsSection">
+        <div class="section-title">סטטיסטיקה</div>
+        <div class="stats-grid">
+          <div class="stat-box"><span>אימונים</span><strong id="totalWorkouts">0</strong></div>
+          <div class="stat-box"><span>תרגילים</span><strong id="totalExercises">0</strong></div>
+          <div class="stat-box"><span>רצף</span><strong id="streak">0</strong></div>
+          <div class="stat-box"><span>קלוריות</span><strong id="totalCalories">0</strong></div>
+        </div>
+      </div>
+ 
+      <div class="card section hidden" id="historySection">
+        <div class="section-title">היסטוריית אימונים</div>
+        <div id="historyList"></div>
+      </div>
+ 
+      <div class="card section hidden" id="musicSection">
+        <div class="section-title">הפלייליסט שלי</div>
+        <input id="spotifyInput" placeholder="הדבק קישור Spotify שלך" />
+        <button class="primary full" id="saveSpotifyBtn" style="margin-top:10px;">שמור פלייליסט</button>
+      </div>
+ 
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <button class="secondary" id="navWorkout">אימון</button>
+        <button class="secondary" id="navHistory">היסטוריה</button>
+        <button class="secondary" id="navMusic">מוזיקה</button>
+        <button onclick="window.location.href='nutrition.html'">תזונה</button>
       </div>
     </div>
   </div>
-
-  <div class="stats-modal" id="statsModal" onclick="if(event.target.id==='statsModal') closeFullStats()">
-    <div class="stats-sheet">
-      <div class="stats-top">
-        <button class="close-stats" onclick="closeFullStats()">סגור</button>
-        <div class="stats-title">📈 סטטיסטיקה מלאה</div>
-      </div>
-
-      <div class="stats-grid">
-        <div class="stat-box"><b id="statsEaten">0</b><span>קלוריות שנאכלו היום</span></div>
-        <div class="stat-box"><b id="statsFoodDeficit">0</b><span>גרעון מתזונה</span></div>
-        <div class="stat-box"><b id="statsWorkoutBurn">0</b><span>קלוריות שנשרפו באימון/הליכה</span></div>
-        <div class="stat-box"><b id="statsTotalDeficit">0</b><span>גרעון כולל משוער</span></div>
-      </div>
-
-      <div class="stats-section">
-        <div class="stats-row"><span>ממוצע גרעון שבועי כולל אימון</span><b><span id="statsAvg">0</span> קל׳</b></div>
-        <div class="stats-row"><span>יעד גרעון יומי</span><b>500 קל׳</b></div>
-        <div class="stats-row"><span>סטטוס</span><b id="statsStatus">-</b></div>
-      </div>
-
-      <div class="stats-section">
-        <div style="font-weight:900;margin-bottom:8px">פירוט שבועי</div>
-        <div id="statsDays"></div>
-      </div>
-
-      <div class="stats-note">קלוריות אימון והליכה נמשכות אוטומטית מה־index.html לפי התאריך.</div>
-    </div>
+ 
+  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+ 
+  <div class="sheet" id="librarySheet">
+    <div class="section-title">הוסף תרגיל / הליכה לאימון הנוכחי</div>
+    <input id="searchInput" placeholder="חפש תרגיל" />
+    <select id="muscleFilter"></select>
+    <select id="equipmentFilter"></select>
+    <div id="libraryList"></div>
   </div>
-
+ 
+  <div class="fixed-spotify">
+    <div class="spotify-mini-label">Spotify</div>
+    <iframe
+      class="spotify-bar"
+      id="spotifyBar"
+      src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator&theme=0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+    </iframe>
+  </div>
+ 
   <script>
-    const KEY = 'nutrition_final_clean_v2';
-    const oldState = JSON.parse(localStorage.getItem('nutrition_final_clean_v1') || '{}');
-    const state = JSON.parse(localStorage.getItem(KEY) || '{}');
-
-    state.week = state.week || oldState.week || [350,520,610,700,680,640,740];
-    state.currentDate = state.currentDate || oldState.currentDate || todayKey();
-    state.customFoods = state.customFoods || oldState.customFoods || [];
-    state.profile = state.profile || oldState.profile || {height:178,weight:94.1,sex:'male',age:35,activity:1.55};
-    state.itemsByDate = state.itemsByDate || oldState.itemsByDate || {};
-    if(oldState.items && oldState.items.length && !state.itemsByDate[state.currentDate]) state.itemsByDate[state.currentDate] = oldState.items;
-
-    state.selected = null;
-    let GOAL = calculateGoals(state.profile);
-
-    const FOODS = [
-      {id:'protein_powder',he:'אבקת חלבון',aliases:['אבקת חלבון','אבקתחלבון','whey','protein powder'],per100:{calories:390,protein:78,carbs:8,fat:6},units:{gram:1,scoop:30,tbsp:10}},
-      {id:'isolate',he:'אבקת חלבון איזולט',aliases:['איזולט','אבקת איזולט','isolate'],per100:{calories:365,protein:85,carbs:3,fat:2},units:{gram:1,scoop:30}},
-      {id:'protein_yogurt',he:'יוגורט חלבון',aliases:['יוגורט חלבון','יוגורטחלבון','מעדן חלבון'],per100:{calories:73,protein:10,carbs:4,fat:1.7},units:{gram:1,piece:200,cup:200}},
-      {id:'go_pro',he:'GO יוגורט חלבון',aliases:['גו','גו פרו','go','go pro','יוגורט go'],per100:{calories:78,protein:10,carbs:5,fat:1.8},units:{gram:1,piece:200}},
-      {id:'yopro',he:'YoPRO יוגורט חלבון',aliases:['יופרו','יו פרו','yopro','yo pro'],per100:{calories:74,protein:10,carbs:4.5,fat:1.6},units:{gram:1,piece:160}},
-      {id:'protein_pudding',he:'פודינג חלבון',aliases:['פודינג חלבון','מעדן חלבון פודינג'],per100:{calories:82,protein:10,carbs:6,fat:1.5},units:{gram:1,piece:200}},
-      {id:'protein_bar',he:'חטיף חלבון',aliases:['חטיף חלבון','חטיףחלבון','protein bar'],per100:{calories:360,protein:32,carbs:34,fat:12},units:{gram:1,piece:60}},
-      {id:'protein_drink',he:'משקה חלבון',aliases:['משקה חלבון','שייק חלבון','protein shake'],per100:{calories:62,protein:10,carbs:4,fat:1},units:{gram:1,piece:250,cup:250}},
-      {id:'chicken_breast',he:'חזה עוף',aliases:['עוף','חזה עוף','חזהעוף','chicken breast'],per100:{calories:165,protein:31,carbs:0,fat:3.6},units:{gram:1,piece:120}},
-      {id:'chicken_thigh',he:'פרגית',aliases:['פרגית','ירך עוף'],per100:{calories:209,protein:26,carbs:0,fat:10.9},units:{gram:1,piece:130}},
-      {id:'tuna',he:'טונה במים',aliases:['טונה','שימורי טונה'],per100:{calories:116,protein:26,carbs:0,fat:1},units:{gram:1,cup:100}},
-      {id:'egg',he:'ביצה',aliases:['ביצה','ביצים'],per100:{calories:155,protein:13,carbs:1.1,fat:11},units:{gram:1,piece:50}},
-      {id:'egg_white',he:'חלבון ביצה',aliases:['חלבון ביצה','לבן ביצה'],per100:{calories:52,protein:11,carbs:0.7,fat:0.2},units:{gram:1,piece:33}},
-      {id:'cottage',he:'קוטג׳',aliases:['קוטג','קוטג׳'],per100:{calories:98,protein:11,carbs:3.4,fat:4.3},units:{gram:1,cup:250,tbsp:15}},
-      {id:'white_cheese',he:'גבינה לבנה',aliases:['גבינה לבנה','גבינהלבנה'],per100:{calories:95,protein:10,carbs:4,fat:5},units:{gram:1,cup:250,tbsp:15}},
-      {id:'skyr',he:'סקיר',aliases:['סקיר','skyr'],per100:{calories:63,protein:11,carbs:4,fat:.2},units:{gram:1,piece:150}},
-      {id:'rice',he:'אורז מבושל',aliases:['אורז','אורזלבן'],per100:{calories:130,protein:2.7,carbs:28,fat:.3},units:{gram:1,cup:150}},
-      {id:'oats',he:'שיבולת שועל',aliases:['קוואקר','שיבולתשועל','שיבולת שועל'],per100:{calories:389,protein:16.9,carbs:66.3,fat:6.9},units:{gram:1,cup:80,tbsp:10}},
-      {id:'avocado',he:'אבוקדו',aliases:['אבוקדו'],per100:{calories:160,protein:2,carbs:8.5,fat:14.7},units:{gram:1,piece:170}},
-      {id:'banana',he:'בננה',aliases:['בננה'],per100:{calories:89,protein:1.1,carbs:23,fat:.3},units:{gram:1,piece:120}},
-      {id:'tahini',he:'טחינה',aliases:['טחינה'],per100:{calories:595,protein:17,carbs:21,fat:53},units:{gram:1,tbsp:15}},
-      {id:'peanut_butter',he:'חמאת בוטנים',aliases:['חמאתבוטנים','חמאת בוטנים'],per100:{calories:588,protein:25,carbs:20,fat:50},units:{gram:1,tbsp:16}}
+    const STORAGE_KEY = 'workout_app_v2_clean';
+ 
+    const OLD_STORAGE_KEYS = [
+      'workout_app_v2_clean',
+      'workout_app_v2_clean_new',
+      'workout_app',
+      'fitness_app'
     ];
-
-    function calculateGoals(p){
-      const w = Number(p.weight || 94.1);
-      const h = Number(p.height || 178);
-      const age = Number(p.age || 35);
-      const act = Number(p.activity || 1.55);
-      const bmr = (p.sex === 'female')
-        ? (10*w + 6.25*h - 5*age - 161)
-        : (10*w + 6.25*h - 5*age + 5);
-      const calories = Math.max(1400, Math.round(bmr * act - 500));
-      const protein = Math.round(w * 1.8);
-      const fat = Math.round(w * 0.67);
-      const carbs = Math.max(80, Math.round((calories - protein*4 - fat*9) / 4));
-      return {calories, protein, carbs, fat, deficitGoal:500};
+ 
+    let workoutTimerInterval = null;
+    let restTimerInterval = null;
+ 
+    const LIBRARY = [
+      { id:'walk1', type:'cardio', name:'הליכה / אירובי', muscle:'אירובי', equipment:'הליכון / חוץ', reps:'30', kg:'0', distance:'3', incline:'0', speed:'5.5', image:'https://cdn-icons-png.flaticon.com/512/384/384276.png', video:'https://www.youtube.com/results?search_query=walking+treadmill+workout' },
+ 
+      { id:'ex1', name:'Dumbbell Bench Press', muscle:'חזה', equipment:'משקולות', reps:'8', kg:'20', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Bench-Press.gif', video:'https://www.youtube.com/results?search_query=dumbbell+bench+press' },
+      { id:'ex2', name:'Machine Chest Press', muscle:'חזה', equipment:'מכונה', reps:'10', kg:'25', image:'https://fitnessprogramer.com/wp-content/uploads/2022/11/Lever-Chest-Press.gif', video:'https://www.youtube.com/results?search_query=machine+chest+press' },
+      { id:'ex3', name:'Cable Fly', muscle:'חזה', equipment:'כבלים', reps:'12', kg:'15', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Crossover.gif', video:'https://www.youtube.com/results?search_query=cable+fly' },
+      { id:'ex4', name:'Dumbbell Curl', muscle:'יד קדמית', equipment:'משקולות', reps:'12', kg:'10', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Curl.gif', video:'https://www.youtube.com/results?search_query=dumbbell+biceps+curl' },
+      { id:'ex5', name:'Hammer Curl', muscle:'יד קדמית', equipment:'משקולות', reps:'12', kg:'10', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Hammer-Curl.gif', video:'https://www.youtube.com/results?search_query=hammer+curl' },
+      { id:'ex6', name:'Lat Pulldown', muscle:'גב', equipment:'מכונה', reps:'8', kg:'30', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Lat-Pulldown.gif', video:'https://www.youtube.com/results?search_query=lat+pulldown' },
+      { id:'ex7', name:'Seated Cable Row', muscle:'גב', equipment:'כבלים', reps:'8', kg:'25', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Seated-Cable-Row.gif', video:'https://www.youtube.com/results?search_query=seated+cable+row' },
+      { id:'ex8', name:'One Arm Dumbbell Row', muscle:'גב', equipment:'משקולות', reps:'10', kg:'18', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/One-Arm-Dumbbell-Row.gif', video:'https://www.youtube.com/results?search_query=one+arm+dumbbell+row' },
+      { id:'ex9', name:'Straight Arm Pulldown', muscle:'גב', equipment:'כבלים', reps:'12', kg:'15', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Straight-Arm-Pulldown.gif', video:'https://www.youtube.com/results?search_query=straight+arm+pulldown' },
+      { id:'ex10', name:'Rope Pushdown', muscle:'יד אחורית', equipment:'כבלים', reps:'12', kg:'12', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Rope-Pushdown.gif', video:'https://www.youtube.com/results?search_query=rope+triceps+pushdown' },
+      { id:'ex11', name:'Overhead Extension', muscle:'יד אחורית', equipment:'כבלים', reps:'10', kg:'10', image:'https://fitnessprogramer.com/wp-content/uploads/2021/06/Cable-Overhead-Triceps-Extension.gif', video:'https://www.youtube.com/results?search_query=overhead+triceps+extension' },
+      { id:'ex12', name:'Assisted Dips', muscle:'יד אחורית', equipment:'מכונה', reps:'10', kg:'סיוע', image:'https://fitnessprogramer.com/wp-content/uploads/2022/06/Assisted-Triceps-Dips.gif', video:'https://www.youtube.com/results?search_query=assisted+dips' },
+      { id:'ex13', name:'Shoulder Press', muscle:'כתפיים', equipment:'מכונה', reps:'10', kg:'20', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Machine-Shoulder-Press.gif', video:'https://www.youtube.com/results?search_query=shoulder+press+machine' },
+      { id:'ex14', name:'Lateral Raise', muscle:'כתפיים', equipment:'משקולות', reps:'12', kg:'8', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif', video:'https://www.youtube.com/results?search_query=lateral+raise' },
+      { id:'ex15', name:'Face Pull', muscle:'כתפיים', equipment:'כבלים', reps:'12', kg:'12', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Face-Pull.gif', video:'https://www.youtube.com/results?search_query=face+pull' },
+      { id:'ex16', name:'Leg Press', muscle:'רגליים', equipment:'מכונה', reps:'12', kg:'80', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Leg-Press.gif', video:'https://www.youtube.com/results?search_query=leg+press' },
+      { id:'ex17', name:'Leg Curl', muscle:'רגליים', equipment:'מכונה', reps:'12', kg:'30', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Lying-Leg-Curl.gif', video:'https://www.youtube.com/results?search_query=leg+curl' },
+      { id:'ex18', name:'Goblet Squat', muscle:'רגליים', equipment:'משקולות', reps:'10', kg:'18', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Goblet-Squat.gif', video:'https://www.youtube.com/results?search_query=goblet+squat' }
+    ];
+ 
+    function uid(){
+      return 'id-' + Math.random().toString(36).slice(2,10);
     }
-
-    function todayKey(){
-      const d = new Date();
-      return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-    }
-
-    function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
-
-    function getSelectedItems(){
-      state.itemsByDate[state.currentDate] = state.itemsByDate[state.currentDate] || [];
-      return state.itemsByDate[state.currentDate];
-    }
-
-    function setSelectedItems(items){ state.itemsByDate[state.currentDate] = items; }
-
-    function getFoods(){ return FOODS.concat(state.customFoods || []); }
-
-    function norm(q){
-      return String(q || '').trim().toLowerCase().replace(/[׳'"`]/g,'').replace(/\s+/g,' ');
-    }
-
-    function compact(q){ return norm(q).replace(/\s+/g,''); }
-
-    function unitLabel(u){
-      return ({gram:'גרם',piece:'יחידה',tbsp:'כף',cup:'גביע',slice:'פרוסה',scoop:'סקופ'})[u] || u;
-    }
-
-    function food(id){ return getFoods().find(f => f.id === id); }
-
-    function dateLabel(){
-      const d = new Date(state.currentDate + 'T12:00:00');
-      return ['יום ראשון','יום שני','יום שלישי','יום רביעי','יום חמישי','יום שישי','יום שבת'][d.getDay()] + ', ' +
-        d.getDate() + ' ' +
-        ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'][d.getMonth()] + ' ' +
-        d.getFullYear();
-    }
-
-    function getWorkoutCaloriesByDate(dateKey){
-      const selectedDate = new Date(dateKey + 'T12:00:00');
-      const heDate = selectedDate.toLocaleDateString('he-IL');
-
-      try {
-        const data = JSON.parse(localStorage.getItem('workout_app_v2_clean') || '{}');
-
-        const workoutCalories = (data.history || [])
-          .filter(item => item.date === heDate)
-          .reduce((sum, item) => sum + Number(item.calories || 0), 0);
-
-        const dailyWalkCalories = (data.dailyWalks || [])
-          .filter(item => item.date === heDate)
-          .reduce((sum, item) => sum + Number(item.calories || 0), 0);
-
-        return Math.round(workoutCalories + dailyWalkCalories);
-      } catch(e) {
-        return 0;
-      }
-    }
-
-    function getTodayWorkoutCalories(){
-      return getWorkoutCaloriesByDate(state.currentDate);
-    }
-
-    function calc(f,a,u){
-      const g = a * (f.units[u] || 1);
-      const m = g / 100;
+ 
+    function makeSet(ex, i){
       return {
-        calories: f.per100.calories * m,
-        protein: f.per100.protein * m,
-        carbs: f.per100.carbs * m,
-        fat: f.per100.fat * m
+        id: uid(),
+        index: i + 1,
+        reps: ex.reps || '10',
+        kg: ex.kg || '0',
+        done: false
       };
     }
-
-    function totals(arr){
-      return arr.reduce((a,i) => ({
-        calories: a.calories + (Number(i.calories) || 0),
-        protein: a.protein + (Number(i.protein) || 0),
-        carbs: a.carbs + (Number(i.carbs) || 0),
-        fat: a.fat + (Number(i.fat) || 0)
-      }), {calories:0,protein:0,carbs:0,fat:0});
-    }
-
-    function toggleProfile(){
-      const el = document.getElementById('profilePanel');
-      el.classList.toggle('show');
-      fillProfile();
-    }
-
-    function fillProfile(){
-      const p = state.profile;
-      document.getElementById('profileHeight').value = p.height;
-      document.getElementById('profileWeight').value = p.weight;
-      document.getElementById('profileSex').value = p.sex;
-      document.getElementById('profileAge').value = p.age;
-      document.getElementById('profileActivity').value = p.activity;
-    }
-
-    function applyProfile(){
-      state.profile = {
-        height:Number(document.getElementById('profileHeight').value || 178),
-        weight:Number(document.getElementById('profileWeight').value || 94.1),
-        sex:document.getElementById('profileSex').value,
-        age:Number(document.getElementById('profileAge').value || 35),
-        activity:Number(document.getElementById('profileActivity').value || 1.55)
-      };
-      GOAL = calculateGoals(state.profile);
-      save();
-      document.getElementById('profilePanel').classList.remove('show');
-      renderAll();
-    }
-
-    function searchFoods(q){
-      const raw = String(q || '').trim();
-      const nq = norm(raw);
-      const cq = compact(raw);
-      if(!nq) return [];
-
-      return getFoods()
-        .map(f => {
-          const all = [f.he].concat(f.aliases || []).filter(Boolean).map(x => norm(x));
-          const allc = all.map(x => x.split(' ').join(''));
-          let score = 0;
-
-          for(const name of all){
-            if(name === nq) score = Math.max(score,120);
-            else if(name.startsWith(nq)) score = Math.max(score,100);
-            else if(name.includes(nq)) score = Math.max(score,80);
-          }
-
-          for(const name of allc){
-            if(name === cq) score = Math.max(score,115);
-            else if(name.startsWith(cq)) score = Math.max(score,95);
-            else if(name.includes(cq)) score = Math.max(score,75);
-          }
-
-          const words = nq.split(' ').filter(Boolean);
-          if(words.length){
-            const combined = all.join(' ');
-            const matched = words.filter(w => combined.includes(w)).length;
-            if(matched > 0) score = Math.max(score,55 + matched*15);
-          }
-
-          return {f,score};
-        })
-        .filter(x => x.score > 0)
-        .sort((a,b) => b.score - a.score)
-        .slice(0,12)
-        .map(x => x.f);
-    }
-
-    function renderSummary(){
-      const sum = totals(getSelectedItems());
-      const eaten = Math.round(sum.calories);
-      const workoutBurn = getTodayWorkoutCalories();
-      const foodDeficit = Math.max(0, GOAL.calories - eaten);
-      const totalDeficit = foodDeficit + workoutBurn;
-
-      document.getElementById('currentDateLabel').textContent = dateLabel();
-      document.getElementById('caloriesValue').textContent = eaten;
-      document.getElementById('goalValue').textContent = GOAL.calories;
-      document.getElementById('goalLineValue').textContent = GOAL.calories;
-      document.getElementById('burnedTodayTop').textContent = workoutBurn;
-
-      document.getElementById('proteinValue').textContent = Math.round(sum.protein);
-      document.getElementById('carbsValue').textContent = Math.round(sum.carbs);
-      document.getElementById('fatValue').textContent = Math.round(sum.fat);
-
-      document.getElementById('proteinGoal').textContent = GOAL.protein;
-      document.getElementById('carbsGoal').textContent = GOAL.carbs;
-      document.getElementById('fatGoal').textContent = GOAL.fat;
-
-      document.getElementById('proteinBar').style.width = Math.min(100,sum.protein/GOAL.protein*100) + '%';
-      document.getElementById('carbsBar').style.width = Math.min(100,sum.carbs/GOAL.carbs*100) + '%';
-      document.getElementById('fatBar').style.width = Math.min(100,sum.fat/GOAL.fat*100) + '%';
-
-      document.getElementById('progressRing').style.strokeDashoffset =
-        490.1 - (490.1 * Math.min(sum.calories / GOAL.calories, 1));
-
-      document.getElementById('todayDeficit').textContent = Math.round(foodDeficit);
-      document.getElementById('totalDeficit').textContent = Math.round(totalDeficit);
-      document.getElementById('statusBadge').textContent = totalDeficit >= GOAL.deficitGoal ? 'בגרעון' : 'מתחת ליעד';
-    }
-
-    function renderSearch(list){
-      const box = document.getElementById('resultArea');
-      const q = document.getElementById('foodSearch').value.trim();
-
-      if(!q){
-        box.innerHTML = '<div class="result-card"><div class="result-name">חפש מזון</div><div class="result-sub">הקלד מזון או לחץ על אחד הקיצורים למעלה כדי להציג תוצאות.</div></div>';
-        return;
+ 
+    function cloneExercise(id){
+      const ex = LIBRARY.find(x => x.id === id);
+ 
+      if (ex.type === 'cardio') {
+        return {
+          instanceId: uid(),
+          libraryId: ex.id,
+          type: 'cardio',
+          name: ex.name,
+          muscle: ex.muscle,
+          equipment: ex.equipment,
+          image: ex.image,
+          video: ex.video,
+          done: false,
+          distance: ex.distance || '3',
+          incline: ex.incline || '0',
+          durationMinutes: ex.reps || '30',
+          speed: ex.speed || '5.5',
+          calories: 0,
+          sets: []
+        };
       }
-
-      box.innerHTML = list.map((f,i) => {
-        const v = calc(f,100,'gram');
-        return `
-          <div class="result-card">
-            <div class="result-name">${f.he}</div>
-            <div class="result-sub">מאגר ${f.custom?'אישי':'פנימי'} בעברית • ל־100 גרם: ${Math.round(v.calories)} קלוריות</div>
-            <div class="fields">
-              <div class="field"><label>כמות</label><input id="amount_${i}" type="number" value="100"></div>
-              <div class="field"><label>יחידה</label><select id="unit_${i}">${Object.keys(f.units).map(u => `<option value="${u}">${unitLabel(u)}</option>`).join('')}</select></div>
-              <div class="field full"><label>ארוחה</label><select id="meal_${i}"><option value="breakfast">ארוחת בוקר</option><option value="lunch">ארוחת צהריים</option><option value="dinner">ארוחת ערב</option><option value="snack">ביניים</option></select></div>
-            </div>
-            <div class="preview-grid">
-              <div class="preview"><b>${Math.round(v.calories)}</b><span>קלוריות</span></div>
-              <div class="preview"><b>${Math.round(v.protein)}</b><span>חלבון</span></div>
-              <div class="preview"><b>${Math.round(v.carbs)}</b><span>פחמימות</span></div>
-              <div class="preview"><b>${Math.round(v.fat)}</b><span>שומן</span></div>
-            </div>
-            <button class="add-btn" onclick="addFood('${f.id}',${i})">הוסף ליומן</button>
-          </div>
-        `;
-      }).join('') || customFoodCard(q);
-    }
-
-    function customFoodCard(name){
-      return `
-        <div class="result-card">
-          <div class="result-name">לא נמצא? הוסף ידנית</div>
-          <div class="result-sub">נשמור את "${name}" לחיפושים הבאים. הערכים הם ל־100 גרם.</div>
-          <div class="fields">
-            <div class="field full"><label>שם המזון</label><input id="customName" type="text" value="${name}"></div>
-            <div class="field"><label>קלוריות</label><input id="customCalories" type="number" value="0"></div>
-            <div class="field"><label>חלבון</label><input id="customProtein" type="number" value="0"></div>
-            <div class="field"><label>פחמימות</label><input id="customCarbs" type="number" value="0"></div>
-            <div class="field"><label>שומן</label><input id="customFat" type="number" value="0"></div>
-          </div>
-          <button class="add-btn" onclick="saveCustomFood()">שמור מזון למאגר</button>
-        </div>
-      `;
-    }
-
-    function saveCustomFood(){
-      const name = document.getElementById('customName').value.trim();
-      if(!name) return alert('צריך להזין שם מזון');
-
-      const newFood = {
-        id:'custom_' + Date.now().toString(36),
-        he:name,
-        aliases:[name, compact(name)],
-        custom:true,
-        per100:{
-          calories:Number(document.getElementById('customCalories').value || 0),
-          protein:Number(document.getElementById('customProtein').value || 0),
-          carbs:Number(document.getElementById('customCarbs').value || 0),
-          fat:Number(document.getElementById('customFat').value || 0)
-        },
-        units:{gram:1,piece:100,cup:200,tbsp:15}
+ 
+      return {
+        instanceId: uid(),
+        libraryId: ex.id,
+        type: 'strength',
+        name: ex.name,
+        muscle: ex.muscle,
+        equipment: ex.equipment,
+        image: ex.image,
+        video: ex.video,
+        restSeconds: 90,
+        done: false,
+        sets: [makeSet(ex,0), makeSet(ex,1), makeSet(ex,2)]
       };
-
-      state.customFoods.push(newFood);
-      save();
-      document.getElementById('foodSearch').value = name;
-      renderSearch([newFood]);
-      alert('המזון נשמר ויופיע בחיפוש הבא');
     }
-
-    function addFood(id,i){
-      const f = food(id);
-      const a = Number(document.getElementById('amount_' + i).value || 0);
-      const u = document.getElementById('unit_' + i).value;
-      const meal = document.getElementById('meal_' + i).value;
-
-      if(!a) return;
-
-      const v = calc(f,a,u);
-      const items = getSelectedItems();
-
-      items.push({
-        id:Date.now().toString(36),
-        meal,
-        he:f.he,
-        amount:a,
-        unit:u,
-        ...v
-      });
-
-      setSelectedItems(items);
-      save();
-      renderAll();
+ 
+    function createDefaultDays(){
+      const wedId = uid();
+ 
+      return {
+        days: [
+          {
+            id: uid(),
+            name: 'שני',
+            label: 'חזה + יד קדמית',
+            exercises: [
+              cloneExercise('ex1'), cloneExercise('ex2'), cloneExercise('ex3'),
+              cloneExercise('ex4'), cloneExercise('ex5'), cloneExercise('ex1')
+            ]
+          },
+          {
+            id: wedId,
+            name: 'רביעי',
+            label: 'גב + יד אחורית',
+            exercises: [
+              cloneExercise('ex6'), cloneExercise('ex7'), cloneExercise('ex8'),
+              cloneExercise('ex9'), cloneExercise('ex10'), cloneExercise('ex11'), cloneExercise('ex12')
+            ]
+          },
+          {
+            id: uid(),
+            name: 'שישי',
+            label: 'כתפיים + רגליים',
+            exercises: [
+              cloneExercise('ex13'), cloneExercise('ex14'), cloneExercise('ex15'),
+              cloneExercise('ex16'), cloneExercise('ex17'), cloneExercise('ex18')
+            ]
+          },
+          {
+            id: uid(),
+            name: 'שבת',
+            label: 'אימון משולב',
+            exercises: [
+              cloneExercise('ex1'), cloneExercise('ex6'), cloneExercise('ex13'),
+              cloneExercise('ex16'), cloneExercise('ex4'), cloneExercise('ex10')
+            ]
+          }
+        ],
+        selectedDayId: wedId
+      };
     }
-
-    function removeFood(id){
-      setSelectedItems(getSelectedItems().filter(x => x.id !== id));
-      save();
-      renderAll();
-    }
-
-    function mealItems(m){ return getSelectedItems().filter(i => i.meal === m); }
-
-    function renderMeals(){
-      ['breakfast','lunch','dinner','snack'].forEach(m => {
-        const arr = mealItems(m);
-        const t = totals(arr);
-
-        if(m === 'breakfast'){
-          document.getElementById('breakfastTotal').textContent = Math.round(t.calories) + ' קל׳';
-          document.getElementById('breakfastTable').innerHTML = arr.length
-            ? '<thead><tr><th>מזון</th><th>קל׳</th><th>חלבון</th><th>פחמ׳</th><th>שומן</th><th></th></tr></thead><tbody>' +
-              arr.map(i => `
-                <tr>
-                  <td><strong>${i.he}</strong><span>${i.amount} ${unitLabel(i.unit)}</span></td>
-                  <td>${Math.round(i.calories)}</td>
-                  <td>${Math.round(i.protein)}</td>
-                  <td>${Math.round(i.carbs)}</td>
-                  <td>${Math.round(i.fat)}</td>
-                  <td><button class="remove" onclick="removeFood('${i.id}')">מחק</button></td>
-                </tr>
-              `).join('') + '</tbody>'
-            : '<tr><td colspan="6">אין פריטים בארוחה זו</td></tr>';
-        } else {
-          document.getElementById(m + 'Total').textContent = Math.round(t.calories) + ' קל׳';
-          document.getElementById(m + 'Body').innerHTML = arr.length
-            ? arr.map(i => `
-              <div class="food-item">
-                <div><strong>${i.he}</strong><div class="meta">${i.amount} ${unitLabel(i.unit)} • ${Math.round(i.calories)} קל׳</div></div>
-                <button class="remove" onclick="removeFood('${i.id}')">מחק</button>
-              </div>
-            `).join('')
-            : 'אין פריטים בארוחה זו';
+ 
+    function defaultState(){
+      const d = createDefaultDays();
+ 
+      return {
+        days: d.days,
+        selectedDayId: d.selectedDayId,
+        activeExerciseIndex: 0,
+        history: [],
+        dailyWalks: [],
+        spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP',
+        filters: { search: '', muscle: 'הכל', equipment: 'הכל' },
+        timers: {
+          workoutSeconds: 0,
+          workoutRunning: false,
+          restSecondsLeft: 0,
+          restRunning: false
         }
-      });
+      };
     }
-
-    function toggleMeal(id){
-      document.querySelector('[data-meal="' + id + '"]').classList.toggle('open');
-    }
-
-    function resetWeek(){
-      state.week = [0,0,0,0,0,0,0];
-      save();
-      renderChart();
-    }
-
-    function getLast7Days(){
-      const days = [];
-
-      for(let i = 6; i >= 0; i--){
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-
-        const key =
-          d.getFullYear() + '-' +
-          String(d.getMonth()+1).padStart(2,'0') + '-' +
-          String(d.getDate()).padStart(2,'0');
-
-        const items = state.itemsByDate?.[key] || [];
-        const t = totals(items);
-        const foodDeficit = Math.max(0, GOAL.calories - t.calories);
-        const workoutBurn = getWorkoutCaloriesByDate(key);
-        const deficit = foodDeficit + workoutBurn;
-
-        days.push({
-          label: d.getDate() + '/' + (d.getMonth()+1),
-          value: Math.round(deficit),
-          workout: workoutBurn
-        });
+ 
+    function normalizeState(result){
+      if (!result || typeof result !== 'object') return defaultState();
+ 
+      if (!Array.isArray(result.days) || result.days.length === 0) {
+        return defaultState();
       }
-
-      return days;
+ 
+      if (!result.selectedDayId || !result.days.some(d => d.id === result.selectedDayId)) {
+        result.selectedDayId = result.days[0].id;
+      }
+ 
+      if (typeof result.activeExerciseIndex !== 'number') {
+        result.activeExerciseIndex = 0;
+      }
+ 
+      if (!Array.isArray(result.history)) result.history = [];
+      if (!Array.isArray(result.dailyWalks)) result.dailyWalks = [];
+ 
+      if (!result.filters) {
+        result.filters = { search: '', muscle: 'הכל', equipment: 'הכל' };
+      }
+ 
+      if (!result.timers) {
+        result.timers = {
+          workoutSeconds: 0,
+          workoutRunning: false,
+          restSecondsLeft: 0,
+          restRunning: false
+        };
+      }
+ 
+      if (!result.spotifyUrl) {
+        result.spotifyUrl = 'https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP';
+      }
+ 
+      result.days.forEach(day => {
+        if (!Array.isArray(day.exercises)) day.exercises = [];
+ 
+        day.exercises.forEach(ex => {
+          if (!ex.instanceId) ex.instanceId = uid();
+          if (!ex.type) ex.type = ex.libraryId === 'walk1' || ex.name?.includes('הליכה') ? 'cardio' : 'strength';
+ 
+          if (ex.type === 'cardio') {
+            if (!ex.distance) ex.distance = '3';
+            if (!ex.incline) ex.incline = '0';
+            if (!ex.durationMinutes) ex.durationMinutes = ex.reps || '30';
+            if (!ex.speed) ex.speed = '5.5';
+            if (!Array.isArray(ex.sets)) ex.sets = [];
+          } else {
+            if (!Array.isArray(ex.sets) || ex.sets.length === 0) {
+              ex.sets = [
+                { id: uid(), index: 1, reps: '10', kg: '0', done: false },
+                { id: uid(), index: 2, reps: '10', kg: '0', done: false },
+                { id: uid(), index: 3, reps: '10', kg: '0', done: false }
+              ];
+            }
+          }
+        });
+      });
+ 
+      return result;
     }
-
-    function renderChart(){
-      const svg = document.getElementById('deficitChart');
-      const data = getLast7Days();
-      const max = Math.max(...data.map(d => d.value), 800);
-
-      const pts = data.map((d,i) => ({
-        x:26 + i*48,
-        y:170 - (d.value / max) * 120,
-        label:d.label
-      }));
-
-      const poly = pts.map(p => p.x + ',' + p.y).join(' ');
-
-      svg.innerHTML =
-        '<polyline fill="rgba(83,214,159,.08)" stroke="none" points="24,170 ' + poly + ' 340,170"/>' +
-        '<polyline fill="none" stroke="#53d69f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" points="' + poly + '"/>' +
-        pts.map((p,i) =>
-          '<circle cx="' + p.x + '" cy="' + p.y + '" r="5" fill="#0f1829" stroke="#53d69f" stroke-width="3"/>' +
-          '<text x="' + p.x + '" y="194" fill="' + (i===6?'#53d69f':'#9aa8c0') + '" font-size="12" text-anchor="middle">' + p.label + '</text>'
-        ).join('');
-
-      const avg = Math.round(data.reduce((a,b) => a + b.value, 0) / data.length);
-      document.getElementById('avgDeficit').textContent = avg;
-      document.getElementById('successBox').textContent = avg >= GOAL.deficitGoal
-        ? 'כל הכבוד! נשמר גרעון יומי ממוצע כולל אימונים'
-        : 'כוון לממוצע של 500 קל׳ ביום כולל אימונים';
+ 
+    function load(){
+      try {
+        for (const key of OLD_STORAGE_KEYS) {
+          const raw = localStorage.getItem(key);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            const result = normalizeState(parsed);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(result));
+            return result;
+          }
+        }
+ 
+        return defaultState();
+      } catch {
+        return defaultState();
+      }
     }
-
-    function openFullStats(){
-      const sum = totals(getSelectedItems());
-      const eaten = Math.round(sum.calories);
-      const foodDeficit = Math.max(0, GOAL.calories - eaten);
-      const workoutBurn = getTodayWorkoutCalories();
-      const totalDeficit = foodDeficit + workoutBurn;
-      const weekData = getLast7Days();
-      const avg = Math.round(weekData.reduce((a,b) => a + b.value, 0) / weekData.length);
-
-      document.getElementById('statsEaten').textContent = eaten;
-      document.getElementById('statsFoodDeficit').textContent = foodDeficit;
-      document.getElementById('statsWorkoutBurn').textContent = workoutBurn;
-      document.getElementById('statsTotalDeficit').textContent = totalDeficit;
-      document.getElementById('statsAvg').textContent = avg;
-      document.getElementById('statsStatus').textContent = totalDeficit >= GOAL.deficitGoal ? 'בגרעון מצוין' : 'מתחת ליעד';
-
-      document.getElementById('statsDays').innerHTML = weekData.map((d,i) => `
-        <div class="stats-row">
-          <span>${d.label} ${d.workout ? '• אימון ' + d.workout + ' קל׳' : ''}</span>
-          <b>${Math.round(d.value)} קל׳</b>
+ 
+    let state = load();
+ 
+    function save(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+ 
+    function selectedDay(){
+      return state.days.find(d => d.id === state.selectedDayId) || state.days[0];
+    }
+ 
+    function activeExercise(){
+      const day = selectedDay();
+      return day.exercises[state.activeExerciseIndex] || day.exercises[0];
+    }
+ 
+    function formatTime(s){
+      const m = String(Math.floor((s || 0) / 60)).padStart(2,'0');
+      const ss = String((s || 0) % 60).padStart(2,'0');
+      return `${m}:${ss}`;
+    }
+ 
+    function estimateStrengthCalories(){
+      const minutes = Math.max(1, Math.round((state.timers.workoutSeconds || 0) / 60));
+ 
+      const completedSets = selectedDay().exercises
+        .filter(ex => ex.type !== 'cardio')
+        .reduce((sum, ex) => sum + ex.sets.filter(s => s.done).length, 0);
+ 
+      return Math.round((minutes * 4.5) + (completedSets * 3));
+    }
+ 
+    function estimateWalkingCaloriesFromValues(durationMinutes, speed, incline){
+      const minutes = Number(durationMinutes || 0);
+      const speedNum = Number(speed || 5.5);
+      const inclineNum = Number(incline || 0);
+ 
+      let met = 3.5;
+      if (speedNum >= 5) met = 4.3;
+      if (speedNum >= 6) met = 5.0;
+      if (inclineNum >= 3) met += 0.7;
+      if (inclineNum >= 6) met += 1.2;
+ 
+      const assumedWeight = 80;
+      return Math.round((met * assumedWeight * 3.5 / 200) * minutes);
+    }
+ 
+    function estimateWalkingCalories(ex){
+      return estimateWalkingCaloriesFromValues(ex.durationMinutes, ex.speed, ex.incline);
+    }
+ 
+    function calculateWorkoutCalories(){
+      const strengthCalories = estimateStrengthCalories();
+ 
+      const cardioCalories = selectedDay().exercises
+        .filter(ex => ex.type === 'cardio' && ex.done)
+        .reduce((sum, ex) => sum + estimateWalkingCalories(ex), 0);
+ 
+      return strengthCalories + cardioCalories;
+    }
+ 
+    function getTotalCalories(){
+      const historyCalories = state.history.reduce((s, h) => s + (h.calories || 0), 0);
+      const dailyWalkCalories = state.dailyWalks.reduce((s, w) => s + (w.calories || 0), 0);
+      return historyCalories + dailyWalkCalories;
+    }
+ 
+    function render(){
+      renderDays();
+      renderExerciseProgress();
+      renderActiveExercise();
+      renderStats();
+      renderHistory();
+      renderMusic();
+      renderLibrary();
+      renderTimers();
+      updateDailyWalkPreview();
+      save();
+    }
+ 
+    function renderDays(){
+      const day = selectedDay();
+ 
+      document.getElementById('dayTabs').innerHTML = state.days.map(d => `
+        <button class="day-card ${d.id===state.selectedDayId?'active':''}" onclick="selectDay('${d.id}')">
+          ${escapeHtml(d.name)}
+          <small>${escapeHtml(d.label)}</small>
+        </button>
+      `).join('');
+ 
+      if (state.activeExerciseIndex >= day.exercises.length) {
+        state.activeExerciseIndex = Math.max(0, day.exercises.length - 1);
+      }
+    }
+ 
+    function renderExerciseProgress(){
+      const day = selectedDay();
+      const items = day.exercises.slice(0, 6);
+ 
+      document.getElementById('exerciseProgress').innerHTML = items.map((_, i) => `
+        <div class="progress-step ${i===state.activeExerciseIndex?'active':''}" onclick="setActiveExercise(${i})">
+          ${i+1}
         </div>
       `).join('');
-
-      document.getElementById('statsModal').classList.add('show');
     }
-
-    function closeFullStats(){
-      document.getElementById('statsModal').classList.remove('show');
+ 
+    function renderActiveExercise(){
+      const ex = activeExercise();
+      const img = document.getElementById('activeExerciseImage');
+ 
+      if (!ex) {
+        document.getElementById('activeExerciseName').textContent = 'אין תרגילים';
+        document.getElementById('activeExerciseDesc').textContent = 'הוסף תרגיל מהמאגר';
+        document.getElementById('setsList').innerHTML = '<div class="empty">אין תרגילים ביום הנבחר</div>';
+        document.getElementById('youtubeLink').href = '#';
+        document.getElementById('animationLink').href = '#';
+        img.src = '';
+        return;
+      }
+ 
+      img.onerror = () => {
+        img.onerror = null;
+        img.src = 'https://via.placeholder.com/600x300?text=Exercise';
+      };
+ 
+      img.src = ex.image;
+      document.getElementById('activeExerciseName').textContent = ex.name;
+      document.getElementById('youtubeLink').href = ex.video || '#';
+      document.getElementById('animationLink').href =
+        `https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' exercise animation')}`;
+ 
+      if (ex.type === 'cardio') {
+        const calories = estimateWalkingCalories(ex);
+ 
+        document.getElementById('activeExerciseDesc').textContent =
+          `${ex.muscle} • ${ex.durationMinutes} דקות • ${ex.distance} ק"מ • שיפוע ${ex.incline}% • כ-${calories} קל׳`;
+ 
+        document.getElementById('setsList').innerHTML = `
+          <div class="set-row active" style="grid-template-columns:1fr 1fr;">
+            <div class="input-wrap">
+              <input class="tiny-input" value="${escapeHtml(ex.distance)}" onchange="updateCardioField('${ex.instanceId}','distance',this.value)" />
+              <span class="unit">ק״מ</span>
+            </div>
+            <div class="input-wrap">
+              <input class="tiny-input" value="${escapeHtml(ex.durationMinutes)}" onchange="updateCardioField('${ex.instanceId}','durationMinutes',this.value)" />
+              <span class="unit">דקות</span>
+            </div>
+          </div>
+ 
+          <div class="set-row active" style="grid-template-columns:1fr 1fr auto;">
+            <div class="input-wrap">
+              <input class="tiny-input" value="${escapeHtml(ex.incline)}" onchange="updateCardioField('${ex.instanceId}','incline',this.value)" />
+              <span class="unit">שיפוע</span>
+            </div>
+            <div class="input-wrap">
+              <input class="tiny-input" value="${escapeHtml(ex.speed)}" onchange="updateCardioField('${ex.instanceId}','speed',this.value)" />
+              <span class="unit">קמ״ש</span>
+            </div>
+            <button class="icon-btn ${ex.done?'done':''}" onclick="toggleCardioDone('${ex.instanceId}')">
+              ${ex.done?'✓':'○'}
+            </button>
+          </div>
+        `;
+        return;
+      }
+ 
+      document.getElementById('activeExerciseDesc').textContent =
+        `${ex.muscle} • מנוחה עולה • 3 סטים`;
+ 
+      document.getElementById('setsList').innerHTML = ex.sets.map((set, idx) => `
+        <div class="set-row ${!set.done && idx===ex.sets.findIndex(s=>!s.done)?'active':''}">
+          <div class="set-index">${set.index}</div>
+          <div class="input-wrap">
+            <input class="tiny-input" value="${escapeHtml(set.reps)}" onchange="updateSetField('${ex.instanceId}','${set.id}','reps',this.value)" />
+            <span class="unit">Reps</span>
+          </div>
+          <div class="input-wrap">
+            <input class="tiny-input" value="${escapeHtml(set.kg)}" onchange="updateSetField('${ex.instanceId}','${set.id}','kg',this.value)" />
+            <span class="unit">Kg</span>
+          </div>
+          <button class="icon-btn ${set.done?'done':''}" onclick="toggleSetDone('${ex.instanceId}','${set.id}')">
+            ${set.done?'✓':'○'}
+          </button>
+        </div>
+      `).join('');
     }
-
-    function quick(q){
-      const input = document.getElementById('foodSearch');
-      input.value = q;
-      renderSearch(searchFoods(q));
-      input.focus();
+ 
+    function renderTimers(){
+      document.getElementById('workoutTimerDisplay').textContent = formatTime(state.timers.workoutSeconds);
+      document.getElementById('restTimerDisplay').textContent = formatTime(state.timers.restSecondsLeft);
+      document.getElementById('toggleWorkoutBtn').textContent =
+        state.timers.workoutRunning ? 'עצור אימון' : 'התחל אימון';
+      document.getElementById('toggleRestBtn').textContent =
+        state.timers.restRunning ? 'עצור מנוחה' : 'התחל מנוחה';
     }
-
-    function goToday(){
-      state.currentDate = todayKey();
+ 
+    function renderStats(){
+      const allSessionsCount = state.history.length + state.dailyWalks.length;
+ 
+      document.getElementById('totalWorkouts').textContent = allSessionsCount;
+ 
+      document.getElementById('totalExercises').textContent =
+        state.history.reduce((s, h) => s + (h.completedExercises || 0), 0);
+ 
+      const allDates = [
+        ...state.history.map(h => h.date),
+        ...state.dailyWalks.map(w => w.date)
+      ];
+ 
+      document.getElementById('streak').textContent = [...new Set(allDates)].length;
+      document.getElementById('totalCalories').textContent = getTotalCalories();
+    }
+ 
+    function renderHistory(){
+      const el = document.getElementById('historyList');
+ 
+      const workouts = state.history.map(h => ({
+        id: h.id,
+        type: 'workout',
+        title: h.day,
+        date: h.date,
+        text: `${h.completedExercises || 0} תרגילים • זמן ${formatTime(h.duration || 0)} • ${h.calories || 0} קל׳`
+      }));
+ 
+      const walks = state.dailyWalks.map(w => ({
+        id: w.id,
+        type: 'walk',
+        title: 'הליכה יומית',
+        date: w.date,
+        text: `${w.distance} ק״מ • ${w.durationMinutes} דקות • שיפוע ${w.incline}% • ${w.speed} קמ״ש • ${w.calories} קל׳`
+      }));
+ 
+      const items = [...workouts, ...walks].reverse();
+ 
+      if (!items.length) {
+        el.innerHTML = '<div class="empty">עדיין אין היסטוריה</div>';
+        return;
+      }
+ 
+      el.innerHTML = items.map(h => `
+        <div class="history-item">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+            <div style="flex:1;">
+              <strong>${escapeHtml(h.title)}</strong>
+              <div style="margin-top:6px;color:var(--muted);font-size:12px;">
+                ${escapeHtml(h.date)} • ${escapeHtml(h.text)}
+              </div>
+            </div>
+ 
+            <button class="trash-btn" onclick="deleteHistoryItem('${h.id}')" title="מחיקת פריט מההיסטוריה" aria-label="מחיקת פריט מההיסטוריה">
+              🗑
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+ 
+    function deleteHistoryItem(id){
+      if(!confirm('למחוק את הפריט מההיסטוריה?')) return;
+ 
+      state.history = state.history.filter(h => h.id !== id);
+      state.dailyWalks = state.dailyWalks.filter(w => w.id !== id);
+ 
       save();
-      renderAll();
+      render();
     }
-
-    document.getElementById('prevDay').addEventListener('click', function(){
-      const d = new Date(state.currentDate + 'T12:00:00');
-      d.setDate(d.getDate() - 1);
-      state.currentDate =
-        d.getFullYear() + '-' +
-        String(d.getMonth()+1).padStart(2,'0') + '-' +
-        String(d.getDate()).padStart(2,'0');
-      save();
-      renderAll();
-    });
-
-    document.getElementById('nextDay').addEventListener('click', function(){
-      const d = new Date(state.currentDate + 'T12:00:00');
-      d.setDate(d.getDate() + 1);
-      state.currentDate =
-        d.getFullYear() + '-' +
-        String(d.getMonth()+1).padStart(2,'0') + '-' +
-        String(d.getDate()).padStart(2,'0');
-      save();
-      renderAll();
-    });
-
-    document.getElementById('foodSearch').addEventListener('input', function(e){
-      renderSearch(searchFoods(e.target.value));
-    });
-
-    function renderAll(){
-      renderSummary();
-      renderSearch(searchFoods(document.getElementById('foodSearch').value));
-      renderMeals();
-      renderChart();
+ 
+    function renderMusic(){
+      document.getElementById('spotifyInput').value = state.spotifyUrl || '';
+      document.getElementById('spotifyBar').src = spotifyEmbedUrl(state.spotifyUrl);
     }
-
-    window.addFood = addFood;
-    window.removeFood = removeFood;
-    window.toggleMeal = toggleMeal;
-    window.resetWeek = resetWeek;
-    window.quick = quick;
-    window.saveCustomFood = saveCustomFood;
-    window.toggleProfile = toggleProfile;
-    window.applyProfile = applyProfile;
-    window.openFullStats = openFullStats;
-    window.closeFullStats = closeFullStats;
-    window.goToday = goToday;
-
-    renderAll();
+ 
+    function spotifyEmbedUrl(url){
+      const fallback =
+        'https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator&theme=0';
+ 
+      const m = url && url.match(/open\.spotify\.com\/(playlist|album|track)\/([A-Za-z0-9]+)/);
+ 
+      if (!m) return fallback;
+ 
+      return `https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator&theme=0`;
+    }
+ 
+    function renderLibrary(){
+      const muscles = ['הכל', ...new Set(LIBRARY.map(x => x.muscle))];
+      const equipment = ['הכל', ...new Set(LIBRARY.map(x => x.equipment))];
+ 
+      document.getElementById('muscleFilter').innerHTML =
+        muscles.map(x => `<option value="${x}">${x}</option>`).join('');
+ 
+      document.getElementById('equipmentFilter').innerHTML =
+        equipment.map(x => `<option value="${x}">${x}</option>`).join('');
+ 
+      document.getElementById('muscleFilter').value = state.filters.muscle;
+      document.getElementById('equipmentFilter').value = state.filters.equipment;
+ 
+      let items = [...LIBRARY];
+      const q = state.filters.search.trim().toLowerCase();
+ 
+      if (q) {
+        items = items.filter(x =>
+          `${x.name} ${x.muscle} ${x.equipment}`.toLowerCase().includes(q)
+        );
+      }
+ 
+      if (state.filters.muscle !== 'הכל') {
+        items = items.filter(x => x.muscle === state.filters.muscle);
+      }
+ 
+      if (state.filters.equipment !== 'הכל') {
+        items = items.filter(x => x.equipment === state.filters.equipment);
+      }
+ 
+      document.getElementById('libraryList').innerHTML = items.map(item => `
+        <div class="library-item">
+          <img src="${item.image}" alt="${escapeHtml(item.name)}" />
+          <div>
+            <div style="font-weight:700;">${escapeHtml(item.name)}</div>
+            <div style="font-size:12px;color:var(--muted);">
+              ${escapeHtml(item.muscle)} • ${escapeHtml(item.equipment)}
+            </div>
+          </div>
+          <button class="primary" style="padding:10px 12px;" onclick="addExercise('${item.id}')">הוסף</button>
+        </div>
+      `).join('') || '<div class="empty">לא נמצאו תרגילים</div>';
+    }
+ 
+    function selectDay(id){
+      state.selectedDayId = id;
+      state.activeExerciseIndex = 0;
+      render();
+    }
+ 
+    function setActiveExercise(i){
+      state.activeExerciseIndex = i;
+      render();
+    }
+ 
+    function updateSetField(exerciseId, setId, field, value){
+      const ex = selectedDay().exercises.find(e => e.instanceId === exerciseId);
+      const set = ex?.sets.find(s => s.id === setId);
+      if (!set) return;
+ 
+      set[field] = value;
+      save();
+    }
+ 
+    function updateCardioField(exerciseId, field, value){
+      const ex = selectedDay().exercises.find(e => e.instanceId === exerciseId);
+      if (!ex) return;
+ 
+      ex[field] = value;
+      ex.calories = estimateWalkingCalories(ex);
+      render();
+    }
+ 
+    function toggleSetDone(exerciseId, setId){
+      const ex = selectedDay().exercises.find(e => e.instanceId === exerciseId);
+      const set = ex?.sets.find(s => s.id === setId);
+      if (!set) return;
+ 
+      set.done = !set.done;
+      ex.done = ex.sets.every(s => s.done);
+ 
+      if (set.done) startRestTimer(true);
+ 
+      if (ex.done && state.activeExerciseIndex < selectedDay().exercises.length - 1) {
+        state.activeExerciseIndex += 1;
+      }
+ 
+      render();
+    }
+ 
+    function toggleCardioDone(exerciseId){
+      const ex = selectedDay().exercises.find(e => e.instanceId === exerciseId);
+      if (!ex) return;
+ 
+      ex.done = !ex.done;
+      ex.calories = estimateWalkingCalories(ex);
+ 
+      if (ex.done && state.activeExerciseIndex < selectedDay().exercises.length - 1) {
+        state.activeExerciseIndex += 1;
+      }
+ 
+      render();
+    }
+ 
+    function addExercise(id){
+      selectedDay().exercises.push(cloneExercise(id));
+      closeSheet();
+      render();
+    }
+ 
+    function toggleWorkoutTimer(){
+      if (state.timers.workoutRunning) {
+        clearInterval(workoutTimerInterval);
+        workoutTimerInterval = null;
+        state.timers.workoutRunning = false;
+      } else {
+        state.timers.workoutRunning = true;
+        workoutTimerInterval = setInterval(() => {
+          state.timers.workoutSeconds += 1;
+          renderTimers();
+          save();
+        }, 1000);
+      }
+ 
+      renderTimers();
+      save();
+    }
+ 
+    function startRestTimer(forceRestart=false){
+      if (forceRestart && restTimerInterval) {
+        clearInterval(restTimerInterval);
+        restTimerInterval = null;
+      }
+ 
+      if (state.timers.restRunning && !forceRestart) return;
+ 
+      if (forceRestart) state.timers.restSecondsLeft = 0;
+ 
+      state.timers.restRunning = true;
+ 
+      restTimerInterval = setInterval(() => {
+        state.timers.restSecondsLeft += 1;
+        renderTimers();
+        save();
+      }, 1000);
+ 
+      renderTimers();
+      save();
+    }
+ 
+    function toggleRestTimer(forceStop=false){
+      if (state.timers.restRunning || forceStop) {
+        clearInterval(restTimerInterval);
+        restTimerInterval = null;
+        state.timers.restRunning = false;
+      } else {
+        startRestTimer(true);
+        return;
+      }
+ 
+      renderTimers();
+      save();
+    }
+ 
+    function finishWorkout(){
+      const day = selectedDay();
+      const completedExercises = day.exercises.filter(ex => ex.done).length;
+      const calories = calculateWorkoutCalories();
+ 
+      state.history.push({
+        id: uid(),
+        day: `${day.name} - ${day.label}`,
+        date: new Date().toLocaleDateString('he-IL'),
+        completedExercises,
+        duration: state.timers.workoutSeconds,
+        calories
+      });
+ 
+      day.exercises.forEach(ex => {
+        ex.done = false;
+        if (Array.isArray(ex.sets)) {
+          ex.sets.forEach(s => s.done = false);
+        }
+      });
+ 
+      state.activeExerciseIndex = 0;
+      state.timers.workoutSeconds = 0;
+      state.timers.restSecondsLeft = 0;
+ 
+      clearInterval(workoutTimerInterval);
+      workoutTimerInterval = null;
+      state.timers.workoutRunning = false;
+ 
+      clearInterval(restTimerInterval);
+      restTimerInterval = null;
+      state.timers.restRunning = false;
+ 
+      render();
+      alert(`האימון נשמר • כ-${calories} קלוריות`);
+    }
+ 
+    function openDailyWalk(){
+      document.getElementById('dailyWalkSection').classList.remove('hidden');
+      document.getElementById('statsSection').classList.add('hidden');
+      document.getElementById('historySection').classList.add('hidden');
+      document.getElementById('musicSection').classList.add('hidden');
+      updateDailyWalkPreview();
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+ 
+    function closeDailyWalk(){
+      document.getElementById('dailyWalkSection').classList.add('hidden');
+      showSection('workout');
+    }
+ 
+    function updateDailyWalkPreview(){
+      const duration = document.getElementById('dailyWalkDuration')?.value || 0;
+      const speed = document.getElementById('dailyWalkSpeed')?.value || 0;
+      const incline = document.getElementById('dailyWalkIncline')?.value || 0;
+ 
+      const calories = estimateWalkingCaloriesFromValues(duration, speed, incline);
+      const el = document.getElementById('dailyWalkCaloriesPreview');
+ 
+      if (el) el.textContent = `חישוב משוער: ${calories} קלוריות`;
+    }
+ 
+    function saveDailyWalk(){
+      const distance = document.getElementById('dailyWalkDistance').value || '0';
+      const durationMinutes = document.getElementById('dailyWalkDuration').value || '0';
+      const incline = document.getElementById('dailyWalkIncline').value || '0';
+      const speed = document.getElementById('dailyWalkSpeed').value || '0';
+ 
+      const calories = estimateWalkingCaloriesFromValues(durationMinutes, speed, incline);
+ 
+      state.dailyWalks.push({
+        id: uid(),
+        type: 'daily_walk',
+        date: new Date().toLocaleDateString('he-IL'),
+        distance,
+        durationMinutes,
+        incline,
+        speed,
+        calories
+      });
+ 
+      save();
+      render();
+      closeDailyWalk();
+      alert(`הליכה יומית נשמרה • כ-${calories} קלוריות`);
+    }
+ 
+    function saveSpotify(){
+      const value = document.getElementById('spotifyInput').value.trim();
+ 
+      if (!value.includes('spotify.com')) {
+        return alert('הדבק קישור Spotify תקין');
+      }
+ 
+      state.spotifyUrl = value;
+      render();
+    }
+ 
+    function openSheet(){
+      document.getElementById('sheetBackdrop').classList.add('open');
+      document.getElementById('librarySheet').classList.add('open');
+    }
+ 
+    function closeSheet(){
+      document.getElementById('sheetBackdrop').classList.remove('open');
+      document.getElementById('librarySheet').classList.remove('open');
+    }
+ 
+    function showSection(name){
+      document.getElementById('dailyWalkSection').classList.add('hidden');
+      document.getElementById('statsSection').classList.toggle('hidden', name !== 'workout');
+      document.getElementById('historySection').classList.toggle('hidden', name !== 'history');
+      document.getElementById('musicSection').classList.toggle('hidden', name !== 'music');
+    }
+ 
+    function escapeHtml(str){
+      return String(str ?? '')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#39;');
+    }
+ 
+    document.getElementById('openLibraryBtn').addEventListener('click', openSheet);
+    document.getElementById('quickWalkBtn').addEventListener('click', openDailyWalk);
+    document.getElementById('closeDailyWalkBtn').addEventListener('click', closeDailyWalk);
+    document.getElementById('saveDailyWalkBtn').addEventListener('click', saveDailyWalk);
+ 
+    ['dailyWalkDistance','dailyWalkDuration','dailyWalkIncline','dailyWalkSpeed'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateDailyWalkPreview);
+    });
+ 
+    document.getElementById('sheetBackdrop').addEventListener('click', closeSheet);
+    document.getElementById('toggleWorkoutBtn').addEventListener('click', toggleWorkoutTimer);
+    document.getElementById('toggleRestBtn').addEventListener('click', () => toggleRestTimer(false));
+    document.getElementById('finishWorkoutTopBtn').addEventListener('click', finishWorkout);
+    document.getElementById('saveSpotifyBtn').addEventListener('click', saveSpotify);
+    document.getElementById('navWorkout').addEventListener('click', () => showSection('workout'));
+    document.getElementById('navHistory').addEventListener('click', () => showSection('history'));
+    document.getElementById('navMusic').addEventListener('click', () => showSection('music'));
+ 
+    document.getElementById('searchInput').addEventListener('input', e => {
+      state.filters.search = e.target.value;
+      renderLibrary();
+      save();
+    });
+ 
+    document.getElementById('muscleFilter').addEventListener('change', e => {
+      state.filters.muscle = e.target.value;
+      renderLibrary();
+      save();
+    });
+ 
+    document.getElementById('equipmentFilter').addEventListener('change', e => {
+      state.filters.equipment = e.target.value;
+      renderLibrary();
+      save();
+    });
+ 
+    window.selectDay = selectDay;
+    window.setActiveExercise = setActiveExercise;
+    window.updateSetField = updateSetField;
+    window.updateCardioField = updateCardioField;
+    window.toggleSetDone = toggleSetDone;
+    window.toggleCardioDone = toggleCardioDone;
+    window.addExercise = addExercise;
+    window.deleteHistoryItem = deleteHistoryItem;
+ 
+    showSection('workout');
+    render();
   </script>
 </body>
 </html>
