@@ -484,6 +484,143 @@
       border: none;
       border-radius: 16px;
     }
+
+
+    /* ===== Premium UX Upgrade V4 - visual only, keeps existing structure ===== */
+    button, .icon-btn, .day-card, .progress-step, .history-delete-btn, a.linkbtn {
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:active, .icon-btn:active, .day-card:active, .progress-step:active, a.linkbtn:active {
+      transform: scale(.96);
+    }
+
+    .card {
+      box-shadow:
+        0 14px 34px rgba(0,0,0,.32),
+        0 2px 10px rgba(43,211,160,.045);
+    }
+
+    .mini-btn:hover, .secondary:hover, .day-card:hover, .icon-btn:hover, a.linkbtn:hover {
+      border-color: rgba(43,211,160,.28);
+      box-shadow: 0 0 0 1px rgba(43,211,160,.06), 0 10px 22px rgba(0,0,0,.18);
+    }
+
+    .progress-track {
+      grid-template-columns: repeat(auto-fit, minmax(34px, 1fr));
+      margin-bottom: 10px;
+    }
+
+    .progress-step.done-step {
+      background: rgba(43,211,160,.22);
+      color: #baf8dd;
+      border-color: rgba(43,211,160,.28);
+    }
+
+    .progress-bar {
+      height: 7px;
+      background: rgba(255,255,255,.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 0 2px 14px;
+      border: 1px solid rgba(255,255,255,.045);
+    }
+
+    #progressFill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), #71f0c3, var(--accent-2));
+      box-shadow: 0 0 18px rgba(43,211,160,.28);
+      transition: width .45s ease;
+    }
+
+    .hero-image {
+      transition: transform .28s ease, filter .28s ease, box-shadow .28s ease;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+    }
+
+    .hero-image:hover {
+      transform: translateY(-1px) scale(1.005);
+    }
+
+    .exercise-title, .exercise-sub, .sets-card {
+      animation: softEnter .26s ease;
+    }
+
+    @keyframes softEnter {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .next-exercise-preview {
+      margin-top: 10px;
+      border-radius: 18px;
+      border: 1px solid rgba(43,211,160,.16);
+      background: linear-gradient(180deg, rgba(43,211,160,.09), rgba(255,255,255,.025));
+      padding: 10px 12px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .next-exercise-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .next-exercise-name {
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .set-row {
+      transition: transform .18s ease, background .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+
+    .set-row:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.12);
+    }
+
+    .set-row.set-done-flash {
+      animation: doneFlash .48s ease;
+    }
+
+    @keyframes doneFlash {
+      0% { background: rgba(43,211,160,.34); box-shadow: 0 0 0 2px rgba(43,211,160,.28) inset; }
+      100% { background: rgba(43,211,160,.08); box-shadow: none; }
+    }
+
+    .timer-footer {
+      backdrop-filter: blur(16px);
+    }
+
+    .fixed-spotify {
+      backdrop-filter: blur(18px);
+      background: rgba(10,14,20,.88);
+    }
+
+    body.focus-mode .days-grid,
+    body.focus-mode .stats-grid,
+    body.focus-mode #statsSection .section-title {
+      display: none !important;
+    }
+
+    body.focus-mode .card:first-child {
+      border-color: rgba(43,211,160,.20);
+      box-shadow: 0 18px 42px rgba(0,0,0,.38), 0 0 0 1px rgba(43,211,160,.06);
+    }
+
+    @media (max-width: 390px) {
+      .progress-track { gap: 6px; }
+      .progress-step { font-size: 12px; }
+      .next-exercise-preview { padding: 9px 10px; }
+    }
+
   </style>
 </head>
 
@@ -499,10 +636,12 @@
 
         <div class="days-grid" id="dayTabs"></div>
         <div class="progress-track" id="exerciseProgress"></div>
+        <div class="progress-bar"><div id="progressFill"></div></div>
 
         <img id="activeExerciseImage" class="hero-image" alt="exercise" />
         <div class="exercise-title" id="activeExerciseName"></div>
         <div class="exercise-sub" id="activeExerciseDesc"></div>
+        <div class="next-exercise-preview" id="nextExercisePreview"></div>
 
         <div class="action-row">
           <a class="linkbtn secondary" id="youtubeLink" href="#" target="_blank" rel="noopener">יוטיוב</a>
@@ -949,6 +1088,8 @@
       renderDays();
       renderExerciseProgress();
       renderActiveExercise();
+      renderNextExercise();
+      updateProgressBar();
       renderStats();
       renderHistory();
       renderMusic();
@@ -977,11 +1118,42 @@
       const day = selectedDay();
       const items = day.exercises;
 
-      document.getElementById('exerciseProgress').innerHTML = items.map((_, i) => `
-        <div class="progress-step ${i===state.activeExerciseIndex?'active':''}" onclick="setActiveExercise(${i})">
+      document.getElementById('exerciseProgress').innerHTML = items.map((ex, i) => `
+        <div class="progress-step ${i===state.activeExerciseIndex?'active':''} ${ex.done?'done-step':''}" onclick="setActiveExercise(${i})">
           ${i+1}
         </div>
       `).join('');
+    }
+
+    function updateProgressBar(){
+      const day = selectedDay();
+      const total = Math.max(1, day.exercises.length);
+      const completed = day.exercises.filter(ex => ex.done).length;
+      const currentWeight = state.activeExerciseIndex > completed ? state.activeExerciseIndex : completed;
+      const percent = Math.min(100, Math.round((currentWeight / total) * 100));
+      const fill = document.getElementById('progressFill');
+      if (fill) fill.style.width = percent + '%';
+    }
+
+    function renderNextExercise(){
+      const el = document.getElementById('nextExercisePreview');
+      if (!el) return;
+
+      const day = selectedDay();
+      const next = day.exercises[state.activeExerciseIndex + 1];
+
+      if (!next) {
+        el.innerHTML = `
+          <div class="next-exercise-label">סיום קרוב</div>
+          <div class="next-exercise-name">זה התרגיל האחרון באימון</div>
+        `;
+        return;
+      }
+
+      el.innerHTML = `
+        <div class="next-exercise-label">התרגיל הבא</div>
+        <div class="next-exercise-name">${escapeHtml(next.name)} · ${escapeHtml(next.muscle || '')}</div>
+      `;
     }
 
     function renderActiveExercise(){
@@ -1262,7 +1434,14 @@
       set.done = !set.done;
       ex.done = ex.sets.every(s => s.done);
 
-      if (set.done) startRestTimer(true);
+      if (set.done) {
+        startRestTimer(true);
+        requestAnimationFrame(() => {
+          const activeRows = document.querySelectorAll('.set-row.active');
+          activeRows.forEach(row => row.classList.add('set-done-flash'));
+          setTimeout(() => activeRows.forEach(row => row.classList.remove('set-done-flash')), 520);
+        });
+      }
 
       if (ex.done && state.activeExerciseIndex < selectedDay().exercises.length - 1) {
         state.activeExerciseIndex += 1;
@@ -1296,8 +1475,10 @@
         clearInterval(workoutTimerInterval);
         workoutTimerInterval = null;
         state.timers.workoutRunning = false;
+        document.body.classList.remove('focus-mode');
       } else {
         state.timers.workoutRunning = true;
+        document.body.classList.add('focus-mode');
         workoutTimerInterval = setInterval(() => {
           state.timers.workoutSeconds += 1;
           renderTimers();
@@ -1377,6 +1558,7 @@
       clearInterval(restTimerInterval);
       restTimerInterval = null;
       state.timers.restRunning = false;
+      document.body.classList.remove('focus-mode');
 
       render();
       alert(`האימון נשמר • כ-${calories} קלוריות`);
