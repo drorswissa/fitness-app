@@ -353,6 +353,26 @@
       margin-bottom: 8px;
     }
 
+    .history-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .history-delete-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: rgba(255,111,111,.13);
+      color: #ffb1b1;
+      border: 1px solid rgba(255,111,111,.25);
+      padding: 0;
+      font-size: 17px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
     .empty {
       color: var(--muted);
       text-align: center;
@@ -1029,24 +1049,44 @@
       document.getElementById('totalCalories').textContent = getTotalCalories();
     }
 
+    function getItemTimeValue(dateText){
+      if (!dateText) return 0;
+
+      const parts = String(dateText).split('.').map(Number);
+      if (parts.length === 3) {
+        const [day, month, year] = parts;
+        return new Date(year, month - 1, day).getTime();
+      }
+
+      const fallback = new Date(dateText).getTime();
+      return Number.isNaN(fallback) ? 0 : fallback;
+    }
+
     function renderHistory(){
       const el = document.getElementById('historyList');
 
       const workouts = state.history.map(h => ({
+        id: h.id,
+        source: 'history',
         type: 'workout',
         title: h.day,
         date: h.date,
+        timeValue: getItemTimeValue(h.date),
         text: `${h.completedExercises || 0} תרגילים • זמן ${formatTime(h.duration || 0)} • ${h.calories || 0} קל׳`
       }));
 
       const walks = state.dailyWalks.map(w => ({
+        id: w.id,
+        source: 'dailyWalks',
         type: 'walk',
         title: 'הליכה יומית',
         date: w.date,
+        timeValue: getItemTimeValue(w.date),
         text: `${w.distance} ק״מ • ${w.durationMinutes} דקות • שיפוע ${w.incline}% • ${w.speed} קמ״ש • ${w.calories} קל׳`
       }));
 
-      const items = [...workouts, ...walks].reverse();
+      const items = [...workouts, ...walks]
+        .sort((a, b) => b.timeValue - a.timeValue);
 
       if (!items.length) {
         el.innerHTML = '<div class="empty">עדיין אין היסטוריה</div>';
@@ -1055,12 +1095,32 @@
 
       el.innerHTML = items.map(h => `
         <div class="history-item">
-          <strong>${escapeHtml(h.title)}</strong>
-          <div style="margin-top:6px;color:var(--muted);font-size:12px;">
-            ${escapeHtml(h.date)} • ${escapeHtml(h.text)}
+          <div class="history-row">
+            <div>
+              <strong>${escapeHtml(h.title)}</strong>
+              <div style="margin-top:6px;color:var(--muted);font-size:12px;">
+                ${escapeHtml(h.date)} • ${escapeHtml(h.text)}
+              </div>
+            </div>
+            <button class="history-delete-btn" onclick="deleteHistoryItem('${h.source}','${h.id}')" title="מחיקת אימון">🗑</button>
           </div>
         </div>
       `).join('');
+    }
+
+    function deleteHistoryItem(source, id){
+      if (!confirm('למחוק את הרשומה מההיסטוריה?')) return;
+
+      if (source === 'history') {
+        state.history = state.history.filter(item => item.id !== id);
+      }
+
+      if (source === 'dailyWalks') {
+        state.dailyWalks = state.dailyWalks.filter(item => item.id !== id);
+      }
+
+      save();
+      render();
     }
 
     function renderMusic(){
@@ -1410,6 +1470,7 @@
     window.toggleSetDone = toggleSetDone;
     window.toggleCardioDone = toggleCardioDone;
     window.addExercise = addExercise;
+    window.deleteHistoryItem = deleteHistoryItem;
 
     showSection('workout');
     render();
