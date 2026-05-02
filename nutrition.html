@@ -242,7 +242,6 @@ button,input,select{font:inherit}
   <div class="quick-tools-grid">
     <button class="quick-tool" onclick="openBarcodeScanner()"><div class="quick-icon">▦</div><b>סריקת ברקוד</b><span>סרוק מוצר והוסף אותו ליומן</span></button>
     <button class="quick-tool" onclick="openQuickAdd()"><div class="quick-icon">＋</div><b>הוספה מהירה</b><span>מזונות נפוצים בקליק אחד</span></button>
-    <button class="quick-tool" onclick="repeatYesterdayMeal()"><div class="quick-icon">↺</div><b>שכפול אתמול</b><span>שחזר יום אכילה קודם במהירות</span></button>
     <button class="quick-tool" onclick="scrollToSmartRecs()"><div class="quick-icon">💡</div><b>המלצות חכמות</b><span>מה להשלים לפי המאקרו שלך</span></button>
   </div>
 </div>
@@ -325,6 +324,13 @@ button,input,select{font:inherit}
   </div>
 </div>
 
+<div class="sheet-modal" id="quickFoodModal" onclick="if(event.target.id==='quickFoodModal')closeQuickFoodModal()">
+  <div class="sheet-panel">
+    <div class="sheet-top"><button class="close-sheet" onclick="closeQuickFoodModal()">סגור</button><div class="sheet-title" id="quickFoodTitle">הוספת מזון</div></div>
+    <div id="quickFoodBody"></div>
+  </div>
+</div>
+
 <script>
 const KEY='nutrition_final_clean_v2';
 const oldState=JSON.parse(localStorage.getItem('nutrition_final_clean_v1')||'{}');
@@ -382,7 +388,7 @@ const BARCODE_DB={
 '7290000000042':{foodId:'cottage',amount:250,unit:'cup',meal:'breakfast'},
 '7290000000059':{foodId:'rice',amount:150,unit:'cup',meal:'lunch'}
 };
-let barcodeStream=null,barcodeTimer=null;
+let barcodeStream=null,barcodeTimer=null,barcodeLookupBusy=false,lastBarcodeLookup='';
 function escapeHtml(str){return String(str??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 function svgFoodData(label,emoji){const txt=encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101b2e"/><stop offset="1" stop-color="#07101d"/></linearGradient></defs><rect width="240" height="240" rx="34" fill="url(#g)"/><circle cx="120" cy="96" r="54" fill="rgba(83,214,159,.13)"/><text x="120" y="116" font-size="62" text-anchor="middle">${emoji||'🍽️'}</text><text x="120" y="184" font-size="22" fill="#f4f8ff" font-family="Arial" font-weight="700" text-anchor="middle">${label||'מזון'}</text></svg>`);return 'data:image/svg+xml;charset=utf-8,'+txt}
 function foodImage(f){if(!f)return svgFoodData('מזון','🍽️');return f.image||FOOD_IMAGES[f.id]||svgFoodData(f.he,FOOD_EMOJI[f.id]||'🍽️')}
@@ -411,6 +417,20 @@ function saveCustomFood(){const name=document.getElementById('customName').value
 
 function addFood(id,i){const f=food(id);const a=+document.getElementById('amount_'+i).value||0;const u=document.getElementById('unit_'+i).value;const meal=document.getElementById('meal_'+i).value;if(!a)return;addFoodDirect(id,a,u,meal)}
 function addFoodDirect(id,amount=100,unit='gram',meal='snack'){const f=food(id);if(!f)return;const v=calc(f,+amount||100,unit);const items=getSelectedItems();items.push({id:Date.now().toString(36),foodId:id,meal,he:f.he,amount:+amount||100,unit,image:foodImage(f),...v});setSelectedItems(items);save();renderAll();try{navigator.vibrate&&navigator.vibrate(35)}catch(e){}}
+function openQuickFoodModal(id,amount=100,unit='gram',meal='snack',source=''){
+const f=food(id);if(!f)return;
+const modal=document.getElementById('quickFoodModal');const body=document.getElementById('quickFoodBody');const title=document.getElementById('quickFoodTitle');
+if(!modal||!body)return;
+const units=Object.keys(f.units||{gram:1});if(!units.includes(unit))unit=units[0]||'gram';
+if(title)title.textContent='הוספת '+f.he;
+const v=calc(f,amount,unit);
+body.innerHTML=`<div class="result-card"><div class="result-head"><img class="food-thumb" src="${foodImage(f)}" alt="${escapeHtml(f.he)}"><div><div class="result-name">${escapeHtml(f.he)}</div><div class="result-sub">בחר כמות וארוחה לפני ההוספה ליומן</div></div></div><div class="food-add-grid"><div class="food-add-box"><label>כמות</label><input id="quickFoodAmount" type="number" value="${amount}" oninput="updateQuickFoodPreview('${id}')"></div><div class="food-add-box"><label>יחידה</label><select id="quickFoodUnit" onchange="updateQuickFoodPreview('${id}')">${units.map(u=>`<option value="${u}" ${u===unit?'selected':''}>${unitLabel(u)}</option>`).join('')}</select></div><div class="food-add-box"><label>ארוחה</label><select id="quickFoodMeal"><option value="breakfast" ${meal==='breakfast'?'selected':''}>ארוחת בוקר</option><option value="lunch" ${meal==='lunch'?'selected':''}>ארוחת צהריים</option><option value="dinner" ${meal==='dinner'?'selected':''}>ארוחת ערב</option><option value="snack" ${meal==='snack'?'selected':''}>ביניים</option></select></div><div class="food-add-box"><label>ערכים לכמות שנבחרה</label><div class="food-add-values" id="quickFoodPreview"><div><span>🔥 קלוריות</span><b>${Math.round(v.calories)}</b></div><div><span>💪 חלבון</span><b>${Math.round(v.protein)}</b></div><div><span>🌿 פחמ׳</span><b>${Math.round(v.carbs)}</b></div><div><span>💧 שומן</span><b>${Math.round(v.fat)}</b></div></div></div></div><button class="add-btn" onclick="confirmQuickFood('${id}','${source}')">הוסף ליומן</button></div>`;
+modal.classList.add('show');
+}
+function updateQuickFoodPreview(id){const f=food(id);if(!f)return;const amount=+document.getElementById('quickFoodAmount')?.value||0;const unit=document.getElementById('quickFoodUnit')?.value||'gram';const v=calc(f,amount,unit);const el=document.getElementById('quickFoodPreview');if(el)el.innerHTML=`<div><span>🔥 קלוריות</span><b>${Math.round(v.calories)}</b></div><div><span>💪 חלבון</span><b>${Math.round(v.protein)}</b></div><div><span>🌿 פחמ׳</span><b>${Math.round(v.carbs)}</b></div><div><span>💧 שומן</span><b>${Math.round(v.fat)}</b></div>`}
+function confirmQuickFood(id,source=''){const amount=+document.getElementById('quickFoodAmount')?.value||0;const unit=document.getElementById('quickFoodUnit')?.value||'gram';const meal=document.getElementById('quickFoodMeal')?.value||'snack';if(!amount)return alert('יש להזין כמות');addFoodDirect(id,amount,unit,meal);closeQuickFoodModal();if(source==='barcode')closeBarcodeScanner()}
+function closeQuickFoodModal(){document.getElementById('quickFoodModal')?.classList.remove('show')}
+
 function removeFood(id){setSelectedItems(getSelectedItems().filter(x=>x.id!==id));save();renderAll()}
 
 function mealItems(m){return getSelectedItems().filter(i=>i.meal===m)}
@@ -435,16 +455,92 @@ function exportData(){const data={};for(let i=0;i<localStorage.length;i++){const
 function importData(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);Object.keys(data).forEach(k=>localStorage.setItem(k,data[k]));alert('הנתונים שוחזרו!');location.reload()}catch{alert('קובץ לא תקין')}};reader.readAsText(file)}
 
 
-function renderSmartRecommendations(){const el=document.getElementById('smartRecommendations');if(!el)return;const sum=totals(getSelectedItems());const missingProtein=Math.max(0,GOAL.protein-sum.protein);const missingCarbs=Math.max(0,GOAL.carbs-sum.carbs);const missingFat=Math.max(0,GOAL.fat-sum.fat);let ids=[];if(missingProtein>=25)ids=['chicken_breast','protein_yogurt','protein_drink'];else if(missingProtein>=12)ids=['egg','cottage','protein_bar'];else if(missingCarbs>=35)ids=['rice','banana','oats'];else if(missingFat>=15)ids=['avocado','tahini','peanut_butter'];else ids=['protein_yogurt','banana','egg'];el.innerHTML=ids.map(id=>{const f=food(id);const defaultAmount=f.units.piece?1:(f.units.cup?1:100);const unit=f.units.piece?'piece':(f.units.cup?'cup':'gram');const v=calc(f,defaultAmount,unit);return `<div class="smart-food-card"><img src="${foodImage(f)}" alt="${escapeHtml(f.he)}"><div class="smart-food-body"><div class="smart-food-title">${escapeHtml(f.he)}</div><div class="smart-food-meta">${Math.round(v.calories)} קל׳ • ${Math.round(v.protein)} חלבון</div><button class="mini-add" onclick="addFoodDirect('${id}',${defaultAmount},'${unit}','snack')">הוסף</button></div></div>`}).join('')}
+function renderSmartRecommendations(){const el=document.getElementById('smartRecommendations');if(!el)return;const sum=totals(getSelectedItems());const missingProtein=Math.max(0,GOAL.protein-sum.protein);const missingCarbs=Math.max(0,GOAL.carbs-sum.carbs);const missingFat=Math.max(0,GOAL.fat-sum.fat);let ids=[];if(missingProtein>=25)ids=['chicken_breast','protein_yogurt','protein_drink'];else if(missingProtein>=12)ids=['egg','cottage','protein_bar'];else if(missingCarbs>=35)ids=['rice','banana','oats'];else if(missingFat>=15)ids=['avocado','tahini','peanut_butter'];else ids=['protein_yogurt','banana','egg'];el.innerHTML=ids.map(id=>{const f=food(id);const defaultAmount=f.units.piece?1:(f.units.cup?1:100);const unit=f.units.piece?'piece':(f.units.cup?'cup':'gram');const v=calc(f,defaultAmount,unit);return `<div class="smart-food-card"><img src="${foodImage(f)}" alt="${escapeHtml(f.he)}"><div class="smart-food-body"><div class="smart-food-title">${escapeHtml(f.he)}</div><div class="smart-food-meta">${Math.round(v.calories)} קל׳ • ${Math.round(v.protein)} חלבון</div><button class="mini-add" onclick="openQuickFoodModal('${id}',${defaultAmount},'${unit}','snack')">הוסף</button></div></div>`}).join('')}
 function scrollToSmartRecs(){document.getElementById('smartCard')?.scrollIntoView({behavior:'smooth',block:'start'})}
 function openQuickAdd(){document.getElementById('quickAddModal').classList.add('show');renderQuickAdd('popular')}
 function closeQuickAdd(){document.getElementById('quickAddModal').classList.remove('show')}
-function renderQuickAdd(mode){const q=document.getElementById('quickAddSearch')?.value||'';let ids={popular:['egg','chicken_breast','rice','banana','protein_yogurt','protein_bar','cottage','oats'],protein:['chicken_breast','protein_yogurt','protein_drink','egg','tuna','cottage','skyr','protein_powder'],carbs:['rice','banana','oats'],fat:['avocado','tahini','peanut_butter']}[mode]||[];let list=mode==='search'?searchFoods(q):ids.map(id=>food(id)).filter(Boolean);document.getElementById('quickAddList').innerHTML=list.map(f=>{const unit=f.units.piece?'piece':(f.units.cup?'cup':'gram');const amount=unit==='gram'?100:1;const v=calc(f,amount,unit);return `<div class="quick-row"><img src="${foodImage(f)}" alt=""><div><b>${escapeHtml(f.he)}</b><span>${Math.round(v.calories)} קל׳ • ${Math.round(v.protein)} חלבון</span></div><button onclick="addFoodDirect('${f.id}',${amount},'${unit}','snack')">＋</button></div>`}).join('')||'<div class="empty">לא נמצאו מזונות</div>'}
+function renderQuickAdd(mode){const q=document.getElementById('quickAddSearch')?.value||'';let ids={popular:['egg','chicken_breast','rice','banana','protein_yogurt','protein_bar','cottage','oats'],protein:['chicken_breast','protein_yogurt','protein_drink','egg','tuna','cottage','skyr','protein_powder'],carbs:['rice','banana','oats'],fat:['avocado','tahini','peanut_butter']}[mode]||[];let list=mode==='search'?searchFoods(q):ids.map(id=>food(id)).filter(Boolean);document.getElementById('quickAddList').innerHTML=list.map(f=>{const unit=f.units.piece?'piece':(f.units.cup?'cup':'gram');const amount=unit==='gram'?100:1;const v=calc(f,amount,unit);return `<div class="quick-row"><img src="${foodImage(f)}" alt=""><div><b>${escapeHtml(f.he)}</b><span>${Math.round(v.calories)} קל׳ • ${Math.round(v.protein)} חלבון</span></div><button onclick="openQuickFoodModal('${f.id}',${amount},'${unit}','snack')">＋</button></div>`}).join('')||'<div class="empty">לא נמצאו מזונות</div>'}
 function repeatYesterdayMeal(){const d=new Date(state.currentDate+'T12:00:00');d.setDate(d.getDate()-1);const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');const prev=state.itemsByDate[key]||[];if(!prev.length)return alert('לא נמצאה ארוחה מאתמול');const items=getSelectedItems();prev.forEach(x=>items.push({...x,id:Date.now().toString(36)+Math.random().toString(36).slice(2,5)}));setSelectedItems(items);save();renderAll();alert('הארוחות מאתמול נוספו להיום')}
 async function openBarcodeScanner(){document.getElementById('barcodeModal').classList.add('show');document.getElementById('barcodeResult').innerHTML='';if(!('BarcodeDetector' in window)){document.getElementById('barcodeResult').innerHTML='<div class="result-card"><div class="result-name">הדפדפן לא תומך בסריקה ישירה</div><div class="result-sub">הזן ברקוד ידנית למטה, או פתח בכרום/אנדרואיד.</div></div>';return}try{barcodeStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const video=document.getElementById('barcodeVideo');video.srcObject=barcodeStream;await video.play();const detector=new BarcodeDetector({formats:['ean_13','ean_8','code_128','upc_a','upc_e']});barcodeTimer=setInterval(async()=>{try{const codes=await detector.detect(video);if(codes&&codes[0])lookupBarcode(codes[0].rawValue)}catch(e){}},900)}catch(e){document.getElementById('barcodeResult').innerHTML='<div class="result-card"><div class="result-name">לא ניתן לפתוח מצלמה</div><div class="result-sub">אפשר להזין ברקוד ידנית.</div></div>'}}
 function closeBarcodeScanner(){document.getElementById('barcodeModal').classList.remove('show');if(barcodeTimer)clearInterval(barcodeTimer);barcodeTimer=null;if(barcodeStream){barcodeStream.getTracks().forEach(t=>t.stop());barcodeStream=null}}
 function manualBarcodeLookup(){lookupBarcode(document.getElementById('manualBarcode').value)}
-function lookupBarcode(code){code=String(code||'').trim();if(!code)return;const hit=BARCODE_DB[code];const box=document.getElementById('barcodeResult');if(hit){const f=food(hit.foodId);box.innerHTML=`<div class="result-card"><div class="result-head"><img class="food-thumb" src="${foodImage(f)}"><div><div class="result-name">${escapeHtml(f.he)}</div><div class="result-sub">זוהה ברקוד ${escapeHtml(code)} • ${hit.amount} ${unitLabel(hit.unit)}</div></div></div><button class="add-btn" onclick="addFoodDirect('${hit.foodId}',${hit.amount},'${hit.unit}','${hit.meal}');closeBarcodeScanner()">הוסף ליומן</button></div>`}else{box.innerHTML=`<div class="result-card"><div class="result-name">ברקוד לא נמצא במאגר</div><div class="result-sub">ברקוד ${escapeHtml(code)}. אפשר להוסיף את המוצר ידנית ולשמור אותו לחיפושים הבאים.</div>${customFoodCard('מוצר חדש '+code)}</div>`}}
+async function lookupBarcode(code){
+  code=String(code||'').trim().replace(/\D/g,'');
+  if(!code)return;
+
+  const box=document.getElementById('barcodeResult');
+  if(!box)return;
+
+  if(barcodeLookupBusy && code===lastBarcodeLookup)return;
+  barcodeLookupBusy=true;
+  lastBarcodeLookup=code;
+
+  box.innerHTML=`<div class="result-card"><div class="result-name">מחפש מוצר...</div><div class="result-sub">בודק את הברקוד ${escapeHtml(code)} מול OpenFoodFacts</div></div>`;
+
+  const localHit=BARCODE_DB[code];
+  if(localHit){
+    const f=food(localHit.foodId);
+    box.innerHTML=`<div class="result-card"><div class="result-head"><img class="food-thumb" src="${foodImage(f)}"><div><div class="result-name">${escapeHtml(f.he)}</div><div class="result-sub">זוהה במאגר המקומי • ${escapeHtml(code)} • ${localHit.amount} ${unitLabel(localHit.unit)}</div></div></div><button class="add-btn" onclick="openQuickFoodModal('${localHit.foodId}',${localHit.amount},'${localHit.unit}','${localHit.meal}','barcode')">הוסף ליומן</button></div>`;
+    barcodeLookupBusy=false;
+    return;
+  }
+
+  try{
+    const fields='product_name,product_name_he,generic_name,brands,serving_quantity,image_url,image_front_url,nutriments';
+    const url=`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(code)}.json?fields=${fields}`;
+    const res=await fetch(url);
+    if(!res.ok)throw new Error('network');
+    const data=await res.json();
+
+    if(data.status!==1 || !data.product){
+      box.innerHTML=`<div class="result-card"><div class="result-name">הברקוד לא נמצא ב־OpenFoodFacts</div><div class="result-sub">ברקוד ${escapeHtml(code)}. אפשר להוסיף את המוצר ידנית ולשמור אותו למאגר האישי.</div>${customFoodCard('מוצר חדש '+code)}</div>`;
+      barcodeLookupBusy=false;
+      return;
+    }
+
+    const product=data.product;
+    const n=product.nutriments||{};
+    const productName=(product.product_name_he||product.product_name||product.generic_name||product.brands||('מוצר '+code)).trim();
+
+    const calories=Number(n['energy-kcal_100g'] ?? n['energy-kcal_value'] ?? n['energy-kcal'] ?? 0);
+    const protein=Number(n['proteins_100g'] ?? 0);
+    const carbs=Number(n['carbohydrates_100g'] ?? 0);
+    const fat=Number(n['fat_100g'] ?? 0);
+
+    const servingGrams=Number(product.serving_quantity||0);
+    const newFood={
+      id:'off_'+code,
+      he:productName,
+      aliases:[productName,compact(productName),product.brands||'',code].filter(Boolean),
+      custom:true,
+      barcode:code,
+      source:'OpenFoodFacts',
+      image:product.image_front_url||product.image_url||'',
+      per100:{calories,protein,carbs,fat},
+      units: servingGrams>0 ? {gram:1,piece:servingGrams} : {gram:1,piece:100}
+    };
+
+    const exists=(state.customFoods||[]).find(f=>f.id===newFood.id || f.barcode===code);
+    if(!exists){
+      state.customFoods.push(newFood);
+      save();
+    }else{
+      Object.assign(exists,newFood);
+      save();
+    }
+
+    const defaultUnit=servingGrams>0?'piece':'gram';
+    const defaultAmount=servingGrams>0?1:100;
+    const preview=calc(newFood,defaultAmount,defaultUnit);
+
+    box.innerHTML=`<div class="result-card"><div class="result-head"><img class="food-thumb" src="${foodImage(newFood)}"><div><div class="result-name">${escapeHtml(productName)}</div><div class="result-sub">זוהה דרך OpenFoodFacts • ${escapeHtml(code)}</div></div></div><div class="food-add-values" style="margin-top:10px"><div><span>🔥 קלוריות</span><b>${Math.round(preview.calories)}</b></div><div><span>💪 חלבון</span><b>${Math.round(preview.protein)}</b></div><div><span>🌿 פחמ׳</span><b>${Math.round(preview.carbs)}</b></div><div><span>💧 שומן</span><b>${Math.round(preview.fat)}</b></div></div><button class="add-btn" onclick="openQuickFoodModal('off_${code}',${defaultAmount},'${defaultUnit}','snack','barcode')">בחר כמות וארוחה</button></div>`;
+  }catch(e){
+    box.innerHTML=`<div class="result-card"><div class="result-name">לא הצלחתי להתחבר ל־API</div><div class="result-sub">בדוק חיבור אינטרנט או נסה שוב. אפשר גם להזין את המוצר ידנית.</div>${customFoodCard('מוצר חדש '+code)}</div>`;
+  }
+
+  barcodeLookupBusy=false;
+}
+
 prevDay.onclick=()=>{const d=new Date(state.currentDate+'T12:00:00');d.setDate(d.getDate()-1);state.currentDate=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');save();renderAll()}
 nextDay.onclick=()=>{const d=new Date(state.currentDate+'T12:00:00');d.setDate(d.getDate()+1);state.currentDate=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');save();renderAll()}
 foodSearch.addEventListener('input',e=>renderSearch(searchFoods(e.target.value)))
