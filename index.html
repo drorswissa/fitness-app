@@ -735,10 +735,13 @@
     <div class="spotify-mini-label">Spotify</div>
     <iframe
       class="spotify-bar"
-      id="spotifyBar"
-      src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator&theme=0"
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
-    </iframe>
+      <iframe
+  class="spotify-bar"
+  id="spotifyBar"
+  src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator&theme=0"
+  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+  loading="lazy">
+</iframe>
   </div>
 
   <script>
@@ -1337,22 +1340,31 @@
       render();
     }
 
-    function renderMusic(){
-      document.getElementById('spotifyInput').value = state.spotifyUrl || '';
-      document.getElementById('spotifyBar').src = spotifyEmbedUrl(state.spotifyUrl);
-    }
+  function renderMusic(){
+  const input = document.getElementById('spotifyInput');
+  const iframe = document.getElementById('spotifyBar');
 
-    function spotifyEmbedUrl(url){
-      const fallback =
-        'https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator&theme=0';
+  if (input) input.value = state.spotifyUrl || '';
+  if (iframe) iframe.src = spotifyEmbedUrl(state.spotifyUrl);
+}
 
-      const m = url && url.match(/open\.spotify\.com\/(playlist|album|track)\/([A-Za-z0-9]+)/);
+   function spotifyEmbedUrl(url){
+  const fallback =
+    'https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator&theme=0';
 
-      if (!m) return fallback;
+  if (!url) return fallback;
 
-      return `https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator&theme=0`;
-    }
+  // אם כבר embed — מחזיר כמו שהוא
+  if (url.includes('open.spotify.com/embed/')) {
+    return url.includes('?') ? url : url + '?utm_source=generator&theme=0';
+  }
 
+  const m = url.match(/open\.spotify\.com\/(playlist|album|track)\/([A-Za-z0-9]+)/);
+
+  if (!m) return fallback;
+
+  return `https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator&theme=0`;
+}
     function renderLibrary(){
       const muscles = ['הכל', ...new Set(LIBRARY.map(x => x.muscle))];
       const equipment = ['הכל', ...new Set(LIBRARY.map(x => x.equipment))];
