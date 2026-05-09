@@ -400,6 +400,93 @@
       border-radius: 16px;
     }
 
+    .history-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: var(--panel-3);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 6px;
+      margin-bottom: 12px;
+    }
+
+    .history-tab {
+      border-radius: 14px;
+      padding: 10px 8px;
+      background: transparent;
+      color: var(--muted);
+      border: none;
+      font-weight: 800;
+    }
+
+    .history-tab.active {
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      color: #062117;
+    }
+
+    .progress-controls {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .progress-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .progress-summary .stat-box strong { font-size: 17px; }
+
+    .progress-chart-card {
+      background: var(--panel-3);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .progress-chart-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .progress-chart { width: 100%; height: 150px; display: block; }
+    .progress-table { display: grid; gap: 8px; }
+
+    .progress-table-row {
+      background: var(--panel-3);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .progress-table-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .progress-sets {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .positive { color: #7cf0bd; }
+    .negative { color: #ffb1b1; }
+
+
     .walk-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -614,6 +701,10 @@
 
       <div class="card section hidden" id="historySection">
         <div class="section-title">היסטוריית אימונים</div>
+        <div class="history-tabs">
+          <button class="history-tab active" id="historyListTab" onclick="setHistoryMode('list')">היסטוריה</button>
+          <button class="history-tab" id="historyProgressTab" onclick="setHistoryMode('progress')">התקדמות משקלים</button>
+        </div>
         <div id="historyList"></div>
       </div>
 
@@ -819,7 +910,7 @@
             label: 'אימון משולב',
             exercises: [
               cloneExercise('ex1'), cloneExercise('ex6'), cloneExercise('ex13'),
-              cloneExercise('ex16'), cloneExercise('ex4'), cloneExercise('ex10'),
+              cloneExercise('ex23'), cloneExercise('ex4'), cloneExercise('ex10'),
               cloneExercise('ex25')
             ]
           }
@@ -895,8 +986,10 @@
     }
 
     let state = load();
+    let historyMode = 'list';
+    let selectedProgressExercise = '';
 
-    const PLAN_VERSION = 'exercise-plan-v4-last-sets-and-wed-update';
+    const PLAN_VERSION = 'exercise-plan-v6-sat-deadlift-progress-update';
 
     function selectedDay(){
       return state.days.find(d => d.id === state.selectedDayId) || state.days[0];
@@ -1167,6 +1260,16 @@
 
     function renderHistory(){
       const el = document.getElementById('historyList');
+      const listTab = document.getElementById('historyListTab');
+      const progressTab = document.getElementById('historyProgressTab');
+
+      if (listTab) listTab.classList.toggle('active', historyMode === 'list');
+      if (progressTab) progressTab.classList.toggle('active', historyMode === 'progress');
+
+      if (historyMode === 'progress') {
+        renderProgressHistory(el);
+        return;
+      }
 
       const workouts = state.history.map(h => ({
         id: h.id,
@@ -1206,6 +1309,151 @@
           </div>
         </div>
       `).join('');
+    }
+
+    function setHistoryMode(mode){
+      historyMode = mode;
+      renderHistory();
+    }
+
+    function getProgressEntries(){
+      return state.history
+        .filter(h => Array.isArray(h.exercises) && h.exercises.length)
+        .sort((a, b) => getItemTimeValue(a.date) - getItemTimeValue(b.date));
+    }
+
+    function getExerciseProgressNames(){
+      const names = [];
+      getProgressEntries().forEach(h => {
+        h.exercises.forEach(ex => {
+          if (ex.type !== 'cardio' && Array.isArray(ex.sets) && !names.includes(ex.name)) names.push(ex.name);
+        });
+      });
+      return names;
+    }
+
+    function numberValue(value){
+      const clean = String(value ?? '').replace(',', '.').replace(/[^0-9.\-]/g, '');
+      const n = Number(clean);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function getExerciseProgressData(name){
+      return getProgressEntries().map(h => {
+        const ex = h.exercises.find(item => item.name === name);
+        if (!ex) return null;
+        const doneSets = (ex.sets || []).filter(s => s.done || numberValue(s.kg) > 0 || numberValue(s.reps) > 0);
+        const maxKg = doneSets.reduce((m, s) => Math.max(m, numberValue(s.kg)), 0);
+        const volume = doneSets.reduce((sum, s) => sum + (numberValue(s.kg) * numberValue(s.reps)), 0);
+        return {
+          date: h.date,
+          day: h.day,
+          maxKg,
+          volume: Math.round(volume),
+          sets: doneSets.map(s => ({ index: s.index, reps: s.reps, kg: s.kg, done: s.done }))
+        };
+      }).filter(Boolean).filter(x => x.maxKg > 0 || x.volume > 0);
+    }
+
+    function renderProgressHistory(el){
+      const names = getExerciseProgressNames();
+
+      if (!names.length) {
+        el.innerHTML = `
+          <div class="empty">
+            מכאן תופיע התקדמות המשקלים שלך אחרי שתסיים אימון חדש.<br>
+            הגרסה הזו שומרת מעכשיו פירוט משקלים וחזרות לכל סט.
+          </div>
+        `;
+        return;
+      }
+
+      if (!selectedProgressExercise || !names.includes(selectedProgressExercise)) {
+        selectedProgressExercise = names[0];
+      }
+
+      const data = getExerciseProgressData(selectedProgressExercise);
+      const last = data[data.length - 1];
+      const prev = data[data.length - 2];
+      const first = data[0];
+      const changePrev = last && prev ? last.maxKg - prev.maxKg : 0;
+      const changeFirst = last && first ? last.maxKg - first.maxKg : 0;
+      const best = data.reduce((m, x) => Math.max(m, x.maxKg), 0);
+
+      el.innerHTML = `
+        <div class="progress-controls">
+          <select id="progressExerciseSelect" onchange="selectedProgressExercise=this.value;renderHistory();">
+            ${names.map(n => `<option value="${escapeHtml(n)}" ${n===selectedProgressExercise?'selected':''}>${escapeHtml(n)}</option>`).join('')}
+          </select>
+        </div>
+
+        <div class="progress-summary">
+          <div class="stat-box"><span>משקל אחרון</span><strong>${last ? last.maxKg : 0}</strong></div>
+          <div class="stat-box"><span>מהקודם</span><strong class="${changePrev>=0?'positive':'negative'}">${changePrev>=0?'+':''}${changePrev}</strong></div>
+          <div class="stat-box"><span>שיא</span><strong>${best}</strong></div>
+        </div>
+
+        <div class="progress-chart-card">
+          <div class="progress-chart-title">מקסימום ק״ג לפי אימון</div>
+          ${buildProgressSvg(data)}
+        </div>
+
+        <div class="progress-table">
+          ${data.slice(-5).reverse().map(item => `
+            <div class="progress-table-row">
+              <div class="progress-table-title">
+                <span>${escapeHtml(item.date)}</span>
+                <span>${item.maxKg} ק״ג • נפח ${item.volume}</span>
+              </div>
+              <div class="progress-sets">
+                ${(item.sets || []).map(s => `סט ${s.index}: ${escapeHtml(s.kg)} ק״ג × ${escapeHtml(s.reps)} חזרות`).join(' • ')}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function buildProgressSvg(data){
+      if (!data || data.length === 0) return '<div class="empty">אין מספיק נתונים לגרף</div>';
+
+      const width = 330;
+      const height = 150;
+      const pad = 24;
+      const max = Math.max(...data.map(x => x.maxKg), 1);
+      const min = Math.min(...data.map(x => x.maxKg), 0);
+      const range = Math.max(1, max - min);
+      const points = data.map((x, i) => {
+        const px = data.length === 1 ? width / 2 : pad + (i * (width - pad * 2) / (data.length - 1));
+        const py = height - pad - ((x.maxKg - min) * (height - pad * 2) / range);
+        return { px, py, value: x.maxKg, label: x.date };
+      });
+
+      const polyline = points.map(p => `${p.px},${p.py}`).join(' ');
+      const fillLine = `${pad},${height-pad} ${polyline} ${width-pad},${height-pad}`;
+
+      return `
+        <svg class="progress-chart" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="גרף התקדמות">
+          <defs>
+            <linearGradient id="progressFillGradient" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="rgba(43,211,160,.38)" />
+              <stop offset="100%" stop-color="rgba(43,211,160,0)" />
+            </linearGradient>
+          </defs>
+          <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${height-pad}" stroke="rgba(255,255,255,.10)" stroke-width="1" />
+          <line x1="${pad}" y1="${height-pad}" x2="${width-pad}" y2="${height-pad}" stroke="rgba(255,255,255,.10)" stroke-width="1" />
+          <polygon points="${fillLine}" fill="url(#progressFillGradient)" />
+          <polyline points="${polyline}" fill="none" stroke="rgba(43,211,160,.95)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+          ${points.map(p => `
+            <circle cx="${p.px}" cy="${p.py}" r="4" fill="#2bd3a0" stroke="#071018" stroke-width="2" vector-effect="non-scaling-stroke" />
+            <text x="${p.px}" y="${Math.max(14, p.py - 9)}" fill="#f5f7fb" font-size="11" text-anchor="middle">${p.value}</text>
+          `).join('')}
+        </svg>
+        <div style="display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:4px;">
+          <span>${escapeHtml(data[0].date)}</span>
+          <span>${escapeHtml(data[data.length - 1].date)}</span>
+        </div>
+      `;
     }
 
     function deleteHistoryItem(source, id){
@@ -1423,13 +1671,28 @@
         }
       });
 
+      const exerciseSnapshot = day.exercises.map(ex => ({
+        name: ex.name,
+        type: ex.type,
+        muscle: ex.muscle,
+        equipment: ex.equipment,
+        done: ex.done,
+        sets: Array.isArray(ex.sets) ? ex.sets.map(s => ({
+          index: s.index,
+          reps: s.reps,
+          kg: s.kg,
+          done: s.done
+        })) : []
+      }));
+
       state.history.push({
         id: uid(),
         day: `${day.name} - ${day.label}`,
         date: new Date().toLocaleDateString('he-IL'),
         completedExercises,
         duration: state.timers.workoutSeconds,
-        calories
+        calories,
+        exercises: exerciseSnapshot
       });
 
       day.exercises.forEach(ex => {
@@ -1582,6 +1845,7 @@
     window.toggleCardioDone = toggleCardioDone;
     window.addExercise = addExercise;
     window.deleteHistoryItem = deleteHistoryItem;
+    window.setHistoryMode = setHistoryMode;
 
     showSection('workout');
     render();
