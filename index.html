@@ -660,14 +660,14 @@
     .library-sheet-modern{max-height:82vh;bottom:12px;border-color:rgba(32,223,176,.32);background:linear-gradient(180deg,#0e1b2b,#09131f);padding:16px}
     .library-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
     .library-title-row .section-title{margin:0;font-size:22px}.library-close{width:40px;height:40px;border-radius:50%;padding:0}
-    .library-filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}.library-filters #searchInput{grid-column:1/-1}
+    .library-filter-labels{display:grid;grid-template-columns:1fr 1fr;gap:8px;color:var(--muted);font-size:12px;font-weight:800;margin:8px 2px 5px}.library-filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}.library-filters select{min-height:46px;font-weight:800}.library-actions{display:grid;grid-template-columns:1fr 1.15fr;gap:6px;margin-top:auto}.library-video{padding:10px 7px!important;font-size:12px!important}
     .library-chips{display:flex;gap:7px;overflow-x:auto;padding:10px 0 12px;scrollbar-width:none}.library-chips::-webkit-scrollbar{display:none}
     .library-chip{white-space:nowrap;padding:8px 13px;border-radius:999px;background:#132238;color:var(--muted);border:1px solid var(--line);font-size:12px}
     .library-chip.active{background:rgba(32,223,176,.17);color:#8ff3d4;border-color:#20dfb0}
     #libraryList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
     .library-item{display:flex;flex-direction:column;align-items:stretch;margin:0;padding:8px;border-radius:18px;overflow:hidden}
     .library-item img{width:100%;height:112px;border-radius:13px}.library-item-info{padding:8px 4px 5px}.library-item .primary{width:100%;margin-top:auto}
-    @media(max-width:430px){.workout-tools{grid-template-columns:1fr 1fr}.library-sheet-modern{max-height:88vh}.library-filters{grid-template-columns:1fr}#libraryList{grid-template-columns:repeat(2,minmax(0,1fr))}.library-item img{height:95px}}
+    @media(max-width:430px){.workout-tools{grid-template-columns:1fr 1fr}.library-sheet-modern{max-height:88vh}.library-filter-labels,.library-filters{grid-template-columns:1fr 1fr}#libraryList{grid-template-columns:repeat(2,minmax(0,1fr))}.library-item img{height:95px}}
   </style>
 </head>
 
@@ -758,8 +758,9 @@
   <div class="sheet-backdrop" id="sheetBackdrop"></div>
 
   <div class="sheet library-sheet-modern" id="librarySheet">
-    <div class="library-title-row"><div><div class="section-title">📚 מחסן תרגילים</div><div class="exercise-sub">בחר תרגיל והוסף לאימון הנוכחי</div></div><button class="secondary library-close" id="closeLibraryBtn">✕</button></div>
-    <div class="library-filters"><input id="searchInput" placeholder="🔎 חפש תרגיל..." /><select id="muscleFilter"></select><select id="equipmentFilter"></select></div>
+    <div class="library-title-row"><div><div class="section-title">📚 מחסן תרגילים</div><div class="exercise-sub">בחר שריר ואמצעי אימון. התמונה מוצגת לפני ההוספה.</div></div><button class="secondary library-close" id="closeLibraryBtn">✕</button></div>
+    <div class="library-filter-labels"><label>1. קבוצת שריר</label><label>2. אמצעי אימון</label></div>
+    <div class="library-filters"><select id="muscleFilter"></select><select id="equipmentFilter"></select></div>
     <div class="library-chips" id="libraryChips"></div>
     <div id="libraryList"></div>
   </div>
@@ -819,40 +820,96 @@
     let restTimerInterval = null;
 
     const LIBRARY = [
-      { id:'walk1', type:'cardio', name:'הליכה / אירובי', muscle:'אירובי', equipment:'הליכון / חוץ', reps:'30', kg:'0', distance:'3', incline:'0', speed:'5.5', image:'https://cdn-icons-png.flaticon.com/512/384/384276.png', video:'https://www.youtube.com/results?search_query=walking+treadmill+workout' },
-
-      { id:'ex1', name:'Dumbbell Bench Press', muscle:'חזה', equipment:'משקולות', reps:'8', kg:'20', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Bench-Press.gif', video:'https://www.youtube.com/results?search_query=dumbbell+bench+press' },
-      { id:'ex2', name:'Machine Chest Press', muscle:'חזה', equipment:'מכונה', reps:'10', kg:'25', image:'https://fitnessprogramer.com/wp-content/uploads/2022/11/Lever-Chest-Press.gif', video:'https://www.youtube.com/results?search_query=machine+chest+press' },
-      { id:'ex3', name:'Cable Fly', muscle:'חזה', equipment:'כבלים', reps:'12', kg:'15', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Crossover.gif', video:'https://www.youtube.com/results?search_query=cable+fly' },
-      { id:'ex4', name:'Dumbbell Curl', muscle:'יד קדמית', equipment:'משקולות', reps:'12', kg:'10', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Curl.gif', video:'https://www.youtube.com/results?search_query=dumbbell+biceps+curl' },
-      { id:'ex5', name:'Hammer Curl', muscle:'יד קדמית', equipment:'משקולות', reps:'12', kg:'10', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Hammer-Curl.gif', video:'https://www.youtube.com/results?search_query=hammer+curl' },
-
-      { id:'ex6', name:'Lat Pulldown', muscle:'גב', equipment:'מכונה', reps:'8', kg:'30', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Lat-Pulldown.gif', video:'https://www.youtube.com/results?search_query=lat+pulldown' },
-      { id:'ex7', name:'Seated Cable Row', muscle:'גב', equipment:'כבלים', reps:'8', kg:'25', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Seated-Cable-Row.gif', video:'https://www.youtube.com/results?search_query=seated+cable+row' },
-      { id:'ex8', name:'One Arm Dumbbell Row', muscle:'גב', equipment:'משקולות', reps:'10', kg:'18', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/One-Arm-Dumbbell-Row.gif', video:'https://www.youtube.com/results?search_query=one+arm+dumbbell+row' },
-      { id:'ex9', name:'Straight Arm Pulldown', muscle:'גב', equipment:'כבלים', reps:'12', kg:'15', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Straight-Arm-Pulldown.gif', video:'https://www.youtube.com/results?search_query=straight+arm+pulldown' },
-
-      { id:'ex10', name:'Rope Pushdown', muscle:'יד אחורית', equipment:'כבלים', reps:'12', kg:'12', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Rope-Pushdown.gif', video:'https://www.youtube.com/results?search_query=rope+triceps+pushdown' },
-      { id:'ex11', name:'Overhead Extension', muscle:'יד אחורית', equipment:'כבלים', reps:'10', kg:'10', image:'https://fitnessprogramer.com/wp-content/uploads/2021/06/Cable-Overhead-Triceps-Extension.gif', video:'https://www.youtube.com/results?search_query=overhead+triceps+extension' },
-      { id:'ex12', name:'Assisted Dips', muscle:'יד אחורית', equipment:'מכונה', reps:'10', kg:'סיוע', image:'https://fitnessprogramer.com/wp-content/uploads/2022/06/Assisted-Triceps-Dips.gif', video:'https://www.youtube.com/results?search_query=assisted+dips' },
-
-      { id:'ex13', name:'Dumbbell Shoulder Press', muscle:'כתפיים', equipment:'משקולות', reps:'10', kg:'14', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif', video:'https://www.youtube.com/results?search_query=dumbbell+shoulder+press' },
-      { id:'ex14', name:'Lateral Raise', muscle:'כתפיים', equipment:'משקולות', reps:'12', kg:'8', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif', video:'https://www.youtube.com/results?search_query=lateral+raise' },
-      { id:'ex15', name:'Face Pull', muscle:'כתפיים', equipment:'כבלים', reps:'12', kg:'12', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Face-Pull.gif', video:'https://www.youtube.com/results?search_query=face+pull' },
-
-      { id:'ex16', name:'Leg Press', muscle:'רגליים', equipment:'מכונה', reps:'12', kg:'80', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Leg-Press.gif', video:'https://www.youtube.com/results?search_query=leg+press' },
-      { id:'ex17', name:'Leg Curl', muscle:'רגליים', equipment:'מכונה', reps:'12', kg:'30', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Lying-Leg-Curl.gif', video:'https://www.youtube.com/results?search_query=leg+curl' },
-      { id:'ex18', name:'Goblet Squat', muscle:'רגליים', equipment:'משקולות', reps:'10', kg:'18', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Goblet-Squat.gif', video:'https://www.youtube.com/results?search_query=goblet+squat' },
-
-      { id:'ex19', name:'Incline Dumbbell Curl', muscle:'יד קדמית', equipment:'משקולות', reps:'10', kg:'10', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Dumbbell-Curl.gif', video:'https://www.youtube.com/results?search_query=incline+dumbbell+curl' },
-      { id:'ex20', name:'Reverse Grip Lat Pulldown', muscle:'גב', equipment:'מכונה', reps:'10', kg:'30', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Reverse-Grip-Lat-Pulldown.gif', video:'https://www.youtube.com/results?search_query=reverse+grip+lat+pulldown' },
-      { id:'ex21', name:'Arnold Press', muscle:'כתפיים', equipment:'משקולות', reps:'10', kg:'12', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Arnold-Press.gif', video:'https://www.youtube.com/results?search_query=arnold+press' },
-      { id:'ex22', name:'Dumbbell Squat', muscle:'רגליים', equipment:'משקולות', reps:'10', kg:'20', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Squat.gif', video:'https://www.youtube.com/results?search_query=dumbbell+squat' },
-      { id:'ex23', name:'Dumbbell Deadlift', muscle:'רגליים', equipment:'משקולות', reps:'10', kg:'24', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Deadlift.gif', video:'https://www.youtube.com/results?search_query=dumbbell+deadlift' },
-      { id:'ex24', name:'Cable Lateral Raise', muscle:'כתפיים', equipment:'כבלים', reps:'12', kg:'8', image:'https://fitnessprogramer.com/wp-content/uploads/2021/09/Cable-Lateral-Raise.gif', video:'https://www.youtube.com/results?search_query=cable+lateral+raise' },
-      { id:'ex25', name:'Overhead Dumbbell Triceps Extension', muscle:'יד אחורית', equipment:'משקולות', reps:'10', kg:'12', image:'https://fitnessprogramer.com/wp-content/uploads/2021/04/Dumbbell-Triceps-Extension.gif', video:'https://www.youtube.com/results?search_query=overhead+dumbbell+triceps+extension' },
-
-      { id:'ex26', name:'Machine Row', muscle:'גב', equipment:'מכונה', reps:'10', kg:'30', image:'https://fitnessprogramer.com/wp-content/uploads/2021/02/Seated-Cable-Row.gif', video:'https://www.youtube.com/results?search_query=machine+row+exercise' }
+      { id:'lib1', name:"לחיצת חזה עם משקולות", muscle:"חזה", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Bench-Press.gif", video:"https://www.youtube.com/results?search_query=dumbbell+bench+press" },
+      { id:'lib2', name:"לחיצת חזה בשיפוע חיובי", muscle:"חזה", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Dumbbell-Press.gif", video:"https://www.youtube.com/results?search_query=incline+dumbbell+press" },
+      { id:'lib3', name:"פרפר עם משקולות", muscle:"חזה", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Fly.gif", video:"https://www.youtube.com/results?search_query=dumbbell+fly" },
+      { id:'lib4', name:"לחיצת חזה צמודה", muscle:"חזה", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Squeeze-Press.gif", video:"https://www.youtube.com/results?search_query=dumbbell+squeeze+press" },
+      { id:'lib5', name:"פולאובר עם משקולת", muscle:"חזה", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Pullover.gif", video:"https://www.youtube.com/results?search_query=dumbbell+pullover" },
+      { id:'lib6', name:"פרפר בכבלים", muscle:"חזה", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Crossover.gif", video:"https://www.youtube.com/results?search_query=cable+crossover+chest" },
+      { id:'lib7', name:"פרפר בכבלים מלמטה למעלה", muscle:"חזה", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Low-Cable-Crossover.gif", video:"https://www.youtube.com/results?search_query=low+to+high+cable+fly" },
+      { id:'lib8', name:"פרפר בכבלים מלמעלה למטה", muscle:"חזה", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/High-Cable-Crossover.gif", video:"https://www.youtube.com/results?search_query=high+to+low+cable+fly" },
+      { id:'lib9', name:"לחיצת חזה בכבלים", muscle:"חזה", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Chest-Press.gif", video:"https://www.youtube.com/results?search_query=cable+chest+press" },
+      { id:'lib10', name:"פרפר ביד אחת בכבל", muscle:"חזה", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/One-Arm-Cable-Fly.gif", video:"https://www.youtube.com/results?search_query=single+arm+cable+fly+chest" },
+      { id:'lib11', name:"לחיצת חזה במכונה", muscle:"חזה", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2022/11/Lever-Chest-Press.gif", video:"https://www.youtube.com/results?search_query=machine+chest+press" },
+      { id:'lib12', name:"לחיצת חזה בשיפוע במכונה", muscle:"חזה", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Chest-Press-Machine.gif", video:"https://www.youtube.com/results?search_query=incline+chest+press+machine" },
+      { id:'lib13', name:"מכונת פרפר", muscle:"חזה", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Pec-Deck-Fly.gif", video:"https://www.youtube.com/results?search_query=pec+deck+fly" },
+      { id:'lib14', name:"לחיצת חזה בסמית", muscle:"חזה", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Smith-Machine-Bench-Press.gif", video:"https://www.youtube.com/results?search_query=smith+machine+bench+press" },
+      { id:'lib15', name:"לחיצת חזה בדיקליין במכונה", muscle:"חזה", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Decline-Chest-Press-Machine.gif", video:"https://www.youtube.com/results?search_query=decline+chest+press+machine" },
+      { id:'lib16', name:"חתירה ביד אחת עם משקולת", muscle:"גב", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/One-Arm-Dumbbell-Row.gif", video:"https://www.youtube.com/results?search_query=one+arm+dumbbell+row" },
+      { id:'lib17', name:"חתירה כפופה עם משקולות", muscle:"גב", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Row.gif", video:"https://www.youtube.com/results?search_query=bent+over+dumbbell+row" },
+      { id:'lib18', name:"חתירה עם חזה נתמך", muscle:"גב", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Chest-Supported-Dumbbell-Row.gif", video:"https://www.youtube.com/results?search_query=chest+supported+dumbbell+row" },
+      { id:'lib19', name:"פולאובר עם משקולת לגב", muscle:"גב", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Pullover.gif", video:"https://www.youtube.com/results?search_query=dumbbell+pullover+back" },
+      { id:'lib20', name:"חתירת רנגייד", muscle:"גב", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Renegade-Row.gif", video:"https://www.youtube.com/results?search_query=renegade+row" },
+      { id:'lib21', name:"חתירה בכבל בישיבה", muscle:"גב", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Seated-Cable-Row.gif", video:"https://www.youtube.com/results?search_query=seated+cable+row" },
+      { id:'lib22', name:"משיכת ידיים ישרות בכבל", muscle:"גב", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Straight-Arm-Pulldown.gif", video:"https://www.youtube.com/results?search_query=straight+arm+pulldown" },
+      { id:'lib23', name:"חתירה ביד אחת בכבל", muscle:"גב", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/One-Arm-Cable-Row.gif", video:"https://www.youtube.com/results?search_query=single+arm+cable+row" },
+      { id:'lib24', name:"חתירה גבוהה בכבל", muscle:"גב", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/High-Cable-Row.gif", video:"https://www.youtube.com/results?search_query=high+cable+row" },
+      { id:'lib25', name:"פולאובר בכבל", muscle:"גב", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Pullover.gif", video:"https://www.youtube.com/results?search_query=cable+pullover" },
+      { id:'lib26', name:"משיכה עליונה במכונה", muscle:"גב", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Lat-Pulldown.gif", video:"https://www.youtube.com/results?search_query=lat+pulldown" },
+      { id:'lib27', name:"חתירה במכונה", muscle:"גב", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Seated-Row-Machine.gif", video:"https://www.youtube.com/results?search_query=machine+row" },
+      { id:'lib28', name:"חתירה עם חזה נתמך במכונה", muscle:"גב", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Chest-Supported-Row.gif", video:"https://www.youtube.com/results?search_query=chest+supported+machine+row" },
+      { id:'lib29', name:"משיכה עליונה באחיזה הפוכה", muscle:"גב", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Reverse-Grip-Lat-Pulldown.gif", video:"https://www.youtube.com/results?search_query=reverse+grip+lat+pulldown" },
+      { id:'lib30', name:"מתח בסיוע מכונה", muscle:"גב", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Assisted-Pull-up.gif", video:"https://www.youtube.com/results?search_query=assisted+pull+up+machine" },
+      { id:'lib31', name:"לחיצת כתפיים עם משקולות", muscle:"כתפיים", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif", video:"https://www.youtube.com/results?search_query=dumbbell+shoulder+press" },
+      { id:'lib32', name:"לחיצת ארנולד", muscle:"כתפיים", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Arnold-Press.gif", video:"https://www.youtube.com/results?search_query=arnold+press" },
+      { id:'lib33', name:"הרחקת כתפיים לצדדים", muscle:"כתפיים", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif", video:"https://www.youtube.com/results?search_query=dumbbell+lateral+raise" },
+      { id:'lib34', name:"הרמת משקולות לפנים", muscle:"כתפיים", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Front-Raise.gif", video:"https://www.youtube.com/results?search_query=dumbbell+front+raise" },
+      { id:'lib35', name:"פרפר הפוך עם משקולות", muscle:"כתפיים", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Rear-Delt-Fly.gif", video:"https://www.youtube.com/results?search_query=dumbbell+rear+delt+fly" },
+      { id:'lib36', name:"הרחקת כתף בכבל", muscle:"כתפיים", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/09/Cable-Lateral-Raise.gif", video:"https://www.youtube.com/results?search_query=cable+lateral+raise" },
+      { id:'lib37', name:"הרמה קדמית בכבל", muscle:"כתפיים", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Front-Raise.gif", video:"https://www.youtube.com/results?search_query=cable+front+raise" },
+      { id:'lib38', name:"פייס פול", muscle:"כתפיים", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Face-Pull.gif", video:"https://www.youtube.com/results?search_query=face+pull" },
+      { id:'lib39', name:"פרפר הפוך בכבלים", muscle:"כתפיים", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Rear-Delt-Fly.gif", video:"https://www.youtube.com/results?search_query=cable+rear+delt+fly" },
+      { id:'lib40', name:"לחיצת כתף ביד אחת בכבל", muscle:"כתפיים", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/One-Arm-Cable-Shoulder-Press.gif", video:"https://www.youtube.com/results?search_query=single+arm+cable+shoulder+press" },
+      { id:'lib41', name:"לחיצת כתפיים במכונה", muscle:"כתפיים", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Machine-Shoulder-Press.gif", video:"https://www.youtube.com/results?search_query=machine+shoulder+press" },
+      { id:'lib42', name:"הרחקת כתפיים במכונה", muscle:"כתפיים", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Lateral-Raise-Machine.gif", video:"https://www.youtube.com/results?search_query=lateral+raise+machine" },
+      { id:'lib43', name:"פרפר הפוך במכונה", muscle:"כתפיים", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Reverse-Pec-Deck.gif", video:"https://www.youtube.com/results?search_query=reverse+pec+deck" },
+      { id:'lib44', name:"כתף אחורית במכונה", muscle:"כתפיים", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Rear-Delt-Machine.gif", video:"https://www.youtube.com/results?search_query=rear+delt+machine" },
+      { id:'lib45', name:"לחיצת כתפיים בסמית", muscle:"כתפיים", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Smith-Machine-Shoulder-Press.gif", video:"https://www.youtube.com/results?search_query=smith+machine+shoulder+press" },
+      { id:'lib46', name:"כפיפת מרפקים עם משקולות", muscle:"יד קדמית", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Curl.gif", video:"https://www.youtube.com/results?search_query=dumbbell+biceps+curl" },
+      { id:'lib47', name:"כפיפת פטיש", muscle:"יד קדמית", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Hammer-Curl.gif", video:"https://www.youtube.com/results?search_query=hammer+curl" },
+      { id:'lib48', name:"כפיפה בשיפוע עם משקולות", muscle:"יד קדמית", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Dumbbell-Curl.gif", video:"https://www.youtube.com/results?search_query=incline+dumbbell+curl" },
+      { id:'lib49', name:"כפיפת ריכוז", muscle:"יד קדמית", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Concentration-Curl.gif", video:"https://www.youtube.com/results?search_query=concentration+curl" },
+      { id:'lib50', name:"כפיפת זוטמן", muscle:"יד קדמית", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Zottman-Curl.gif", video:"https://www.youtube.com/results?search_query=zottman+curl" },
+      { id:'lib51', name:"כפיפת מרפקים בכבל", muscle:"יד קדמית", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Curl.gif", video:"https://www.youtube.com/results?search_query=cable+biceps+curl" },
+      { id:'lib52', name:"כפיפת פטיש בחבל", muscle:"יד קדמית", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Rope-Hammer-Curl.gif", video:"https://www.youtube.com/results?search_query=rope+hammer+curl" },
+      { id:'lib53', name:"כפיפת בייסיאן בכבל", muscle:"יד קדמית", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Bayesian-Curl.gif", video:"https://www.youtube.com/results?search_query=bayesian+cable+curl" },
+      { id:'lib54', name:"כפיפה גבוהה בכבלים", muscle:"יד קדמית", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/High-Cable-Curl.gif", video:"https://www.youtube.com/results?search_query=high+cable+curl" },
+      { id:'lib55', name:"כפיפה ביד אחת בכבל", muscle:"יד קדמית", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/One-Arm-Cable-Curl.gif", video:"https://www.youtube.com/results?search_query=single+arm+cable+curl" },
+      { id:'lib56', name:"כפיפת פריצ׳ר במכונה", muscle:"יד קדמית", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Preacher-Curl-Machine.gif", video:"https://www.youtube.com/results?search_query=preacher+curl+machine" },
+      { id:'lib57', name:"כפיפת יד קדמית במכונה", muscle:"יד קדמית", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Biceps-Curl-Machine.gif", video:"https://www.youtube.com/results?search_query=biceps+curl+machine" },
+      { id:'lib58', name:"כפיפת סקוט במכונה", muscle:"יד קדמית", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Scott-Curl-Machine.gif", video:"https://www.youtube.com/results?search_query=scott+curl+machine" },
+      { id:'lib59', name:"כפיפת יד קדמית במכונת פלטות", muscle:"יד קדמית", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Plate-Loaded-Biceps-Curl.gif", video:"https://www.youtube.com/results?search_query=plate+loaded+biceps+curl" },
+      { id:'lib60', name:"כפיפה ביד אחת במכונה", muscle:"יד קדמית", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Single-Arm-Biceps-Curl-Machine.gif", video:"https://www.youtube.com/results?search_query=single+arm+biceps+curl+machine" },
+      { id:'lib61', name:"פשיטת מרפק מעל הראש עם משקולת", muscle:"יד אחורית", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/04/Dumbbell-Triceps-Extension.gif", video:"https://www.youtube.com/results?search_query=overhead+dumbbell+triceps+extension" },
+      { id:'lib62', name:"סקאל קראשר עם משקולות", muscle:"יד אחורית", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Skull-Crusher.gif", video:"https://www.youtube.com/results?search_query=dumbbell+skull+crusher" },
+      { id:'lib63', name:"קיקבק עם משקולת", muscle:"יד אחורית", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Kickback.gif", video:"https://www.youtube.com/results?search_query=dumbbell+triceps+kickback" },
+      { id:'lib64', name:"טייט פרס", muscle:"יד אחורית", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Tate-Press.gif", video:"https://www.youtube.com/results?search_query=tate+press" },
+      { id:'lib65', name:"לחיצה צרה עם משקולות", muscle:"יד אחורית", equipment:"משקולות חופשיות", reps:'12', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Close-Grip-Dumbbell-Press.gif", video:"https://www.youtube.com/results?search_query=close+grip+dumbbell+press" },
+      { id:'lib66', name:"פשיטת מרפקים בחבל", muscle:"יד אחורית", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Rope-Pushdown.gif", video:"https://www.youtube.com/results?search_query=rope+triceps+pushdown" },
+      { id:'lib67', name:"פשיטת מרפקים במוט ישר", muscle:"יד אחורית", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Triceps-Pushdown.gif", video:"https://www.youtube.com/results?search_query=straight+bar+triceps+pushdown" },
+      { id:'lib68', name:"פשיטה מעל הראש בכבל", muscle:"יד אחורית", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/06/Cable-Overhead-Triceps-Extension.gif", video:"https://www.youtube.com/results?search_query=cable+overhead+triceps+extension" },
+      { id:'lib69', name:"פשיטה ביד אחת בכבל", muscle:"יד אחורית", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/One-Arm-Triceps-Pushdown.gif", video:"https://www.youtube.com/results?search_query=single+arm+cable+triceps+pushdown" },
+      { id:'lib70', name:"פשיטה מוצלבת בכבל", muscle:"יד אחורית", equipment:"כבלים", reps:'12', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Crossbody-Cable-Triceps-Extension.gif", video:"https://www.youtube.com/results?search_query=cross+body+cable+triceps+extension" },
+      { id:'lib71', name:"פשיטת מרפקים במכונה", muscle:"יד אחורית", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Triceps-Extension-Machine.gif", video:"https://www.youtube.com/results?search_query=triceps+extension+machine" },
+      { id:'lib72', name:"מקבילים בסיוע מכונה", muscle:"יד אחורית", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2022/06/Assisted-Triceps-Dips.gif", video:"https://www.youtube.com/results?search_query=assisted+dips+triceps" },
+      { id:'lib73', name:"מכונת מקבילים", muscle:"יד אחורית", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Seated-Dip-Machine.gif", video:"https://www.youtube.com/results?search_query=dip+machine+triceps" },
+      { id:'lib74', name:"לחיצת יד אחורית במכונה", muscle:"יד אחורית", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Triceps-Press-Machine.gif", video:"https://www.youtube.com/results?search_query=triceps+press+machine" },
+      { id:'lib75', name:"לחיצה צרה בסמית", muscle:"יד אחורית", equipment:"מכונה", reps:'12', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Smith-Machine-Close-Grip-Bench-Press.gif", video:"https://www.youtube.com/results?search_query=smith+close+grip+bench+press" },
+      { id:'lib76', name:"גובלט סקוואט", muscle:"רגליים", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Goblet-Squat.gif", video:"https://www.youtube.com/results?search_query=goblet+squat" },
+      { id:'lib77', name:"סקוואט עם משקולות", muscle:"רגליים", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Squat.gif", video:"https://www.youtube.com/results?search_query=dumbbell+squat" },
+      { id:'lib78', name:"דדליפט רומני עם משקולות", muscle:"רגליים", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Romanian-Deadlift.gif", video:"https://www.youtube.com/results?search_query=dumbbell+romanian+deadlift" },
+      { id:'lib79', name:"בולגרי עם משקולות", muscle:"רגליים", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Bulgarian-Split-Squat.gif", video:"https://www.youtube.com/results?search_query=dumbbell+bulgarian+split+squat" },
+      { id:'lib80', name:"לאנג׳ עם משקולות", muscle:"רגליים", equipment:"משקולות חופשיות", reps:'10', kg:'20', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lunge.gif", video:"https://www.youtube.com/results?search_query=dumbbell+lunge" },
+      { id:'lib81', name:"סקוואט בכבל", muscle:"רגליים", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Squat.gif", video:"https://www.youtube.com/results?search_query=cable+squat" },
+      { id:'lib82', name:"דדליפט רומני בכבל", muscle:"רגליים", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Romanian-Deadlift.gif", video:"https://www.youtube.com/results?search_query=cable+romanian+deadlift" },
+      { id:'lib83', name:"פול ת׳רו בכבל", muscle:"רגליים", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Pull-Through.gif", video:"https://www.youtube.com/results?search_query=cable+pull+through" },
+      { id:'lib84', name:"לאנג׳ בכבל", muscle:"רגליים", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Lunge.gif", video:"https://www.youtube.com/results?search_query=cable+lunge" },
+      { id:'lib85', name:"כפיפת ברך בכבל", muscle:"רגליים", equipment:"כבלים", reps:'10', kg:'15', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Leg-Curl.gif", video:"https://www.youtube.com/results?search_query=cable+leg+curl" },
+      { id:'lib86', name:"לחיצת רגליים", muscle:"רגליים", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Leg-Press.gif", video:"https://www.youtube.com/results?search_query=leg+press" },
+      { id:'lib87', name:"פשיטת ברכיים במכונה", muscle:"רגליים", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Leg-Extension.gif", video:"https://www.youtube.com/results?search_query=leg+extension" },
+      { id:'lib88', name:"כפיפת ברכיים במכונה", muscle:"רגליים", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Lying-Leg-Curl.gif", video:"https://www.youtube.com/results?search_query=leg+curl+machine" },
+      { id:'lib89', name:"האק סקוואט", muscle:"רגליים", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Hack-Squat.gif", video:"https://www.youtube.com/results?search_query=hack+squat+machine" },
+      { id:'lib90', name:"הרמת תאומים במכונה", muscle:"רגליים", equipment:"מכונה", reps:'10', kg:'30', image:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Standing-Calf-Raise-Machine.gif", video:"https://www.youtube.com/results?search_query=calf+raise+machine" }
     ];
 
     function uid(){
@@ -919,9 +976,9 @@
             name: 'חזה + יד קדמית',
             label: 'חזה • יד קדמית',
             exercises: [
-              cloneExercise('ex1'), cloneExercise('ex2'), cloneExercise('ex3'),
-              cloneExercise('ex4'), cloneExercise('ex5'), cloneExercise('ex1'),
-              cloneExercise('ex19')
+              cloneExercise('lib1'), cloneExercise('lib11'), cloneExercise('lib6'),
+              cloneExercise('lib46'), cloneExercise('lib47'), cloneExercise('lib1'),
+              cloneExercise('lib48')
             ]
           },
           {
@@ -929,9 +986,9 @@
             name: 'גב + יד אחורית',
             label: 'גב • יד אחורית',
             exercises: [
-              cloneExercise('ex6'), cloneExercise('ex7'), cloneExercise('ex8'),
-              cloneExercise('ex9'), cloneExercise('ex10'), cloneExercise('ex11'),
-              cloneExercise('ex26'), cloneExercise('ex25')
+              cloneExercise('lib41'), cloneExercise('lib36'), cloneExercise('lib31'),
+              cloneExercise('lib37'), cloneExercise('lib66'), cloneExercise('lib68'),
+              cloneExercise('lib42'), cloneExercise('lib61')
             ]
           },
           {
@@ -939,9 +996,9 @@
             name: 'כתפיים + רגליים',
             label: 'כתפיים • רגליים',
             exercises: [
-              cloneExercise('ex13'), cloneExercise('ex21'), cloneExercise('ex14'),
-              cloneExercise('ex15'), cloneExercise('ex24'), cloneExercise('ex22'),
-              cloneExercise('ex23')
+              cloneExercise('lib16'), cloneExercise('lib17'), cloneExercise('lib18'),
+              cloneExercise('lib23'), cloneExercise('lib21'), cloneExercise('lib77'),
+              cloneExercise('lib78')
             ]
           }
         ],
@@ -1526,15 +1583,11 @@
     }
 
     function renderLibrary(){
-      const muscles = ['הכל', ...new Set(LIBRARY.map(x => x.muscle))];
-      const equipment = ['הכל', ...new Set(LIBRARY.map(x => x.equipment))];
+      const muscles = ['הכל', 'חזה', 'גב', 'כתפיים', 'יד קדמית', 'יד אחורית', 'רגליים'];
+      const equipment = ['הכל', 'מכונה', 'כבלים', 'משקולות חופשיות'];
 
-      document.getElementById('muscleFilter').innerHTML =
-        muscles.map(x => `<option value="${x}">${x}</option>`).join('');
-
-      document.getElementById('equipmentFilter').innerHTML =
-        equipment.map(x => `<option value="${x}">${x}</option>`).join('');
-
+      document.getElementById('muscleFilter').innerHTML = muscles.map(x => `<option value="${x}">${x}</option>`).join('');
+      document.getElementById('equipmentFilter').innerHTML = equipment.map(x => `<option value="${x}">${x}</option>`).join('');
       document.getElementById('muscleFilter').value = state.filters.muscle;
       document.getElementById('equipmentFilter').value = state.filters.equipment;
 
@@ -1542,29 +1595,22 @@
       if (chips) chips.innerHTML = muscles.map(x => `<button class="library-chip ${state.filters.muscle===x?'active':''}" onclick="setLibraryMuscle('${x}')">${x}</button>`).join('');
 
       let items = [...LIBRARY];
-      const q = state.filters.search.trim().toLowerCase();
-
-      if (q) {
-        items = items.filter(x =>
-          `${x.name} ${x.muscle} ${x.equipment}`.toLowerCase().includes(q)
-        );
-      }
-
       if (state.filters.muscle !== 'הכל') items = items.filter(x => x.muscle === state.filters.muscle);
       if (state.filters.equipment !== 'הכל') items = items.filter(x => x.equipment === state.filters.equipment);
 
       document.getElementById('libraryList').innerHTML = items.map(item => `
         <div class="library-item">
-          <img src="${item.image}" alt="${escapeHtml(item.name)}" />
+          <img src="${item.image}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/600x400/101b2a/8ff3d4?text=Exercise'" />
           <div class="library-item-info">
             <div style="font-weight:800;">${escapeHtml(item.name)}</div>
-            <div style="font-size:12px;color:var(--muted);">
-              ${escapeHtml(item.muscle)} • ${escapeHtml(item.equipment)}
-            </div>
+            <div style="font-size:12px;color:var(--muted);">${escapeHtml(item.muscle)} • ${escapeHtml(item.equipment)}</div>
           </div>
-          <button class="primary" style="padding:10px 12px;" onclick="addExercise('${item.id}')">＋ הוסף לאימון</button>
+          <div class="library-actions">
+            <button class="secondary library-video" onclick="window.open('${item.video}','_blank')">▶ סרטון</button>
+            <button class="primary" style="padding:10px 7px;" onclick="addExercise('${item.id}')">＋ הוסף</button>
+          </div>
         </div>
-      `).join('') || '<div class="empty">לא נמצאו תרגילים</div>';
+      `).join('') || '<div class="empty">לא נמצאו תרגילים בשילוב הזה</div>';
     }
 
     function setLibraryMuscle(muscle){
@@ -1885,11 +1931,6 @@
     document.getElementById('navWorkout').addEventListener('click', () => showSection('workout'));
     document.getElementById('navHistory').addEventListener('click', () => showSection('history'));
 
-    document.getElementById('searchInput').addEventListener('input', e => {
-      state.filters.search = e.target.value;
-      renderLibrary();
-      save();
-    });
 
     document.getElementById('muscleFilter').addEventListener('change', e => {
       state.filters.muscle = e.target.value;
